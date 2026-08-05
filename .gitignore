@@ -29,3 +29,6 @@ npm-debug.log*
 
 # Lock files (keep package-lock.json but exclude yarn.lock if present)
 yarn.lock
+
+.vercel
+.env*
