@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build output
+client/dist/
+client/build/
+
+# Environment files
+.env
+.env.local
+.env.production
+server/.env
+
+# Server data storage (not committed)
+server/data/inquiries.json
+server/data/newsletters.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Lock files (keep package-lock.json but exclude yarn.lock if present)
+yarn.lock

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orillusive — AI Software Development</title>
+  <meta name="description" content="We design and engineer intelligent products for businesses ready to lead their next chapter." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/target.css">
+  <style>
+    /* ─── Typography override ─── */
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-display { font-family: 'Outfit', sans-serif; }
+
+    /* ─── Splash Screen ─── */
+    .splash-screen {
+      position: fixed; inset: 0; z-index: 100;
+      display: grid; place-items: center;
+      background: var(--night);
+      animation: splash-out 2.8s ease-in-out forwards;
+    }
+    .logo-breathe { animation: logo-breathe 2s ease-in-out infinite; }
+    .loader-line {
+      height: 100%;
+      background: var(--steel);
+      animation: line-load 1.8s ease-in-out forwards;
+    }
+    @keyframes splash-out { 0%,78%{opacity:1;visibility:visible} to{opacity:0;visibility:hidden} }
+    @keyframes logo-breathe { 0%,to{opacity:.35;transform:scale(.97)} 50%{opacity:1;transform:scale(1)} }
+    @keyframes line-load { 0%{transform:scaleX(0)} to{transform:scaleX(1)} }
+
+    /* ─── Hero drift ─── */
+    .hero-drift { animation: drift 8s ease-in-out infinite; }
+    @keyframes drift { 0%,to{transform:translate(0) rotate(-1deg)} 50%{transform:translateY(-12px) rotate(1deg)} }
+
+    /* ─── Section reveal ─── */
+    .section-reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+    .section-reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── Marquee ─── */
+    .marquee-track { animation: marquee 25s linear infinite; display: flex; width: max-content; }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee { to { transform: translate(-50%); } }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--night); }
+    ::-webkit-scrollbar-thumb { background: oklch(30% .04 265); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--steel); }
+
+    /* ─── Nav scroll ─── */
+    #site-header.scrolled {
+      background: oklch(12.9% .042 264.695 / .85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding-top: .75rem; padding-bottom: .75rem;
+    }
+  </style>
+</head>
+<body class="bg-background text-foreground antialiased selection:bg-steel/30">
+
+<!-- ═══════════════════════════════════
+     SPLASH SCREEN
+══════════════════════════════════════ -->
+<div class="splash-screen" aria-hidden="true">
+  <div style="width:16rem;text-align:center">
+    <div class="logo-breathe text-xl font-bold uppercase tracking-[0.32em] font-display text-primary-foreground">
+      Orillusive<span style="color:var(--steel)">.</span>
+    </div>
+    <div class="mt-8 h-px overflow-hidden" style="background:oklch(100% 0 0/.15)">
+      <div class="loader-line" style="transform-origin:left"></div>
+    </div>
+    <p class="mt-3 text-[10px] uppercase tracking-[0.22em]" style="color:oklch(100% 0 0/.5)">
+      Intelligence in motion
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     HEADER
+══════════════════════════════════════ -->
+<header id="site-header" class="fixed inset-x-0 top-0 z-50 transition-all duration-500 pt-5 md:pt-7">
+  <nav aria-label="Primary navigation" class="mx-auto grid max-w-[1380px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 md:flex md:justify-between py-2">
+    <a href="#top" aria-label="Orillusive home" class="text-[15px] font-extrabold uppercase tracking-[0.18em] text-foreground font-display">
+      Orillusive<span style="color:var(--steel)">.</span>
+    </a>
+    <div class="hidden items-center gap-7 md:flex">
+      <a href="#services" class="text-xs font-semibold transition-colors hover:text-foreground" style="color:var(--ink-soft)">Services</a>
+      <a href="#projects" class="text-xs font-semibold transition-colors hover:text-foreground" style="color:var(--ink-soft)">Projects</a>
+      <a href="#about" class="text-xs font-semibold transition-colors hover:text-foreground" style="color:var(--ink-soft)">About</a>
+      <a href="#process" class="text-xs font-semibold transition-colors hover:text-foreground" style="color:var(--ink-soft)">Process</a>
+      <a href="#pricing" class="text-xs font-semibold transition-colors hover:text-foreground" style="color:var(--ink-soft)">Pricing</a>
+      <a href="#contact" class="text-xs font-semibold transition-colors hover:text-foreground" style="color:var(--ink-soft)">Contact</a>
+    </div>
+    <a href="#contact" class="hidden min-h-11 items-center gap-2 rounded-md bg-primary px-5 text-xs font-bold text-primary-foreground transition-transform hover:scale-[1.03] md:inline-flex">
+      Book a Call
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+    <!-- Mobile menu button -->
+    <button id="mobile-toggle" type="button" aria-label="Open menu" class="grid size-11 place-items-center rounded-md border border-border bg-surface md:hidden">
+      <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+    </button>
+  </nav>
+  <!-- Mobile drawer -->
+  <div id="mobile-menu" class="hidden md:hidden bg-background border-b border-border px-5 py-4 space-y-3">
+    <a href="#services" class="block text-sm font-semibold py-2 border-b border-border/50" style="color:var(--ink-soft)">Services</a>
+    <a href="#projects" class="block text-sm font-semibold py-2 border-b border-border/50" style="color:var(--ink-soft)">Projects</a>
+    <a href="#about" class="block text-sm font-semibold py-2 border-b border-border/50" style="color:var(--ink-soft)">About</a>
+    <a href="#process" class="block text-sm font-semibold py-2 border-b border-border/50" style="color:var(--ink-soft)">Process</a>
+    <a href="#pricing" class="block text-sm font-semibold py-2 border-b border-border/50" style="color:var(--ink-soft)">Pricing</a>
+    <a href="#contact" class="block text-sm font-semibold py-2" style="color:var(--ink-soft)">Contact</a>
+    <a href="#contact" class="flex items-center justify-center gap-2 min-h-12 rounded-md bg-primary px-5 text-xs font-bold text-primary-foreground mt-3">
+      Book a Call
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section id="top" class="relative grid min-h-[94dvh] items-end overflow-hidden px-5 pb-10 pt-32 md:px-10 md:pb-14 lg:px-16" style="scroll-margin-top:6rem">
+  <div class="absolute inset-0 opacity-55 pointer-events-none" style="background:radial-gradient(circle at 80% 35%, var(--steel-soft), transparent 32%)"></div>
+  <div class="relative mx-auto grid w-full max-w-[1380px] items-end gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(400px,.95fr)] z-10">
+
+    <!-- Left: Copy -->
+    <div class="z-10 max-w-4xl">
+      <p class="mb-7 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em]" style="color:var(--steel)">
+        <span class="h-px w-9 inline-block" style="background:var(--steel)"></span>
+        AI software development
+      </p>
+      <h1 class="max-w-4xl font-display font-semibold leading-[.91]" style="font-size:clamp(3.4rem,7.4vw,7.8rem)">
+        Building software<br>that moves<br>
+        <span style="color:var(--steel)">business forward.</span>
+      </h1>
+      <p class="mt-7 max-w-md text-base leading-7 md:text-lg" style="color:var(--ink-soft)">
+        We design and engineer intelligent products for businesses ready to lead their next chapter.
+      </p>
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <a href="#contact" class="inline-flex min-h-12 items-center justify-center gap-3 rounded-md bg-primary px-6 text-sm font-bold text-primary-foreground transition-transform hover:scale-[1.02]">
+          Book a Discovery Call
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="#projects" class="inline-flex min-h-12 items-center justify-center gap-3 rounded-md border border-border px-6 text-sm font-bold transition-colors hover:bg-surface" style="background:oklch(100% 0 0/.04)">
+          View Our Work
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 7 10 10"/><path d="M17 7v10H7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right: Hero Card -->
+    <div class="hero-drift relative mx-auto w-full max-w-2xl overflow-hidden rounded-[6px] shadow-2xl">
+      <img src="/assets/orillusive-hero-Bb3uHCUy.jpg" alt="Sculptural AI software dashboard interface" width="1600" height="1200" fetchpriority="high" class="aspect-[4/3] w-full object-cover">
+      <div class="absolute inset-x-4 bottom-4 grid grid-cols-[1fr_auto] items-center rounded-md border p-4 backdrop-blur-xl" style="border-color:oklch(100% 0 0/.2);background:oklch(12.9% .042 264.695/.7);color:oklch(98.4% .003 247.858)">
+        <div>
+          <p class="text-[10px] uppercase tracking-[0.16em]" style="color:oklch(100% 0 0/.55)">System status</p>
+          <p class="mt-1 text-sm font-semibold">Intelligence, operational.</p>
+        </div>
+        <span class="size-2 rounded-full animate-pulse" style="background:var(--steel)"></span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     METRICS
+══════════════════════════════════════ -->
+<section class="border-y border-border px-5 py-24 md:px-10 md:py-32 lg:px-16" style="background:var(--surface)">
+  <div class="section-reveal mx-auto max-w-[1380px]">
+    <div class="mb-16 grid gap-4 md:grid-cols-2">
+      <h2 class="text-3xl font-semibold md:text-5xl font-display">Trusted by businesses<br>built to go further.</h2>
+      <p class="max-w-sm self-end text-sm leading-6 md:justify-self-end" style="color:var(--ink-soft)">Measured by meaningful outcomes—not output for output's sake.</p>
+    </div>
+    <div class="grid border-t border-border sm:grid-cols-2 lg:grid-cols-3">
+      <div class="border-b border-border py-9 sm:px-7 lg:border-r"><p class="text-5xl font-semibold md:text-6xl font-display">120+</p><p class="mt-3 text-xs font-bold uppercase tracking-[0.13em]" style="color:var(--ink-soft)">Projects delivered</p></div>
+      <div class="border-b border-border py-9 sm:px-7 lg:border-r"><p class="text-5xl font-semibold md:text-6xl font-display">30+</p><p class="mt-3 text-xs font-bold uppercase tracking-[0.13em]" style="color:var(--ink-soft)">Industries served</p></div>
+      <div class="border-b border-border py-9 sm:px-7 lg:border-r"><p class="text-5xl font-semibold md:text-6xl font-display">99%</p><p class="mt-3 text-xs font-bold uppercase tracking-[0.13em]" style="color:var(--ink-soft)">Client satisfaction</p></div>
+      <div class="border-b border-border py-9 sm:px-7 lg:border-r"><p class="text-5xl font-semibold md:text-6xl font-display">10+</p><p class="mt-3 text-xs font-bold uppercase tracking-[0.13em]" style="color:var(--ink-soft)">Countries</p></div>
+      <div class="border-b border-border py-9 sm:px-7 lg:border-r"><p class="text-5xl font-semibold md:text-6xl font-display">24/7</p><p class="mt-3 text-xs font-bold uppercase tracking-[0.13em]" style="color:var(--ink-soft)">Global support</p></div>
+      <div class="border-b border-border py-9 sm:px-7 lg:border-r"><p class="text-5xl font-semibold md:text-6xl font-display">5+</p><p class="mt-3 text-xs font-bold uppercase tracking-[0.13em]" style="color:var(--ink-soft)">Years of impact</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     ABOUT
+══════════════════════════════════════ -->
+<section id="about" class="scroll-mt-24 px-5 py-28 md:px-10 md:py-40 lg:px-16">
+  <div class="section-reveal mx-auto grid max-w-[1380px] gap-16 lg:grid-cols-[.7fr_1.3fr]">
+    <div>
+      <p class="text-[11px] font-bold uppercase tracking-[0.2em]" style="color:var(--steel)">About Orillusive</p>
+      <p class="mt-7 max-w-xs text-sm leading-6" style="color:var(--ink-soft)">Strategy, design, and engineering in one senior team. No relay race. No translation loss.</p>
+    </div>
+    <div>
+      <h2 class="max-w-4xl text-4xl font-semibold leading-[1.08] md:text-7xl font-display">
+        Technology should not merely support a business.
+        <span style="color:var(--ink-soft)"> It should change what the business can become.</span>
+      </h2>
+      <div class="mt-16 grid gap-8 border-t border-border pt-8 sm:grid-cols-3">
+        <div><span class="text-xs font-bold" style="color:var(--steel)">01</span><h3 class="mt-7 text-lg font-semibold font-display">See clearly</h3><p class="mt-2 text-sm leading-6" style="color:var(--ink-soft)">We uncover the highest-leverage opportunity.</p></div>
+        <div><span class="text-xs font-bold" style="color:var(--steel)">02</span><h3 class="mt-7 text-lg font-semibold font-display">Build precisely</h3><p class="mt-2 text-sm leading-6" style="color:var(--ink-soft)">We turn complexity into calm, useful products.</p></div>
+        <div><span class="text-xs font-bold" style="color:var(--steel)">03</span><h3 class="mt-7 text-lg font-semibold font-display">Move decisively</h3><p class="mt-2 text-sm leading-6" style="color:var(--ink-soft)">We ship, learn, and compound the advantage.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     SERVICES
+══════════════════════════════════════ -->
+<section id="services" class="scroll-mt-24 px-5 py-28 md:px-10 md:py-36 lg:px-16" style="background:var(--night);color:var(--primary-foreground)">
+  <div class="section-reveal mx-auto max-w-[1380px]">
+    <div class="grid gap-5 md:grid-cols-2">
+      <p class="text-[11px] font-bold uppercase tracking-[0.2em]" style="color:var(--steel)">What we build</p>
+      <h2 class="text-4xl font-semibold leading-tight md:text-6xl font-display">
+        One partner.<br><span style="color:oklch(100% 0 0/.45)">Every critical layer.</span>
+      </h2>
+    </div>
+    <div class="mt-20 grid border-l border-t sm:grid-cols-2 lg:grid-cols-4" style="border-color:oklch(100% 0 0/.15)">
+
+      <!-- AI Solutions -->
+      <article class="group min-h-72 border-b border-r p-7 transition-colors duration-500 hover:bg-white/[.06]" style="border-color:oklch(100% 0 0/.15)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" class="transition-transform duration-500 group-hover:scale-110" aria-hidden="true"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        <h3 class="mt-20 text-xl font-semibold font-display">AI Solutions</h3>
+        <p class="mt-3 text-sm leading-6" style="color:oklch(100% 0 0/.55)">Intelligent systems grounded in your data, workflows, and competitive edge.</p>
+      </article>
+
+      <!-- Web Applications -->
+      <article class="group min-h-72 border-b border-r p-7 transition-colors duration-500 hover:bg-white/[.06]" style="border-color:oklch(100% 0 0/.15)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" class="transition-transform duration-500 group-hover:scale-110" aria-hidden="true"><path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"/><path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17"/><path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"/><circle cx="12" cy="12" r="10"/></svg>
+        <h3 class="mt-20 text-xl font-semibold font-display">Web Applications</h3>
+        <p class="mt-3 text-sm leading-6" style="color:oklch(100% 0 0/.55)">Fast, resilient platforms engineered for complexity and effortless use.</p>
+      </article>
+
+      <!-- Mobile Apps -->
+      <article class="group min-h-72 border-b border-r p-7 transition-colors duration-500 hover:bg-white/[.06]" style="border-color:oklch(100% 0 0/.15)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" class="transition-transform duration-500 group-hover:scale-110" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+        <h3 class="mt-20 text-xl font-semibold font-display">Mobile Apps</h3>
+        <p class="mt-3 text-sm leading-6" style="color:oklch(100% 0 0/.55)">Native-quality product experiences for iOS, Android, and every screen between.</p>
+      </article>
+
+      <!-- SaaS Development -->
+      <article class="group min-h-72 border-b border-r p-7 transition-colors duration-500 hover:bg-white/[.06]" style="border-color:oklch(100% 0 0/.15)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" class="transition-transform duration-500 group-hover:scale-110" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+        <h3 class="mt-20 text-xl font-semibold font-display">SaaS Development</h3>
+        <p class="mt-3 text-sm leading-6" style="color:oklch(100% 0 0/.55)">From product architecture to scale—subscription products built to endure.</p>
+      </article>
+
+      <!-- Automation -->
+      <article class="group min-h-72 border-b border-r p-7 transition-colors duration-500 hover:bg-white/[.06]" style="border-color:oklch(100% 0 0/.15)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" class="transition-transform duration-500 group-hover:scale-110" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+        <h3 class="mt-20 text-xl font-semibold font-display">Automation</h3>
+        <p class="mt-3 text-sm leading-6" style="color:oklch(100% 0 0/.55)">Connected workflows that remove friction, accelerate teams, and compound output.</p>
+      </article>
+
+      <!-- UI / UX -->
+      <article class="group min-h-72 border-b border-r p-7 transition-colors duration-500 hover:bg-white/[.06]" style="border-color:oklch(100% 0 0/.15)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" class="transition-transform duration-500 group-hover:scale-110" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
+        <h3 class="mt-20 text-xl font-semibold font-display">UI / UX</h3>
+        <p class="mt-3 text-sm leading-6" style="color:oklch(100% 0 0/.55)">Calm, clear interfaces that make sophisticated software feel instinctive.</p>
+      </article>
+
+      <!-- Cloud Systems -->
+      <article class="group min-h-72 border-b border-r p-7 transition-colors duration-500 hover:bg-white/[.06]" style="border-color:oklch(100% 0 0/.15)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" class="transition-transform duration-500 group-hover:scale-110" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+        <h3 class="mt-20 text-xl font-semibold font-display">Cloud Systems</h3>
+        <p class="mt-3 text-sm leading-6" style="color:oklch(100% 0 0/.55)">Secure infrastructure shaped for availability, performance, and global growth.</p>
+      </article>
+
+      <!-- Maintenance -->
+      <article class="group min-h-72 border-b border-r p-7 transition-colors duration-500 hover:bg-white/[.06]" style="border-color:oklch(100% 0 0/.15)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" class="transition-transform duration-500 group-hover:scale-110" aria-hidden="true"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+        <h3 class="mt-20 text-xl font-semibold font-display">Maintenance</h3>
+        <p class="mt-3 text-sm leading-6" style="color:oklch(100% 0 0/.55)">Continuous optimization, observability, and expert support after launch.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     PROCESS
+══════════════════════════════════════ -->
+<section id="process" class="scroll-mt-24 px-5 py-28 md:px-10 md:py-40 lg:px-16">
+  <div class="section-reveal mx-auto max-w-[1380px]">
+    <p class="text-[11px] font-bold uppercase tracking-[0.2em]" style="color:var(--steel)">How we move</p>
+    <div class="mt-5 flex items-end justify-between gap-8">
+      <h2 class="text-4xl font-semibold md:text-6xl font-display">Momentum,<br>made methodical.</h2>
+      <p class="hidden max-w-xs text-sm leading-6 md:block" style="color:var(--ink-soft)">A clear path from first conversation to long-term product advantage.</p>
+    </div>
+    <div class="relative mt-20 grid gap-0 md:grid-cols-6">
+      <div class="absolute left-0 right-0 top-5 hidden h-px md:block" style="background:var(--border)">
+        <div class="h-full w-4/5" style="background:var(--steel)"></div>
+      </div>
+      <div class="relative border-l border-border pb-10 pl-7 md:border-l-0 md:pb-0 md:pl-0">
+        <div class="relative z-10 grid size-10 place-items-center rounded-full border border-border text-[10px] font-bold" style="background:var(--background);color:var(--steel)">01</div>
+        <h3 class="mt-5 text-sm font-semibold md:mt-8 font-display">Discovery</h3>
+      </div>
+      <div class="relative border-l border-border pb-10 pl-7 md:border-l-0 md:pb-0 md:pl-0">
+        <div class="relative z-10 grid size-10 place-items-center rounded-full border border-border text-[10px] font-bold" style="background:var(--background);color:var(--steel)">02</div>
+        <h3 class="mt-5 text-sm font-semibold md:mt-8 font-display">Strategy</h3>
+      </div>
+      <div class="relative border-l border-border pb-10 pl-7 md:border-l-0 md:pb-0 md:pl-0">
+        <div class="relative z-10 grid size-10 place-items-center rounded-full border border-border text-[10px] font-bold" style="background:var(--background);color:var(--steel)">03</div>
+        <h3 class="mt-5 text-sm font-semibold md:mt-8 font-display">Design</h3>
+      </div>
+      <div class="relative border-l border-border pb-10 pl-7 md:border-l-0 md:pb-0 md:pl-0">
+        <div class="relative z-10 grid size-10 place-items-center rounded-full border border-border text-[10px] font-bold" style="background:var(--background);color:var(--steel)">04</div>
+        <h3 class="mt-5 text-sm font-semibold md:mt-8 font-display">Development</h3>
+      </div>
+      <div class="relative border-l border-border pb-10 pl-7 md:border-l-0 md:pb-0 md:pl-0">
+        <div class="relative z-10 grid size-10 place-items-center rounded-full border border-border text-[10px] font-bold" style="background:var(--background);color:var(--steel)">05</div>
+        <h3 class="mt-5 text-sm font-semibold md:mt-8 font-display">Launch</h3>
+      </div>
+      <div class="relative border-l border-border pb-10 pl-7 md:border-l-0 md:pb-0 md:pl-0">
+        <div class="relative z-10 grid size-10 place-items-center rounded-full border border-border text-[10px] font-bold" style="background:var(--background);color:var(--steel)">06</div>
+        <h3 class="mt-5 text-sm font-semibold md:mt-8 font-display">Growth</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     PROJECTS
+══════════════════════════════════════ -->
+<section id="projects" class="scroll-mt-24 px-5 py-28 md:px-10 md:py-36 lg:px-16" style="background:var(--surface)">
+  <div class="section-reveal mx-auto max-w-[1380px]">
+    <div class="grid gap-5 md:grid-cols-2">
+      <p class="text-[11px] font-bold uppercase tracking-[0.2em]" style="color:var(--steel)">Selected work</p>
+      <h2 class="text-4xl font-semibold md:text-6xl font-display">Software with<br>measurable gravity.</h2>
+    </div>
+    <div class="mt-16 grid gap-12">
+
+      <!-- Northstar -->
+      <article class="group grid items-center gap-7 lg:grid-cols-[1.4fr_.6fr]">
+        <div class="overflow-hidden rounded-[6px]" style="background:oklch(20.8% .042 265.755)">
+          <img src="/assets/project-northstar-CgUfm3eW.jpg" alt="Northstar enterprise logistics command center" width="1408" height="1008" loading="lazy" class="aspect-[7/5] w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.025]">
+        </div>
+        <div class="lg:px-8">
+          <p class="text-[10px] font-bold uppercase tracking-[0.16em]" style="color:var(--steel)">Enterprise Intelligence</p>
+          <h3 class="mt-4 text-4xl font-semibold md:text-5xl font-display">Northstar</h3>
+          <p class="mt-6 text-xl" style="color:var(--ink-soft)">42% faster decisions</p>
+          <div class="mt-8 flex flex-wrap gap-2">
+            <span class="border border-border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">Strategy</span>
+            <span class="border border-border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">Product Design</span>
+            <span class="border border-border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">Engineering</span>
+          </div>
+          <a href="#contact" class="mt-8 inline-flex min-h-11 items-center gap-3 text-sm font-bold hover:opacity-70 transition-opacity">
+            Explore the result
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Aurelia -->
+      <article class="group grid items-center gap-7 lg:grid-cols-[1.4fr_.6fr] lg:[&>*:first-child]:order-2">
+        <div class="overflow-hidden rounded-[6px]" style="background:oklch(20.8% .042 265.755)">
+          <img src="/assets/project-aurelia-CAM6FC6i.jpg" alt="Aurelia AI financial analytics platform" width="1408" height="1008" loading="lazy" class="aspect-[7/5] w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.025]">
+        </div>
+        <div class="lg:px-8">
+          <p class="text-[10px] font-bold uppercase tracking-[0.16em]" style="color:var(--steel)">AI Financial Platform</p>
+          <h3 class="mt-4 text-4xl font-semibold md:text-5xl font-display">Aurelia</h3>
+          <p class="mt-6 text-xl" style="color:var(--ink-soft)">$18M analyzed daily</p>
+          <div class="mt-8 flex flex-wrap gap-2">
+            <span class="border border-border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">Strategy</span>
+            <span class="border border-border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">Product Design</span>
+            <span class="border border-border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">Engineering</span>
+          </div>
+          <a href="#contact" class="mt-8 inline-flex min-h-11 items-center gap-3 text-sm font-bold hover:opacity-70 transition-opacity">
+            Explore the result
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Vanta Health -->
+      <article class="group grid items-center gap-7 lg:grid-cols-[1.4fr_.6fr]">
+        <div class="overflow-hidden rounded-[6px]" style="background:oklch(20.8% .042 265.755)">
+          <img src="/assets/project-vanta-CMmfP3Wh.jpg" alt="Vanta Health mobile automation platform" width="1408" height="1008" loading="lazy" class="aspect-[7/5] w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.025]">
+        </div>
+        <div class="lg:px-8">
+          <p class="text-[10px] font-bold uppercase tracking-[0.16em]" style="color:var(--steel)">Mobile Automation</p>
+          <h3 class="mt-4 text-4xl font-semibold md:text-5xl font-display">Vanta Health</h3>
+          <p class="mt-6 text-xl" style="color:var(--ink-soft)">3.2× user growth</p>
+          <div class="mt-8 flex flex-wrap gap-2">
+            <span class="border border-border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">Strategy</span>
+            <span class="border border-border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">Product Design</span>
+            <span class="border border-border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.1em]">Engineering</span>
+          </div>
+          <a href="#contact" class="mt-8 inline-flex min-h-11 items-center gap-3 text-sm font-bold hover:opacity-70 transition-opacity">
+            Explore the result
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     WHY ORILLUSIVE
+══════════════════════════════════════ -->
+<section class="overflow-hidden py-28 md:py-36" style="background:var(--earth)">
+  <div class="section-reveal mx-auto max-w-[1380px] px-5 md:px-10 lg:px-16">
+    <p class="text-[11px] font-bold uppercase tracking-[0.2em]" style="color:var(--steel-soft)">Why Orillusive</p>
+    <h2 class="mt-5 max-w-4xl text-4xl font-semibold leading-tight md:text-6xl font-display">The velocity of a focused team. The rigor of an enterprise partner.</h2>
+    <div class="mt-16 grid border md:grid-cols-2" style="border-color:oklch(100% 0 0/.15)">
+
+      <!-- Traditional Agency -->
+      <div class="p-7 md:p-10" style="opacity:.55">
+        <p class="text-xs uppercase tracking-[.16em]">Traditional agency</p>
+        <p class="flex items-center gap-3 border-b py-6 text-sm" style="border-color:oklch(100% 0 0/.15)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          Layers of account management
+        </p>
+        <p class="flex items-center gap-3 border-b py-6 text-sm" style="border-color:oklch(100% 0 0/.15)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          Fixed, opaque processes
+        </p>
+        <p class="flex items-center gap-3 border-b py-6 text-sm" style="border-color:oklch(100% 0 0/.15)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          Technology follows the brief
+        </p>
+        <p class="flex items-center gap-3 border-b py-6 text-sm" style="border-color:oklch(100% 0 0/.15)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          Launch marks the finish
+        </p>
+      </div>
+
+      <!-- Orillusive -->
+      <div class="border-t p-7 md:border-l md:border-t-0 md:p-10" style="background:oklch(100% 0 0/.06);border-color:oklch(100% 0 0/.15)">
+        <p class="text-xs font-bold uppercase tracking-[.16em]" style="color:var(--steel-soft)">Orillusive</p>
+        <p class="flex items-center gap-3 border-b py-6 text-sm font-semibold" style="border-color:oklch(100% 0 0/.15)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel-soft)" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          Senior experts, directly involved
+        </p>
+        <p class="flex items-center gap-3 border-b py-6 text-sm font-semibold" style="border-color:oklch(100% 0 0/.15)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel-soft)" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          Adaptive execution with total clarity
+        </p>
+        <p class="flex items-center gap-3 border-b py-6 text-sm font-semibold" style="border-color:oklch(100% 0 0/.15)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel-soft)" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          Technology shapes the opportunity
+        </p>
+        <p class="flex items-center gap-3 border-b py-6 text-sm font-semibold" style="border-color:oklch(100% 0 0/.15)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel-soft)" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          Launch begins the growth cycle
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     TECH MARQUEE
+══════════════════════════════════════ -->
+<section class="border-b border-border py-16">
+  <p class="mb-9 text-center text-[10px] font-bold uppercase tracking-[.2em]" style="color:var(--ink-soft)">Technology, selected for the mission</p>
+  <div class="overflow-hidden" aria-label="Technology stack">
+    <div class="marquee-track flex w-max items-center gap-16 pr-16 text-xl font-semibold font-display" style="color:var(--ink-soft)">
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>React</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Next.js</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Node.js</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Flutter</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Postgres</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>AWS</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>OpenAI</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Claude</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Gemini</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>React</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Next.js</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Node.js</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Flutter</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Postgres</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>AWS</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>OpenAI</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Claude</span>
+      <span class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Gemini</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     TESTIMONIAL
+══════════════════════════════════════ -->
+<section class="px-5 py-28 md:px-10 md:py-40 lg:px-16">
+  <div class="section-reveal mx-auto max-w-[1100px]">
+    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--steel)" aria-hidden="true"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M12 11h.01"/><path d="M16 11h.01"/><path d="M8 11h.01"/></svg>
+
+    <div class="mt-10 min-h-[260px]" aria-live="polite" id="testimonial-container">
+      <blockquote class="text-3xl font-semibold leading-tight md:text-6xl font-display" id="testimonial-quote">
+        "Orillusive did not just ship our platform. They changed how our company thinks about software."
+      </blockquote>
+      <div class="mt-10">
+        <p class="text-sm font-bold" id="testimonial-author">Maya Ellison</p>
+        <p class="mt-1 text-xs" style="color:var(--ink-soft)" id="testimonial-role">COO, Northstar Logistics</p>
+      </div>
+    </div>
+
+    <div class="mt-8 flex items-center justify-between border-t border-border pt-6">
+      <div class="flex gap-2" id="testimonial-dots">
+        <button type="button" aria-label="Show testimonial 1" class="h-2 min-w-11 transition-all rounded-full" style="background:var(--steel)" data-idx="0"></button>
+        <button type="button" aria-label="Show testimonial 2" class="h-2 min-w-11 transition-all rounded-full" style="background:var(--border)" data-idx="1"></button>
+        <button type="button" aria-label="Show testimonial 3" class="h-2 min-w-11 transition-all rounded-full" style="background:var(--border)" data-idx="2"></button>
+      </div>
+      <div class="flex gap-2">
+        <button type="button" aria-label="Previous testimonial" id="prev-testimonial" class="grid size-11 place-items-center rounded-full border border-border hover:bg-surface transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button type="button" aria-label="Next testimonial" id="next-testimonial" class="grid size-11 place-items-center rounded-full border border-border hover:bg-surface transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     PRICING
+══════════════════════════════════════ -->
+<section id="pricing" class="scroll-mt-24 px-5 py-24 md:px-10 md:py-32 lg:px-16" style="background:var(--steel-soft)">
+  <div class="section-reveal mx-auto grid max-w-[1380px] gap-10 lg:grid-cols-[1fr_1fr]">
+    <div>
+      <p class="text-[11px] font-bold uppercase tracking-[0.2em]" style="color:var(--steel)">Engagements</p>
+      <h2 class="mt-5 text-4xl font-semibold md:text-6xl font-display">Investment shaped<br>around the outcome.</h2>
+    </div>
+    <div class="grid gap-px" style="background:var(--border)">
+      <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-6 p-6 md:p-8 hover:opacity-90 transition-opacity cursor-pointer" style="background:var(--surface)">
+        <div class="min-w-0">
+          <h3 class="text-lg font-semibold font-display">Product Sprint</h3>
+          <p class="mt-2 text-sm" style="color:var(--ink-soft)">Define and validate the opportunity</p>
+        </div>
+        <p class="text-sm font-bold" style="color:var(--steel)">From $12k</p>
+      </div>
+      <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-6 p-6 md:p-8 hover:opacity-90 transition-opacity cursor-pointer" style="background:var(--surface)">
+        <div class="min-w-0">
+          <h3 class="text-lg font-semibold font-display">End-to-End Build</h3>
+          <p class="mt-2 text-sm" style="color:var(--ink-soft)">Design and engineer the full product</p>
+        </div>
+        <p class="text-sm font-bold" style="color:var(--steel)">From $35k</p>
+      </div>
+      <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-6 p-6 md:p-8 hover:opacity-90 transition-opacity cursor-pointer" style="background:var(--surface)">
+        <div class="min-w-0">
+          <h3 class="text-lg font-semibold font-display">Dedicated Product Team</h3>
+          <p class="mt-2 text-sm" style="color:var(--ink-soft)">Continuous delivery and growth</p>
+        </div>
+        <p class="text-sm font-bold" style="color:var(--steel)">Monthly</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     CONTACT CTA
+══════════════════════════════════════ -->
+<section id="contact" class="scroll-mt-24 px-5 py-28 md:px-10 md:py-40 lg:px-16" style="background:var(--night)">
+  <div class="section-reveal mx-auto max-w-[1380px]">
+    <p class="text-[11px] font-bold uppercase tracking-[0.2em]" style="color:var(--steel)">Start a conversation</p>
+    <div class="mt-7 grid items-end gap-10 md:grid-cols-[1fr_auto]">
+      <h2 class="max-w-5xl text-5xl font-semibold leading-[.98] md:text-8xl font-display">
+        Let's build something extraordinary.
+      </h2>
+      <a href="mailto:hello@orillusive.com" class="inline-flex min-h-14 items-center justify-center gap-3 rounded-md bg-primary px-7 text-sm font-bold text-primary-foreground transition-transform hover:scale-[1.03] shrink-0">
+        Book Strategy Call
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer class="px-5 pb-10 md:px-10 lg:px-16" style="background:var(--night)">
+  <div class="mx-auto max-w-[1380px] pt-14" style="border-top:1px solid oklch(100% 0 0/.15)">
+    <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <a href="#top" aria-label="Orillusive home" class="text-[15px] font-extrabold uppercase tracking-[0.18em] font-display">
+          Orillusive<span style="color:var(--steel)">.</span>
+        </a>
+        <p class="mt-5 max-w-xs text-sm leading-6" style="color:oklch(100% 0 0/.5)">Intelligent software for ambitious businesses.</p>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-[.16em]" style="color:oklch(100% 0 0/.45)">Navigate</p>
+        <div class="mt-4 grid gap-3">
+          <a href="#services" class="text-sm hover:text-foreground transition-colors" style="color:var(--ink-soft)">Services</a>
+          <a href="#projects" class="text-sm hover:text-foreground transition-colors" style="color:var(--ink-soft)">Projects</a>
+          <a href="#about" class="text-sm hover:text-foreground transition-colors" style="color:var(--ink-soft)">About</a>
+          <a href="#process" class="text-sm hover:text-foreground transition-colors" style="color:var(--ink-soft)">Process</a>
+          <a href="#pricing" class="text-sm hover:text-foreground transition-colors" style="color:var(--ink-soft)">Pricing</a>
+        </div>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-[.16em]" style="color:oklch(100% 0 0/.45)">Contact</p>
+        <a href="mailto:hello@orillusive.com" class="mt-4 block text-sm" style="color:var(--foreground)">hello@orillusive.com</a>
+        <p class="mt-3 text-sm" style="color:oklch(100% 0 0/.5)">Working worldwide</p>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-[.16em]" style="color:oklch(100% 0 0/.45)">Field notes</p>
+        <form id="newsletter-form" class="mt-4">
+          <label for="newsletter" class="sr-only">Email address</label>
+          <div class="grid grid-cols-[1fr_auto]" style="border-bottom:1px solid oklch(100% 0 0/.3)">
+            <input id="newsletter" required type="email" placeholder="Your email" class="min-w-0 bg-transparent py-3 text-sm focus:outline-none" style="color:var(--foreground)" placeholder-style="color:oklch(100% 0 0/.35)">
+            <button type="submit" aria-label="Subscribe to newsletter" class="grid size-11 place-items-center hover:text-steel transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+          <p aria-live="polite" class="mt-3 min-h-5 text-xs" id="newsletter-status" style="color:var(--steel-soft)">Occasional ideas. Never noise.</p>
+        </form>
+      </div>
+    </div>
+    <div class="mt-16 flex flex-col gap-4 pt-6 text-[10px] uppercase tracking-[.12em] sm:flex-row sm:justify-between" style="border-top:1px solid oklch(100% 0 0/.15);color:oklch(100% 0 0/.4)">
+      <p>© 2026 Orillusive. All rights reserved.</p>
+      <div class="flex gap-5">
+        <a href="#top" class="hover:text-white transition-colors">LinkedIn</a>
+        <a href="#top" class="hover:text-white transition-colors">X</a>
+        <a href="#top" class="hover:text-white transition-colors">Privacy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Header scroll behaviour ──
+const header = document.getElementById('site-header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 30);
+}, { passive: true });
+
+// ── Mobile menu ──
+const toggle = document.getElementById('mobile-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+toggle.addEventListener('click', () => {
+  mobileMenu.classList.toggle('hidden');
+});
+mobileMenu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+});
+
+// ── Smooth close mobile on resize ──
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 768) mobileMenu.classList.add('hidden');
+});
+
+// ── Testimonials ──
+const TESTIMONIALS = [
+  { quote: "Orillusive did not just ship our platform. They changed how our company thinks about software.", author: "Maya Ellison", role: "COO, Northstar Logistics" },
+  { quote: "The senior engineering team delivered an AI platform that handled our data scale effortlessly.", author: "Marcus Sterling", role: "VP Product, Aurelia Capital" },
+  { quote: "Working with Orillusive was the highest leverage decision we made for our mobile growth.", author: "Elena Rostova", role: "Founder, Vanta Health" }
+];
+let currentIdx = 0;
+
+function setTestimonial(idx) {
+  currentIdx = (idx + TESTIMONIALS.length) % TESTIMONIALS.length;
+  const t = TESTIMONIALS[currentIdx];
+  document.getElementById('testimonial-quote').textContent = '"' + t.quote + '"';
+  document.getElementById('testimonial-author').textContent = t.author;
+  document.getElementById('testimonial-role').textContent = t.role;
+  document.querySelectorAll('#testimonial-dots button').forEach((btn, i) => {
+    btn.style.background = i === currentIdx ? 'var(--steel)' : 'var(--border)';
+  });
+}
+
+document.getElementById('next-testimonial').addEventListener('click', () => setTestimonial(currentIdx + 1));
+document.getElementById('prev-testimonial').addEventListener('click', () => setTestimonial(currentIdx - 1));
+document.querySelectorAll('#testimonial-dots button').forEach((btn, i) => {
+  btn.addEventListener('click', () => setTestimonial(i));
+});
+// Auto-rotate
+let autoRotate = setInterval(() => setTestimonial(currentIdx + 1), 5000);
+document.getElementById('testimonial-container').addEventListener('mouseenter', () => clearInterval(autoRotate));
+document.getElementById('testimonial-container').addEventListener('mouseleave', () => {
+  autoRotate = setInterval(() => setTestimonial(currentIdx + 1), 5000);
+});
+
+// ── Section reveal on scroll ──
+const reveals = document.querySelectorAll('.section-reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(r => observer.observe(r));
+
+// ── Newsletter form ──
+document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const status = document.getElementById('newsletter-status');
+  status.textContent = 'Subscribed to Field Notes successfully.';
+  this.reset();
+});
+</script>
+</body>
+</html>
