@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { SplashLoader } from './components/SplashLoader';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -21,6 +22,7 @@ export function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <SpeedInsights />
       <div id="top" className="min-h-screen bg-[#F7F7F5] text-[#111111] selection:bg-[#4F6B85] selection:text-white">
         {/* Splash Loader */}
         <AnimatePresence>
