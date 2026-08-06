@@ -87,6 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry }) => {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle navigation menu"
+          aria-expanded={mobileMenuOpen}
           className="grid size-10 place-items-center rounded-full border border-black/10 bg-white/80 text-[#111111] md:hidden"
         >
           {mobileMenuOpen ? <X className="size-4.5" /> : <Menu className="size-4.5" />}

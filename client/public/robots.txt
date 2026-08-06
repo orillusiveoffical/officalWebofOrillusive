@@ -1,0 +1,10 @@
+# Orillusive Website — robots.txt
+# https://orillusive.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /api/*
+
+# Sitemap
+Sitemap: https://orillusive.com/sitemap.xml

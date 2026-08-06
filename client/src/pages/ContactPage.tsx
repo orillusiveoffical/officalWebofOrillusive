@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { ArrowRight, Mail, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import { SERVICES_DATA } from '../data/contentData';
+import { SEOHead } from '../components/SEOHead';
+import { StructuredData } from '../components/StructuredData';
+import { PAGE_SEO, buildBreadcrumbSchema } from '../data/seoData';
 
 export const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -39,6 +42,14 @@ export const ContactPage: React.FC = () => {
 
   return (
     <div className="pt-36 pb-32 px-6 sm:px-12 lg:px-20 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
+      <SEOHead page={PAGE_SEO.contact} />
+      <StructuredData
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Contact', path: '/contact' },
+        ])}
+        id="breadcrumb"
+      />
       <div className="mx-auto max-w-[1360px] grid lg:grid-cols-2 gap-16 items-start">
         
         <div className="space-y-6">

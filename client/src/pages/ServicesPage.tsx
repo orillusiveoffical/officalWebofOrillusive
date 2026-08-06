@@ -1,6 +1,9 @@
 import React from 'react';
 import { SERVICES_DATA } from '../data/contentData';
 import { Layers, Globe, Smartphone, Building2, ShieldCheck, LayoutGrid, Workflow, Wrench, ArrowRight } from 'lucide-react';
+import { SEOHead } from '../components/SEOHead';
+import { StructuredData } from '../components/StructuredData';
+import { PAGE_SEO, SERVICES_SCHEMA, buildBreadcrumbSchema } from '../data/seoData';
 
 const iconMap: Record<string, React.ElementType> = {
   Layers, Globe, Smartphone, Building2, ShieldCheck, LayoutGrid, Workflow, Wrench
@@ -13,6 +16,15 @@ interface ServicesPageProps {
 export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenInquiry }) => {
   return (
     <div className="pt-36 pb-32 px-6 sm:px-12 lg:px-20 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
+      <SEOHead page={PAGE_SEO.services} />
+      <StructuredData data={SERVICES_SCHEMA} id="services" />
+      <StructuredData
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Services', path: '/services' },
+        ])}
+        id="breadcrumb"
+      />
       <div className="mx-auto max-w-[1360px] space-y-16">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#4F6B85] mb-4">Our Core Offerings</p>

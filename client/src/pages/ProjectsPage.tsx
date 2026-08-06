@@ -1,6 +1,9 @@
 import React from 'react';
 import { FEATURED_PRODUCTS_DATA } from '../data/contentData';
 import { ArrowUpRight, Check } from 'lucide-react';
+import { SEOHead } from '../components/SEOHead';
+import { StructuredData } from '../components/StructuredData';
+import { PAGE_SEO, buildBreadcrumbSchema } from '../data/seoData';
 
 interface ProjectsPageProps {
   onOpenInquiry: () => void;
@@ -9,6 +12,14 @@ interface ProjectsPageProps {
 export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenInquiry }) => {
   return (
     <div className="pt-36 pb-32 px-6 sm:px-12 lg:px-20 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
+      <SEOHead page={PAGE_SEO.projects} />
+      <StructuredData
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Products', path: '/projects' },
+        ])}
+        id="breadcrumb"
+      />
       <div className="mx-auto max-w-[1360px] space-y-16">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#4F6B85] mb-4">In-House Products</p>

@@ -1,8 +1,19 @@
 import React from 'react';
+import { SEOHead } from '../components/SEOHead';
+import { StructuredData } from '../components/StructuredData';
+import { PAGE_SEO, buildBreadcrumbSchema } from '../data/seoData';
 
 export const AboutPage: React.FC = () => {
   return (
     <div className="pt-36 pb-32 px-6 sm:px-12 lg:px-20 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
+      <SEOHead page={PAGE_SEO.about} />
+      <StructuredData
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'About', path: '/about' },
+        ])}
+        id="breadcrumb"
+      />
       <div className="mx-auto max-w-[1360px] space-y-28">
         
         {/* About Hero */}

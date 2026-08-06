@@ -80,9 +80,9 @@ export const Footer: React.FC = () => {
         <div className="mt-10 flex flex-col gap-5 text-[11px] text-[#777777] sm:flex-row sm:items-center sm:justify-between font-mono">
           <p>© 2026 Orillusive. All rights reserved.</p>
           <div className="flex gap-8">
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-[#F7F7F5] transition-colors">GitHub</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-[#F7F7F5] transition-colors">LinkedIn</a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-[#F7F7F5] transition-colors">X / Twitter</a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on GitHub" className="hover:text-[#F7F7F5] transition-colors">GitHub</a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on LinkedIn" className="hover:text-[#F7F7F5] transition-colors">LinkedIn</a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on X / Twitter" className="hover:text-[#F7F7F5] transition-colors">X / Twitter</a>
           </div>
         </div>
 
