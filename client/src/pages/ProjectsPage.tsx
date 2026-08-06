@@ -70,10 +70,10 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenInquiry }) => 
                 <span className="text-xs font-bold text-[#111111]">Orillusive Engineering Studio</span>
                 <button
                   onClick={onOpenInquiry}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#4F6B85] hover:underline"
+                  className="inline-flex items-center gap-2 px-4.5 py-2 rounded-full bg-[#4F6B85]/10 text-[#4F6B85] hover:bg-[#4F6B85] hover:text-white transition-all duration-300 font-bold uppercase tracking-wider text-[11px] hover:scale-105 active:scale-95 shadow-2xs hover:shadow-md group/btn"
                 >
                   <span>Inquire about access</span>
-                  <ArrowUpRight className="size-4" />
+                  <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                 </button>
               </div>
             </div>

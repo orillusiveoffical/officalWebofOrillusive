@@ -103,7 +103,7 @@ export const ContactPage: React.FC = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Alex Mercer"
-                  className="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:outline-none text-xs text-[#111111] placeholder:text-[#999999]"
+                  className="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:ring-2 focus:ring-[#4F6B85]/20 focus:outline-none text-xs text-[#111111] placeholder:text-[#999999] transition-all"
                 />
               </div>
 
@@ -115,7 +115,7 @@ export const ContactPage: React.FC = () => {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="alex@company.com"
-                  className="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:outline-none text-xs text-[#111111] placeholder:text-[#999999]"
+                  className="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:ring-2 focus:ring-[#4F6B85]/20 focus:outline-none text-xs text-[#111111] placeholder:text-[#999999] transition-all"
                 />
               </div>
 
@@ -124,7 +124,7 @@ export const ContactPage: React.FC = () => {
                 <select
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:outline-none text-xs text-[#111111]"
+                  className="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:ring-2 focus:ring-[#4F6B85]/20 focus:outline-none text-xs text-[#111111] transition-all"
                 >
                   {SERVICES_DATA.map((s) => (
                     <option key={s.id} value={s.title}>{s.title}</option>
@@ -140,14 +140,14 @@ export const ContactPage: React.FC = () => {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="Tell us about your product goals, timeline, or engineering challenges..."
-                  className="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:outline-none text-xs text-[#111111] placeholder:text-[#999999] resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:ring-2 focus:ring-[#4F6B85]/20 focus:outline-none text-xs text-[#111111] placeholder:text-[#999999] resize-none transition-all"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 bg-[#111111] text-[#F7F7F5] font-bold text-xs rounded-full hover:bg-[#2C1E16] transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 uppercase tracking-wider"
+                className="btn-sheen group w-full py-4 bg-[#111111] text-[#F7F7F5] font-bold text-xs rounded-full hover:bg-[#2C1E16] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2.5 disabled:opacity-50 uppercase tracking-wider shadow-md hover:shadow-lg"
               >
                 {loading ? (
                   <>
@@ -157,7 +157,7 @@ export const ContactPage: React.FC = () => {
                 ) : (
                   <>
                     <span>Book Discovery Call</span>
-                    <ArrowRight className="size-4" />
+                    <ArrowRight className="size-4 text-[#C9A84C] transition-transform duration-300 group-hover:translate-x-1" />
                   </>
                 )}
               </button>

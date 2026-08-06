@@ -54,17 +54,17 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenInquiry }) => 
           })}
         </div>
 
-        <div className="bg-[#111111] text-[#F7F7F5] rounded-3xl p-10 sm:p-14 flex flex-col md:flex-row items-center justify-between gap-8 shadow-lg">
-          <div className="space-y-2">
+        <div className="bg-[#111111] text-[#F7F7F5] rounded-3xl p-10 sm:p-14 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl border border-white/10 relative overflow-hidden">
+          <div className="space-y-2 z-10">
             <h3 className="text-2xl sm:text-3xl font-bold font-sans text-white">Need a custom software platform?</h3>
             <p className="text-xs sm:text-sm text-white/70">Book a discovery session directly with our senior architecture team.</p>
           </div>
           <button 
             onClick={onOpenInquiry} 
-            className="inline-flex min-h-13 items-center gap-3 rounded-full bg-white px-8 text-xs font-bold text-[#111111] shrink-0 hover:bg-[#F7F7F5] transition-colors uppercase tracking-wider"
+            className="btn-sheen group inline-flex min-h-13 items-center gap-3 rounded-full bg-white px-8 text-xs font-bold text-[#111111] shrink-0 hover:bg-[#F7F7F5] hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 uppercase tracking-wider shadow-lg hover:shadow-2xl hover:shadow-white/20 z-10"
           >
             <span>Book a Discovery Call</span>
-            <ArrowRight className="size-4 text-[#4F6B85]" />
+            <ArrowRight className="size-4 text-[#4F6B85] transition-transform duration-300 group-hover:translate-x-1" />
           </button>
         </div>
 

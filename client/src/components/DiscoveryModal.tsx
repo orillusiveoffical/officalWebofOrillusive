@@ -79,7 +79,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
             <button
               onClick={onClose}
               aria-label="Close modal"
-              className="p-1.5 rounded-full border border-black/10 text-[#555555] hover:text-[#111111] transition-colors"
+              className="p-2 rounded-full border border-black/10 text-[#555555] hover:text-[#111111] hover:bg-[#F7F7F5] hover:scale-105 active:scale-95 transition-all"
             >
               <X className="size-4" />
             </button>
@@ -98,7 +98,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
               </p>
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 bg-[#111111] text-[#F7F7F5] text-xs font-bold rounded-full hover:bg-[#2C1E16] transition-colors"
+                className="px-6 py-3 bg-[#111111] text-[#F7F7F5] text-xs font-bold rounded-full hover:bg-[#2C1E16] hover:scale-105 active:scale-95 transition-all duration-300 shadow-md"
               >
                 Close Window
               </button>
@@ -120,7 +120,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Alex Mercer"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:outline-none text-xs text-[#111111] placeholder:text-[#999999]"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:ring-2 focus:ring-[#4F6B85]/20 focus:outline-none text-xs text-[#111111] placeholder:text-[#999999] transition-all"
                 />
               </div>
 
@@ -132,7 +132,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="alex@company.com"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:outline-none text-xs text-[#111111] placeholder:text-[#999999]"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:ring-2 focus:ring-[#4F6B85]/20 focus:outline-none text-xs text-[#111111] placeholder:text-[#999999] transition-all"
                 />
               </div>
 
@@ -141,7 +141,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
                 <select
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:outline-none text-xs text-[#111111]"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:ring-2 focus:ring-[#4F6B85]/20 focus:outline-none text-xs text-[#111111] transition-all"
                 >
                   {SERVICES_DATA.map((s) => (
                     <option key={s.id} value={s.title}>{s.title}</option>
@@ -157,14 +157,14 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="Describe your software objectives, technical scope, or business timeline..."
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:outline-none text-xs text-[#111111] placeholder:text-[#999999] resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:ring-2 focus:ring-[#4F6B85]/20 focus:outline-none text-xs text-[#111111] placeholder:text-[#999999] resize-none transition-all"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 bg-[#111111] text-[#F7F7F5] font-bold text-xs rounded-full hover:bg-[#2C1E16] transition-colors flex items-center justify-center space-x-2 disabled:opacity-50"
+                className="btn-sheen group w-full py-3.5 bg-[#111111] text-[#F7F7F5] font-bold text-xs rounded-full hover:bg-[#2C1E16] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 uppercase tracking-wider shadow-md hover:shadow-lg"
               >
                 {loading ? (
                   <>
@@ -174,7 +174,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
                 ) : (
                   <>
                     <span>Book Discovery Call</span>
-                    <ArrowRight className="size-4" />
+                    <ArrowRight className="size-4 text-[#C9A84C] transition-transform duration-300 group-hover:translate-x-1" />
                   </>
                 )}
               </button>

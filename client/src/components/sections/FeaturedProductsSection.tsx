@@ -84,10 +84,10 @@ export const FeaturedProductsSection: React.FC<FeaturedProductsSectionProps> = (
                 <button 
                   onClick={onOpenInquiry}
                   aria-label={`Inquire about access to ${product.title}`}
-                  className="inline-flex items-center gap-1.5 text-[#4F6B85] hover:underline focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
+                  className="inline-flex items-center gap-2 px-4.5 py-2 rounded-full bg-[#4F6B85]/10 text-[#4F6B85] hover:bg-[#4F6B85] hover:text-white transition-all duration-300 font-bold uppercase tracking-wider text-[11px] hover:scale-105 active:scale-95 shadow-2xs hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none group/btn"
                 >
                   <span>Inquire Access</span>
-                  <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true" />
+                  <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" aria-hidden="true" />
                 </button>
               </div>
             </motion.article>

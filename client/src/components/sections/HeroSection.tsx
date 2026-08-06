@@ -63,19 +63,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInquiry }) => {
             <button
               onClick={onOpenInquiry}
               aria-label="Start your project with Orillusive"
-              className="group inline-flex min-h-14 items-center justify-center gap-3.5 rounded-full bg-[#111111] px-9 text-xs font-bold uppercase tracking-wider text-[#F7F7F5] transition-all hover:bg-[#2C1E16] shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
+              className="btn-sheen group inline-flex min-h-14 items-center justify-center gap-3.5 rounded-full bg-[#111111] px-9 text-xs font-bold uppercase tracking-wider text-[#F7F7F5] transition-all duration-300 hover:bg-[#2C1E16] hover:scale-[1.03] active:scale-[0.97] shadow-md hover:shadow-xl hover:shadow-black/25 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
             >
               <span>Start Your Project</span>
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1 text-[#C9A84C]" aria-hidden="true" />
             </button>
 
             <a
               href="#products"
               aria-label="View featured products under development"
-              className="inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-white border border-black/10 px-9 text-xs font-bold uppercase tracking-wider text-[#111111] transition-all hover:border-black/30 hover:bg-[#F0F0EC] shadow-xs focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
+              className="inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-white border border-black/10 px-9 text-xs font-bold uppercase tracking-wider text-[#111111] transition-all duration-300 hover:border-[#4F6B85]/40 hover:bg-[#F0F0EC] hover:scale-[1.03] active:scale-[0.97] shadow-xs hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
             >
               <span>View Products</span>
-              <ArrowUpRight className="size-4 text-[#4F6B85]" aria-hidden="true" />
+              <ArrowUpRight className="size-4 text-[#4F6B85] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
             </a>
           </motion.div>
         </div>
@@ -87,25 +87,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInquiry }) => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative mx-auto w-full max-w-lg lg:max-w-none"
         >
-          <div className="relative rounded-3xl bg-white border border-black/10 p-8 sm:p-10 shadow-xl space-y-7">
+          <div className="relative rounded-3xl bg-white border border-black/10 p-8 sm:p-10 shadow-xl hover:shadow-2xl transition-all duration-500 space-y-7">
             
             {/* Header Bar */}
             <div className="flex items-center justify-between pb-6 border-b border-black/5">
               <div className="flex items-center space-x-2">
-                <div className="size-3 rounded-full bg-[#111111]/20" aria-hidden="true" />
-                <div className="size-3 rounded-full bg-[#111111]/20" aria-hidden="true" />
-                <div className="size-3 rounded-full bg-[#111111]/20" aria-hidden="true" />
+                <div className="size-3 rounded-full bg-[#FF5F56]/80" aria-hidden="true" />
+                <div className="size-3 rounded-full bg-[#FFBD2E]/80" aria-hidden="true" />
+                <div className="size-3 rounded-full bg-[#27C93F]/80" aria-hidden="true" />
                 <span className="ml-3 text-[10px] font-mono text-[#888888] tracking-wider hidden sm:inline">orillusive-suite // v2.4</span>
               </div>
 
               {/* Interactive Mockup Switcher */}
-              <div className="flex rounded-full bg-[#F7F7F5] p-1 border border-black/5 text-[10px] font-bold" role="tablist" aria-label="Software Preview Tabs">
+              <div className="flex rounded-full bg-[#F7F7F5] p-1 border border-black/5 text-[10px] font-bold shadow-inner" role="tablist" aria-label="Software Preview Tabs">
                 <button
                   role="tab"
                   aria-selected={heroActiveTab === 'hotel'}
                   onClick={() => setHeroActiveTab('hotel')}
-                  className={`px-4 py-1.5 rounded-full transition-all focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none ${
-                    heroActiveTab === 'hotel' ? 'bg-[#111111] text-[#F7F7F5]' : 'text-[#777777] hover:text-[#111111]'
+                  className={`px-4 py-1.5 rounded-full transition-all duration-300 active:scale-95 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none ${
+                    heroActiveTab === 'hotel' ? 'bg-[#111111] text-[#F7F7F5] shadow-xs' : 'text-[#777777] hover:text-[#111111]'
                   }`}
                 >
                   Hospitality Engine
@@ -114,8 +114,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInquiry }) => {
                   role="tab"
                   aria-selected={heroActiveTab === 'mobile'}
                   onClick={() => setHeroActiveTab('mobile')}
-                  className={`px-4 py-1.5 rounded-full transition-all focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none ${
-                    heroActiveTab === 'mobile' ? 'bg-[#111111] text-[#F7F7F5]' : 'text-[#777777] hover:text-[#111111]'
+                  className={`px-4 py-1.5 rounded-full transition-all duration-300 active:scale-95 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none ${
+                    heroActiveTab === 'mobile' ? 'bg-[#111111] text-[#F7F7F5] shadow-xs' : 'text-[#777777] hover:text-[#111111]'
                   }`}
                 >
                   Mobile Suite

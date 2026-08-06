@@ -76,10 +76,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry }) => {
         <div className="hidden items-center gap-4 md:flex">
           <button
             onClick={onOpenInquiry}
-            className="group inline-flex min-h-10 items-center justify-center gap-2.5 rounded-full bg-[#111111] px-6 text-xs font-bold tracking-wider text-[#F7F7F5] transition-all hover:bg-[#2C1E16] hover:shadow-md uppercase"
+            className="btn-sheen group inline-flex min-h-10 items-center justify-center gap-2.5 rounded-full bg-[#111111] px-6 text-xs font-bold tracking-wider text-[#F7F7F5] transition-all duration-300 hover:bg-[#2C1E16] hover:scale-[1.03] active:scale-[0.97] shadow-md hover:shadow-lg hover:shadow-black/20 uppercase"
           >
             <span>Book a Discovery Call</span>
-            <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#C9A84C]" />
           </button>
         </div>
 
@@ -125,10 +125,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry }) => {
                   setMobileMenuOpen(false);
                   onOpenInquiry();
                 }}
-                className="w-full mt-4 min-h-12 items-center justify-center gap-2.5 rounded-full bg-[#111111] px-6 text-xs font-bold text-[#F7F7F5] flex uppercase tracking-wider"
+                className="btn-sheen w-full mt-4 min-h-12 items-center justify-center gap-2.5 rounded-full bg-[#111111] px-6 text-xs font-bold text-[#F7F7F5] flex uppercase tracking-wider transition-all duration-300 hover:bg-[#2C1E16] hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg"
               >
                 <span>Book a Discovery Call</span>
-                <ArrowUpRight className="size-4" />
+                <ArrowUpRight className="size-4 text-[#C9A84C]" />
               </button>
             </div>
           </motion.div>
