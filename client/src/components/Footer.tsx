@@ -6,9 +6,9 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-[#111111] text-[#F7F7F5] px-8 py-24 md:px-14 lg:px-24 font-sans border-t border-white/10">
       <div className="mx-auto max-w-[1400px]">
-        
+
         <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-4 pb-16 border-b border-white/10">
-          
+
           {/* Col 1 — Brand */}
           <div className="space-y-5">
             <Link to="/" className="flex items-center gap-3 group" aria-label="Go to Orillusive homepage">
@@ -51,8 +51,8 @@ export const Footer: React.FC = () => {
               Contact
             </p>
             <div className="space-y-3">
-              <a 
-                href="mailto:hello@orillusive.com" 
+              <a
+                href="mailto:hello@orillusive.com"
                 className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#CCCCCC] hover:text-[#C9A84C] transition-colors font-medium"
               >
                 <span>hello@orillusive.com</span>
@@ -80,8 +80,8 @@ export const Footer: React.FC = () => {
         <div className="mt-10 flex flex-col gap-5 text-[11px] text-[#777777] sm:flex-row sm:items-center sm:justify-between font-mono">
           <p>© 2026 Orillusive. All rights reserved.</p>
           <div className="flex gap-8">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on GitHub" className="hover:text-[#F7F7F5] transition-colors">GitHub</a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on LinkedIn" className="hover:text-[#F7F7F5] transition-colors">LinkedIn</a>
+            <a href="https://github.com" target="_blank" rel="https://github.com/orillusiveoffical" aria-label="Visit Orillusive on GitHub" className="hover:text-[#F7F7F5] transition-colors">GitHub</a>
+            <a href="https://linkedin.com" target="_blank" rel="https://www.linkedin.com/company/orillusive/" aria-label="Visit Orillusive on LinkedIn" className="hover:text-[#F7F7F5] transition-colors">LinkedIn</a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on X / Twitter" className="hover:text-[#F7F7F5] transition-colors">X / Twitter</a>
           </div>
         </div>
