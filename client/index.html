@@ -56,6 +56,76 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
+
+  <!-- Structured Data: ProfessionalService JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Orillusive",
+    "url": "https://orillusive.com",
+    "logo": "https://orillusive.com/logo.jpg",
+    "image": "https://orillusive.com/logo.jpg",
+    "description": "Orillusive is a premium Software Engineering Studio specializing in SaaS development, custom web applications, mobile app development (Flutter), hotel management systems, and enterprise software.",
+    "priceRange": "$$$$",
+    "email": "hello@orillusive.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "Worldwide"
+    },
+    "sameAs": [
+      "https://github.com/orillusive",
+      "https://linkedin.com/company/orillusive",
+      "https://twitter.com/orillusive"
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Software Engineering Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "SaaS Development",
+            "description": "Scalable, cloud-native SaaS platforms designed for modern enterprise growth."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Custom Web Applications",
+            "description": "High-performance React & Node.js web applications engineered for complex workflows."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Mobile App Development",
+            "description": "Native-grade cross-platform mobile apps built with Flutter for iOS and Android."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Hotel Management Systems",
+            "description": "Comprehensive hospitality software platforms for property management, reservations, and analytics."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Enterprise Software Engineering",
+            "description": "Mission-critical backend architectures, API integrations, and cloud infrastructure."
+          }
+        }
+      ]
+    }
+  }
+  </script>
 </head>
 
 <body class="bg-[#F7F7F5] text-[#111111] antialiased selection:bg-[#4F6B85] selection:text-white font-sans">
