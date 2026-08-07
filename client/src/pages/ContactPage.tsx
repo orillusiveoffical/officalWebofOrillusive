@@ -51,7 +51,7 @@ export const ContactPage: React.FC = () => {
         id="breadcrumb"
       />
       <div className="mx-auto max-w-[1360px] grid lg:grid-cols-2 gap-16 items-start">
-        
+
         <div className="space-y-6">
           <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#4F6B85]">Direct Engagement</p>
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-sans font-bold leading-tight text-[#111111]">
@@ -65,8 +65,8 @@ export const ContactPage: React.FC = () => {
           <div className="space-y-4 text-xs font-sans pt-6 border-t border-black/10">
             <div className="flex items-center space-x-3">
               <Mail className="size-4.5 text-[#4F6B85]" />
-              <a href="mailto:hello@orillusive.com" className="font-bold text-[#111111] hover:text-[#4F6B85] transition-colors">
-                hello@orillusive.com
+              <a href="mailto:info@orillusive.com" className="font-bold text-[#111111] hover:text-[#4F6B85] transition-colors">
+                info@orillusive.com
               </a>
             </div>
             <p className="text-[#777777]">Global operations &bull; Response within 24 hours</p>
@@ -87,7 +87,7 @@ export const ContactPage: React.FC = () => {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5 text-xs font-sans">
               <h3 className="text-xl font-bold font-sans text-[#111111] mb-2">Send an Inquiry</h3>
-              
+
               {errorMsg && (
                 <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 flex items-center space-x-2">
                   <AlertCircle className="size-4 shrink-0" />

@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
 
     // Resend Email Dispatch
     const apiKey = process.env.RESEND_API_KEY;
-    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || 'hello@orillusive.com';
+    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || 'info@orillusive.com';
 
     if (apiKey && apiKey !== 're_your_resend_api_key_here') {
       try {

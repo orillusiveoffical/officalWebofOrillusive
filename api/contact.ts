@@ -22,7 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || 'hello@orillusive.com';
+    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || 'info@orillusive.com';
 
     if (!apiKey || apiKey === 're_your_resend_api_key_here') {
       console.warn('[ORILLUSIVE RESEND] RESEND_API_KEY is missing or unconfigured. Processing intake in mock mode.');

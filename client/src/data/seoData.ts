@@ -16,7 +16,7 @@ export const SEO_CONFIG = {
   defaultOgImage: '/logo.jpg',
   locale: 'en_US',
   twitterHandle: '@orillusive',
-  email: 'hello@orillusive.com',
+  email: 'info@orillusive.com',
 } as const;
 
 // ─────────────────────────────────────────────
