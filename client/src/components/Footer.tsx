@@ -52,10 +52,10 @@ export const Footer: React.FC = () => {
             </p>
             <div className="space-y-3">
               <a
-                href="mailto:hello@orillusive.com"
+                href="mailto:info@orillusive.com"
                 className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#CCCCCC] hover:text-[#C9A84C] transition-colors font-medium"
               >
-                <span>hello@orillusive.com</span>
+                <span>info@orillusive.com</span>
                 <ArrowUpRight className="size-3.5" />
               </a>
               <p className="text-xs text-[#888888] leading-relaxed">
