@@ -33,7 +33,7 @@ export const CallToActionSection: React.FC<CallToActionSectionProps> = ({ onOpen
           <button
             onClick={onOpenInquiry}
             aria-label="Book a discovery call with Orillusive senior architects"
-            className="btn-sheen group inline-flex min-h-15 items-center justify-center gap-3.5 rounded-full bg-white px-10 text-xs font-bold uppercase tracking-wider text-[#111111] transition-all duration-300 hover:bg-[#F7F7F5] hover:scale-[1.04] active:scale-[0.97] shadow-xl hover:shadow-2xl hover:shadow-white/20 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
+            className="btn-sheen group inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-white px-9 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#111111] transition-all duration-300 hover:bg-[#F7F7F5] hover:scale-[1.03] active:scale-[0.97] shadow-xl hover:shadow-2xl hover:shadow-white/20 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
           >
             <span>Book a Discovery Call</span>
             <ArrowRight className="size-4 text-[#4F6B85] transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />

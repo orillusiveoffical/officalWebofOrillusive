@@ -1,9 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import { requestLogger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import contactRouter from './routes/contact.js';
 import newsletterRouter from './routes/newsletter.js';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;

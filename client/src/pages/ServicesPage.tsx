@@ -61,7 +61,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenInquiry }) => 
           </div>
           <button 
             onClick={onOpenInquiry} 
-            className="btn-sheen group inline-flex min-h-13 items-center gap-3 rounded-full bg-white px-8 text-xs font-bold text-[#111111] shrink-0 hover:bg-[#F7F7F5] hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 uppercase tracking-wider shadow-lg hover:shadow-2xl hover:shadow-white/20 z-10"
+            className="btn-sheen group inline-flex min-h-13 items-center justify-center gap-3 rounded-full bg-white px-8 py-3.5 text-xs font-bold text-[#111111] shrink-0 hover:bg-[#F7F7F5] hover:scale-[1.03] active:scale-[0.97] transition-all duration-300 uppercase tracking-wider shadow-lg hover:shadow-2xl hover:shadow-white/20 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none z-10"
           >
             <span>Book a Discovery Call</span>
             <ArrowRight className="size-4 text-[#4F6B85] transition-transform duration-300 group-hover:translate-x-1" />

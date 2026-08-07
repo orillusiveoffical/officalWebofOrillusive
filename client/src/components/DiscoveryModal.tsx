@@ -36,10 +36,10 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
       if (res.ok && data.success) {
         setSubmitted(true);
       } else {
-        setErrorMsg(data.error || 'Failed to submit inquiry.');
+        setErrorMsg(data.error || 'Failed to submit inquiry. Please check your information and try again.');
       }
     } catch (err) {
-      setTimeout(() => setSubmitted(true), 700);
+      setErrorMsg(err instanceof Error ? err.message : 'Network error. Unable to reach server. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -164,7 +164,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-sheen group w-full py-3.5 bg-[#111111] text-[#F7F7F5] font-bold text-xs rounded-full hover:bg-[#2C1E16] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 uppercase tracking-wider shadow-md hover:shadow-lg"
+                className="btn-sheen group w-full min-h-12 py-3.5 bg-[#111111] text-[#F7F7F5] font-bold text-xs rounded-full hover:bg-[#2C1E16] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 inline-flex items-center justify-center gap-2.5 disabled:opacity-50 uppercase tracking-wider shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
               >
                 {loading ? (
                   <>
@@ -173,7 +173,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
                   </>
                 ) : (
                   <>
-                    <span>Book Discovery Call</span>
+                    <span>Book a Discovery Call</span>
                     <ArrowRight className="size-4 text-[#C9A84C] transition-transform duration-300 group-hover:translate-x-1" />
                   </>
                 )}

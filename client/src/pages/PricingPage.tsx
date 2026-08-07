@@ -62,9 +62,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onOpenInquiry }) => {
               </div>
               <button
                 onClick={onOpenInquiry}
-                className="btn-sheen group/btn w-full py-4 bg-[#111111] text-[#F7F7F5] font-bold text-xs rounded-full hover:bg-[#2C1E16] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2.5 uppercase tracking-wider shadow-md hover:shadow-xl hover:shadow-black/20"
+                className="btn-sheen group/btn w-full min-h-12 py-3.5 bg-[#111111] text-[#F7F7F5] font-bold text-xs rounded-full hover:bg-[#2C1E16] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 inline-flex items-center justify-center gap-2.5 uppercase tracking-wider shadow-md hover:shadow-xl hover:shadow-black/20 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
               >
-                <span>Book Discovery Call</span>
+                <span>Book a Discovery Call</span>
                 <ArrowRight className="size-4 text-[#C9A84C] transition-transform duration-300 group-hover/btn:translate-x-1" />
               </button>
             </div>
