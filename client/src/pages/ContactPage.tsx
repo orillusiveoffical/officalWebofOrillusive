@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, Mail, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import { SERVICES_DATA } from '../data/contentData';
 import { SEOHead } from '../components/SEOHead';
 import { StructuredData } from '../components/StructuredData';
 import { PAGE_SEO, buildBreadcrumbSchema } from '../data/seoData';
+import { useAuth } from '../context/AuthContext';
 
 export const ContactPage: React.FC = () => {
+  const { user, token, fetchMyBookings } = useAuth();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     service: SERVICES_DATA[0].title,
     message: ''
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: prev.name || user.name,
+        email: prev.email || user.email
+      }));
+    }
+  }, [user]);
+
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -22,14 +36,24 @@ export const ContactPage: React.FC = () => {
     setErrorMsg(null);
 
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(formData)
       });
       const data = await res.json();
       if (res.ok && data.success) {
         setSubmitted(true);
+        if (token) {
+          fetchMyBookings();
+        }
       } else {
         setErrorMsg(data.error || 'Failed to submit contact inquiry. Please try again.');
       }

@@ -1,14 +1,18 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import { Resend } from 'resend';
+import { connectToDatabase } from '../db/mongodb.js';
+import Booking from '../models/Booking.js';
 import { saveInquiry } from '../db/persistence.js';
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
 router.post('/', async (req, res) => {
   try {
     const { name, email, message, service } = req.body || {};
 
-    // Server-side validation
+    // Validation
     if (!name || typeof name !== 'string' || name.trim() === '') {
       return res.status(400).json({ success: false, error: 'Full name is required.' });
     }
@@ -19,16 +23,43 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Project brief or message is required.' });
     }
 
-    // Save inquiry to persistence store
-    const inquiry = saveInquiry({
-      name: name.trim(),
-      email: email.trim(),
-      message: message.trim(),
-      service: service || 'General'
-    });
-    console.log(`[ORILLUSIVE INTAKE] Saved new contact from ${email}`);
+    // Extract user token if present
+    let userId = null;
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, JWT_SECRET);
+        userId = decoded.userId;
+      } catch (tokenErr) {
+        // Token invalid or expired, continue as guest
+      }
+    }
 
-    // Resend Email Dispatch
+    let savedBooking = null;
+    const dbConn = await connectToDatabase();
+
+    if (dbConn) {
+      savedBooking = await Booking.create({
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        service: service || 'General Software Consultation',
+        message: message.trim(),
+        userId
+      });
+      console.log(`⚡ [ORILLUSIVE MONGO ATLAS] Saved booking call to MongoDB Atlas from ${email}`);
+    } else {
+      // Fallback JSON persistence
+      savedBooking = saveInquiry({
+        name: name.trim(),
+        email: email.trim(),
+        message: message.trim(),
+        service: service || 'General'
+      });
+      console.log(`ℹ️ [ORILLUSIVE INTAKE] Saved contact to local persistence from ${email}`);
+    }
+
+    // Optional Resend email dispatch
     const apiKey = process.env.RESEND_API_KEY;
     const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || 'info@orillusive.com';
 
@@ -57,7 +88,7 @@ router.post('/', async (req, res) => {
             <div class="card">
               <div class="header">
                 <div class="subtitle">Orillusive Studio Intake</div>
-                <h1 class="title">New Discovery Inquiry</h1>
+                <h1 class="title">New Discovery Call Saved</h1>
               </div>
               <div class="field">
                 <div class="label">Full Name</div>
@@ -72,41 +103,36 @@ router.post('/', async (req, res) => {
                 <div class="value">${service || 'General Software Consultation'}</div>
               </div>
               <div class="field">
-                <div class="label">Project Brief & Requirements</div>
+                <div class="label">Project Brief</div>
                 <div class="message-box">${message.trim()}</div>
               </div>
               <div class="footer">
-                Sent automatically from Orillusive Engineering Studio platform.
+                Saved in MongoDB Atlas & dispatched automatically from Orillusive Studio platform.
               </div>
             </div>
           </body>
           </html>
         `;
 
-        const { error } = await resend.emails.send({
+        await resend.emails.send({
           from: 'Orillusive Intake <onboarding@resend.dev>',
           to: [receiverEmail],
           replyTo: email.trim(),
-          subject: `[Discovery Call Inquiry] ${name.trim()} — ${service || 'Orillusive Studio'}`,
+          subject: `[Discovery Call Booking] ${name.trim()} — ${service || 'Orillusive Studio'}`,
           html: emailHtml,
         });
-
-        if (error) {
-          console.error('[ORILLUSIVE RESEND ERROR]', error);
-          return res.status(500).json({ success: false, error: error.message || 'Failed to dispatch email via Resend.' });
-        }
       } catch (emailErr) {
-        console.error('[ORILLUSIVE RESEND EXCEPTION]', emailErr);
-        return res.status(500).json({ success: false, error: emailErr?.message || 'Email service error.' });
+        console.error('[ORILLUSIVE EMAIL DISPATCH EXCEPTION]', emailErr);
       }
     }
 
     return res.status(200).json({
       success: true,
-      message: 'Strategy call request received. Senior team will reach out within 24 hours.',
-      inquiryId: inquiry.id
+      message: 'Discovery call request received & saved to database. Our senior team will contact you shortly.',
+      booking: savedBooking
     });
   } catch (error) {
+    console.error('[ORILLUSIVE BOOKING ERROR]', error);
     return res.status(500).json({ success: false, error: 'Failed to record intake submission.' });
   }
 });

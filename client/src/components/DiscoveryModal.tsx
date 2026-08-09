@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle2, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { SERVICES_DATA } from '../data/contentData';
+import { useAuth } from '../context/AuthContext';
 
 interface DiscoveryModalProps {
   isOpen: boolean;
@@ -9,12 +10,24 @@ interface DiscoveryModalProps {
 }
 
 export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose }) => {
+  const { user, token, fetchMyBookings } = useAuth();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     service: SERVICES_DATA[0].title,
     message: ''
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: prev.name || user.name,
+        email: prev.email || user.email
+      }));
+    }
+  }, [user, isOpen]);
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -26,15 +39,25 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
     setErrorMsg(null);
 
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(formData)
       });
 
       const data = await res.json();
       if (res.ok && data.success) {
         setSubmitted(true);
+        if (token) {
+          fetchMyBookings();
+        }
       } else {
         setErrorMsg(data.error || 'Failed to submit inquiry. Please check your information and try again.');
       }
