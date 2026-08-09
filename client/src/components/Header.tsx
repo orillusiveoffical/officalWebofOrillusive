@@ -107,13 +107,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
             <AnimatePresence>
               {activeDropdown === 'about' && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                  initial={{ opacity: 0, y: 12, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.18 }}
-                  className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-72 z-50"
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute left-1/2 -translate-x-1/2 top-full pt-3.5 w-84 z-50 font-sans"
                 >
-                  <div className="rounded-2xl bg-white/95 backdrop-blur-2xl border border-black/10 p-2.5 shadow-2xl space-y-1">
+                  <div className="rounded-3xl bg-white/95 backdrop-blur-2xl border border-black/10 p-3 sm:p-4 shadow-2xl shadow-black/10 space-y-1.5 ring-1 ring-black/5">
+                    <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#4F6B85]">
+                      Studio Overview
+                    </div>
                     {aboutSublinks.map((item) => {
                       const IconComp = item.icon;
                       const isSubActive = location.pathname === item.href;
@@ -121,16 +124,24 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
                         <Link
                           key={item.name}
                           to={item.href}
-                          className={`flex items-start gap-3 p-2.5 rounded-xl transition-all ${
-                            isSubActive ? 'bg-[#4F6B85]/10 text-[#4F6B85]' : 'hover:bg-[#F7F7F5] text-[#111111]'
+                          className={`group flex items-start gap-3.5 p-3 rounded-2xl transition-all duration-300 ${
+                            isSubActive 
+                              ? 'bg-[#4F6B85]/10 text-[#4F6B85] border border-[#4F6B85]/20 shadow-xs' 
+                              : 'hover:bg-[#F7F7F5] border border-transparent hover:border-black/5 text-[#111111]'
                           }`}
                         >
-                          <div className={`p-2 rounded-lg shrink-0 mt-0.5 ${isSubActive ? 'bg-[#4F6B85] text-white' : 'bg-black/5 text-[#4F6B85]'}`}>
-                            <IconComp className="size-4" />
+                          <div className={`p-2.5 rounded-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${
+                            isSubActive ? 'bg-[#4F6B85] text-white shadow-xs' : 'bg-[#4F6B85]/10 text-[#4F6B85] group-hover:bg-[#111111] group-hover:text-white'
+                          }`}>
+                            <IconComp className="size-4.5" />
                           </div>
                           <div>
-                            <div className="text-xs font-bold font-sans">{item.name}</div>
-                            <div className="text-[10px] text-[#777777] leading-snug mt-0.5">{item.desc}</div>
+                            <div className="text-xs sm:text-sm font-bold font-sans tracking-tight text-[#111111] group-hover:text-[#4F6B85] transition-colors">
+                              {item.name}
+                            </div>
+                            <div className="text-[11px] text-[#777777] leading-relaxed mt-0.5 font-sans font-normal">
+                              {item.desc}
+                            </div>
                           </div>
                         </Link>
                       );
@@ -160,13 +171,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
             <AnimatePresence>
               {activeDropdown === 'contact' && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                  initial={{ opacity: 0, y: 12, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.18 }}
-                  className="absolute right-0 top-full pt-3 w-80 z-50"
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute right-0 top-full pt-3.5 w-92 z-50 font-sans"
                 >
-                  <div className="rounded-2xl bg-white/95 backdrop-blur-2xl border border-black/10 p-2.5 shadow-2xl space-y-1">
+                  <div className="rounded-3xl bg-white/95 backdrop-blur-2xl border border-black/10 p-3 sm:p-4 shadow-2xl shadow-black/10 space-y-1.5 ring-1 ring-black/5">
+                    <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#4F6B85]">
+                      Engagements & Offerings
+                    </div>
                     {contactSublinks.map((item) => {
                       const IconComp = item.icon;
                       const isSubActive = location.pathname === item.href;
@@ -174,16 +188,24 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
                         <Link
                           key={item.name}
                           to={item.href}
-                          className={`flex items-start gap-3 p-2.5 rounded-xl transition-all ${
-                            isSubActive ? 'bg-[#4F6B85]/10 text-[#4F6B85]' : 'hover:bg-[#F7F7F5] text-[#111111]'
+                          className={`group flex items-start gap-3.5 p-3 rounded-2xl transition-all duration-300 ${
+                            isSubActive 
+                              ? 'bg-[#4F6B85]/10 text-[#4F6B85] border border-[#4F6B85]/20 shadow-xs' 
+                              : 'hover:bg-[#F7F7F5] border border-transparent hover:border-black/5 text-[#111111]'
                           }`}
                         >
-                          <div className={`p-2 rounded-lg shrink-0 mt-0.5 ${isSubActive ? 'bg-[#4F6B85] text-white' : 'bg-black/5 text-[#4F6B85]'}`}>
-                            <IconComp className="size-4" />
+                          <div className={`p-2.5 rounded-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${
+                            isSubActive ? 'bg-[#4F6B85] text-white shadow-xs' : 'bg-[#4F6B85]/10 text-[#4F6B85] group-hover:bg-[#111111] group-hover:text-white'
+                          }`}>
+                            <IconComp className="size-4.5" />
                           </div>
                           <div>
-                            <div className="text-xs font-bold font-sans">{item.name}</div>
-                            <div className="text-[10px] text-[#777777] leading-snug mt-0.5">{item.desc}</div>
+                            <div className="text-xs sm:text-sm font-bold font-sans tracking-tight text-[#111111] group-hover:text-[#4F6B85] transition-colors">
+                              {item.name}
+                            </div>
+                            <div className="text-[11px] text-[#777777] leading-relaxed mt-0.5 font-sans font-normal">
+                              {item.desc}
+                            </div>
                           </div>
                         </Link>
                       );
@@ -196,15 +218,15 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
         </div>
 
         {/* Action & Auth Buttons */}
-        <div className="hidden items-center gap-3 lg:gap-4 md:flex">
+        <div className="hidden items-center gap-3 lg:gap-4 md:flex font-sans">
           {user ? (
             <div className="flex items-center gap-2">
               <button
                 onClick={onOpenMyBookings}
-                className="px-3.5 py-2 rounded-full bg-[#4F6B85]/10 text-[#4F6B85] hover:bg-[#4F6B85] hover:text-white transition-all text-[11px] font-bold flex items-center gap-1.5"
+                className="btn-sheen group inline-flex min-h-10 lg:min-h-11 items-center justify-center gap-2 rounded-full bg-[#111111] px-4 lg:px-6 text-[11px] lg:text-xs font-bold uppercase tracking-wider text-[#F7F7F5] transition-all duration-300 hover:bg-[#2C1E16] hover:scale-[1.03] active:scale-[0.97] shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
                 title="View saved discovery calls"
               >
-                <Calendar className="size-3.5" />
+                <Calendar className="size-3.5 text-[#C9A84C]" />
                 <span>My Calls ({bookings.length})</span>
               </button>
               <button
@@ -218,20 +240,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
           ) : (
             <button
               onClick={onOpenAuth}
-              className="px-4 py-2 rounded-full border border-black/10 text-[#111111] hover:bg-[#F7F7F5] text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5"
+              className="btn-sheen group inline-flex min-h-10 lg:min-h-11 items-center justify-center gap-2 rounded-full bg-[#111111] px-5 lg:px-6 text-[11px] lg:text-xs font-bold uppercase tracking-wider text-[#F7F7F5] transition-all duration-300 hover:bg-[#2C1E16] hover:scale-[1.03] active:scale-[0.97] shadow-md hover:shadow-lg hover:shadow-black/20 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
             >
-              <LogIn className="size-3.5 text-[#4F6B85]" />
-              <span>Sign In</span>
+              <LogIn className="size-3.5 lg:size-4 text-[#C9A84C] transition-transform duration-300 group-hover:translate-x-0.5" />
+              <span>Sign In / Login</span>
             </button>
           )}
-
-          <button
-            onClick={onOpenInquiry}
-            className="btn-sheen group inline-flex min-h-10 lg:min-h-11 items-center justify-center gap-2 rounded-full bg-[#111111] px-4 lg:px-6 text-[11px] lg:text-xs font-bold uppercase tracking-wider text-[#F7F7F5] transition-all duration-300 hover:bg-[#2C1E16] hover:scale-[1.03] active:scale-[0.97] shadow-md hover:shadow-lg hover:shadow-black/20 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
-          >
-            <span>Book a Discovery Call</span>
-            <ArrowUpRight className="size-3.5 lg:size-4 text-[#C9A84C] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </button>
         </div>
 
         {/* Mobile Button */}
@@ -348,9 +362,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
                     setMobileMenuOpen(false);
                     onOpenMyBookings();
                   }}
-                  className="w-full py-2.5 rounded-full border border-black/10 text-[#111111] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 mt-2"
+                  className="btn-sheen group w-full min-h-12 inline-flex items-center justify-center gap-2.5 rounded-full bg-[#111111] px-6 text-xs font-bold text-[#F7F7F5] uppercase tracking-wider transition-all duration-300 hover:bg-[#2C1E16] active:scale-[0.98] shadow-md mt-2"
                 >
-                  <Calendar className="size-4 text-[#4F6B85]" />
+                  <Calendar className="size-4 text-[#C9A84C]" />
                   <span>My Saved Calls ({bookings.length})</span>
                 </button>
               ) : (
@@ -359,23 +373,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
                     setMobileMenuOpen(false);
                     onOpenAuth();
                   }}
-                  className="w-full py-2.5 rounded-full border border-black/10 text-[#111111] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 mt-2"
+                  className="btn-sheen group w-full min-h-12 inline-flex items-center justify-center gap-2.5 rounded-full bg-[#111111] px-6 text-xs font-bold text-[#F7F7F5] uppercase tracking-wider transition-all duration-300 hover:bg-[#2C1E16] active:scale-[0.98] shadow-md mt-2"
                 >
-                  <LogIn className="size-4 text-[#4F6B85]" />
-                  <span>Sign In / Register</span>
+                  <LogIn className="size-4 text-[#C9A84C]" />
+                  <span>Sign In / Login</span>
                 </button>
               )}
-
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenInquiry();
-                }}
-                className="btn-sheen group w-full min-h-12 inline-flex items-center justify-center gap-2.5 rounded-full bg-[#111111] px-6 text-xs font-bold text-[#F7F7F5] uppercase tracking-wider transition-all duration-300 hover:bg-[#2C1E16] hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
-              >
-                <span>Book a Discovery Call</span>
-                <ArrowUpRight className="size-4 text-[#C9A84C] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </button>
             </div>
           </motion.div>
         )}
