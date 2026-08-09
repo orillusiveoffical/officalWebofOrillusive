@@ -31,7 +31,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onOpenInquiry }) => {
   ];
 
   return (
-    <div className="pt-36 pb-32 px-6 sm:px-12 lg:px-20 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
+    <div className="pt-28 sm:pt-36 pb-20 sm:pb-28 px-4 sm:px-8 lg:px-16 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
       <SEOHead page={PAGE_SEO.pricing} />
       <StructuredData
         data={buildBreadcrumbSchema([
@@ -40,21 +40,21 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onOpenInquiry }) => {
         ])}
         id="breadcrumb"
       />
-      <div className="mx-auto max-w-[1360px] space-y-16">
+      <div className="mx-auto max-w-[1360px] space-y-12 sm:space-y-16">
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#4F6B85] mb-4">Engagements</p>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-sans font-bold text-[#111111] leading-tight mb-6">
+          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#4F6B85] mb-3 sm:mb-4">Engagements</p>
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-sans font-bold text-[#111111] leading-tight mb-4 sm:mb-6">
             Flexible Studio Models <br />
             <span className="text-[#4F6B85]">Shaped Around Business Goals.</span>
           </h1>
-          <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-[#555555]">
+          <p className="max-w-2xl text-sm sm:text-lg leading-relaxed text-[#555555]">
             Clear, outcome-focused engagement models tailored to your product stage, technical complexity, and growth objectives.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3 max-w-6xl">
+        <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl">
           {engagementModels.map((tier) => (
-            <div key={tier.id} className="p-9 rounded-2xl bg-white border border-black/10 shadow-xs flex flex-col justify-between space-y-10">
+            <div key={tier.id} className="p-6 sm:p-8 lg:p-9 rounded-2xl bg-white border border-black/10 shadow-xs flex flex-col justify-between space-y-8 sm:space-y-10">
               <div>
                 <h3 className="text-2xl font-bold font-sans text-[#111111]">{tier.title}</h3>
                 <p className="mt-3 text-xs sm:text-sm leading-relaxed text-[#555555]">{tier.subtitle}</p>

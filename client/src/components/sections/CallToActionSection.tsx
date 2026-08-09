@@ -11,29 +11,29 @@ export const CallToActionSection: React.FC<CallToActionSectionProps> = ({ onOpen
     <section 
       id="contact" 
       aria-label="Call to Action"
-      className="antigravity-dark-bg text-[#F7F7F5] py-36 md:py-52 lg:py-60 px-8 sm:px-14 lg:px-24"
+      className="antigravity-dark-bg text-[#F7F7F5] py-20 sm:py-28 md:py-36 px-4 sm:px-8 lg:px-16"
     >
       <motion.div 
         initial={{ opacity: 0, y: 35 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mx-auto max-w-4xl text-center space-y-10"
+        className="mx-auto max-w-4xl text-center space-y-6 sm:space-y-10"
       >
         <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#4F6B85]">
           Start Your Journey
         </p>
-        <h2 className="font-sans text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white">
+        <h2 className="font-sans text-3xl sm:text-5xl md:text-7xl font-bold tracking-tight text-white">
           Let's Build Something Meaningful.
         </h2>
-        <p className="text-base sm:text-lg md:text-xl leading-relaxed text-white/70 max-w-xl mx-auto font-normal">
+        <p className="text-sm sm:text-lg md:text-xl leading-relaxed text-white/70 max-w-xl mx-auto font-normal">
           Whether you're launching your first product or modernizing an existing business, we're ready to help you build software that lasts.
         </p>
-        <div className="pt-6">
+        <div className="pt-4 sm:pt-6">
           <button
             onClick={onOpenInquiry}
             aria-label="Book a discovery call with Orillusive senior architects"
-            className="btn-sheen group inline-flex min-h-14 items-center justify-center gap-3 rounded-full bg-white px-9 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#111111] transition-all duration-300 hover:bg-[#F7F7F5] hover:scale-[1.03] active:scale-[0.97] shadow-xl hover:shadow-2xl hover:shadow-white/20 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
+            className="btn-sheen group inline-flex min-h-12 sm:min-h-14 items-center justify-center gap-3 rounded-full bg-white px-7 sm:px-9 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#111111] transition-all duration-300 hover:bg-[#F7F7F5] hover:scale-[1.03] active:scale-[0.97] shadow-xl hover:shadow-2xl hover:shadow-white/20 focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
           >
             <span>Book a Discovery Call</span>
             <ArrowRight className="size-4 text-[#4F6B85] transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />

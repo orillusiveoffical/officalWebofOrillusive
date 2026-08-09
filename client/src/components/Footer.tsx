@@ -4,10 +4,10 @@ import { ArrowUpRight } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#111111] text-[#F7F7F5] px-8 py-24 md:px-14 lg:px-24 font-sans border-t border-white/10">
+    <footer className="bg-[#111111] text-[#F7F7F5] px-4 sm:px-8 lg:px-16 py-16 sm:py-20 md:py-24 font-sans border-t border-white/10">
       <div className="mx-auto max-w-[1400px]">
 
-        <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-4 pb-16 border-b border-white/10">
+        <div className="grid gap-10 sm:gap-14 md:grid-cols-2 lg:grid-cols-4 pb-12 sm:pb-16 border-b border-white/10">
 
           {/* Col 1 — Brand */}
           <div className="space-y-5">

@@ -65,7 +65,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-lg rounded-2xl border border-black/10 bg-white text-[#111111] p-6 sm:p-8 shadow-2xl z-10 font-sans"
+          className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto my-auto rounded-2xl border border-black/10 bg-white text-[#111111] p-5 sm:p-8 shadow-2xl z-10 font-sans"
         >
           <div className="flex items-center justify-between pb-4 border-b border-black/10 mb-6">
             <div>

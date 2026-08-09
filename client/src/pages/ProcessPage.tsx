@@ -6,7 +6,7 @@ import { PAGE_SEO, buildBreadcrumbSchema } from '../data/seoData';
 
 export const ProcessPage: React.FC = () => {
   return (
-    <div className="pt-36 pb-32 px-6 sm:px-12 lg:px-20 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
+    <div className="pt-28 sm:pt-36 pb-20 sm:pb-28 px-4 sm:px-8 lg:px-16 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
       <SEOHead page={PAGE_SEO.process} />
       <StructuredData
         data={buildBreadcrumbSchema([
@@ -15,19 +15,19 @@ export const ProcessPage: React.FC = () => {
         ])}
         id="breadcrumb"
       />
-      <div className="mx-auto max-w-[1360px] space-y-16">
+      <div className="mx-auto max-w-[1360px] space-y-12 sm:space-y-16">
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#4F6B85] mb-4">Development Methodology</p>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-sans font-bold text-[#111111] leading-tight mb-6">
+          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#4F6B85] mb-3 sm:mb-4">Development Methodology</p>
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-sans font-bold text-[#111111] leading-tight mb-4 sm:mb-6">
             Engineering Process <br />
             <span className="text-[#4F6B85]">From Discovery to Long-Term Growth.</span>
           </h1>
-          <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-[#555555]">
+          <p className="max-w-2xl text-sm sm:text-lg leading-relaxed text-[#555555]">
             A methodical 7-step engineering roadmap designed to take software products from initial discovery to high-scale production and continuous evolution.
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {PROCESS_STEPS.map((s) => (
             <div key={s.step} className="p-8 rounded-2xl bg-white border border-black/10 shadow-xs flex flex-col justify-between min-h-[230px]">
               <span className="text-2xl font-bold font-mono text-[#4F6B85]">{s.step}</span>

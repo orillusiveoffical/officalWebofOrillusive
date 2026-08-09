@@ -41,7 +41,7 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="pt-36 pb-32 px-6 sm:px-12 lg:px-20 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
+    <div className="pt-28 sm:pt-36 pb-20 sm:pb-28 px-4 sm:px-8 lg:px-16 bg-[#F7F7F5] text-[#111111] min-h-screen font-sans">
       <SEOHead page={PAGE_SEO.contact} />
       <StructuredData
         data={buildBreadcrumbSchema([
@@ -50,15 +50,15 @@ export const ContactPage: React.FC = () => {
         ])}
         id="breadcrumb"
       />
-      <div className="mx-auto max-w-[1360px] grid lg:grid-cols-2 gap-16 items-start">
+      <div className="mx-auto max-w-[1360px] grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#4F6B85]">Direct Engagement</p>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-sans font-bold leading-tight text-[#111111]">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-sans font-bold leading-tight text-[#111111]">
             Let's Build Something <br />
             <span className="text-[#4F6B85]">Meaningful & Scalable.</span>
           </h1>
-          <p className="text-base sm:text-lg text-[#555555] leading-relaxed">
+          <p className="text-sm sm:text-lg text-[#555555] leading-relaxed">
             Whether you're starting a new custom product or modernizing existing enterprise software, our studio is ready to consult and build.
           </p>
 
@@ -73,7 +73,7 @@ export const ContactPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-black/10 rounded-3xl p-8 sm:p-10 shadow-xs">
+        <div className="bg-white border border-black/10 rounded-3xl p-6 sm:p-10 shadow-xs">
           {submitted ? (
             <div className="text-center py-12 space-y-4">
               <div className="size-14 rounded-full bg-[#4F6B85]/10 border border-[#4F6B85]/30 flex items-center justify-center mx-auto text-[#4F6B85]">
