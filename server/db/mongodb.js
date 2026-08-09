@@ -10,8 +10,13 @@ export async function connectToDatabase() {
 
   const mongoUri = process.env.MONGODB_URI;
 
-  if (!mongoUri || mongoUri === 'mongodb+srv://your_atlas_connection_string') {
-    console.warn('⚠️ [ORILLUSIVE MONGO] MONGODB_URI is unconfigured in environment variables.');
+  if (
+    !mongoUri ||
+    mongoUri === 'mongodb+srv://your_atlas_connection_string' ||
+    mongoUri.includes('<db_username>') ||
+    mongoUri.includes('<db_password>')
+  ) {
+    console.warn('⚠️ [ORILLUSIVE MONGO] MONGODB_URI contains unreplaced placeholders (<db_username> / <db_password>).');
     // Try local fallback
     const fallbackUri = 'mongodb://127.0.0.1:27017/orillusive';
     try {
