@@ -37,18 +37,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const conn = await connectToDatabase();
-    let savedBooking = null;
-
-    if (conn) {
-      savedBooking = await Booking.create({
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        service: service || 'General Software Consultation',
-        message: message.trim(),
-        userId
-      });
-      console.log(`[ORILLUSIVE VERCEL MONGO ATLAS] Saved booking from ${email}`);
+    if (!conn) {
+      return res.status(500).json({ success: false, error: 'Database connection failed. Unable to record booking.' });
     }
+
+    const savedBooking = await Booking.create({
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      service: service || 'General Software Consultation',
+      message: message.trim(),
+      userId
+    });
+    console.log(`[ORILLUSIVE VERCEL MONGO ATLAS] Saved booking from ${email}`);
 
     const apiKey = process.env.RESEND_API_KEY;
     const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || 'info@orillusive.com';

@@ -3,12 +3,15 @@ import mongoose from 'mongoose';
 let cachedConn: typeof mongoose | null = null;
 let cachedPromise: Promise<typeof mongoose> | null = null;
 
+const DEFAULT_MONGODB_URI =
+  'mongodb+srv://orillusiveoffical_db_user:Minhajkhan12@orillusivewebdata.n6qw5tw.mongodb.net/orillusive?retryWrites=true&w=majority';
+
 export async function connectToDatabase() {
-  if (cachedConn) {
+  if (cachedConn && mongoose.connection.readyState === 1) {
     return cachedConn;
   }
 
-  const mongoUri = process.env.MONGODB_URI;
+  let mongoUri = process.env.MONGODB_URI;
 
   if (
     !mongoUri ||
@@ -16,18 +19,18 @@ export async function connectToDatabase() {
     mongoUri.includes('<db_username>') ||
     mongoUri.includes('<db_password>')
   ) {
-    console.warn('[ORILLUSIVE VERCEL MONGO] MONGODB_URI contains unreplaced placeholders (<db_username> / <db_password>).');
-    return null;
+    mongoUri = DEFAULT_MONGODB_URI;
   }
 
   if (!cachedPromise) {
-    cachedPromise = mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 5000,
-      bufferCommands: false,
-    }).then((m) => {
-      console.log('[ORILLUSIVE VERCEL MONGO ATLAS] Connected to MongoDB Atlas');
-      return m;
-    });
+    cachedPromise = mongoose
+      .connect(mongoUri, {
+        serverSelectionTimeoutMS: 8000
+      })
+      .then((m) => {
+        console.log('[ORILLUSIVE VERCEL MONGO ATLAS] Connected to MongoDB Atlas');
+        return m;
+      });
   }
 
   try {
@@ -39,3 +42,4 @@ export async function connectToDatabase() {
     return null;
   }
 }
+

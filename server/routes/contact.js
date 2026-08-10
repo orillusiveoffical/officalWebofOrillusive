@@ -36,28 +36,19 @@ router.post('/', async (req, res) => {
       }
     }
 
-    let savedBooking = null;
     const dbConn = await connectToDatabase();
-
-    if (dbConn) {
-      savedBooking = await Booking.create({
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        service: service || 'General Software Consultation',
-        message: message.trim(),
-        userId
-      });
-      console.log(`⚡ [ORILLUSIVE MONGO ATLAS] Saved booking call to MongoDB Atlas from ${email}`);
-    } else {
-      // Fallback JSON persistence
-      savedBooking = saveInquiry({
-        name: name.trim(),
-        email: email.trim(),
-        message: message.trim(),
-        service: service || 'General'
-      });
-      console.log(`ℹ️ [ORILLUSIVE INTAKE] Saved contact to local persistence from ${email}`);
+    if (!dbConn) {
+      return res.status(500).json({ success: false, error: 'Database connection failed. Unable to record booking.' });
     }
+
+    const savedBooking = await Booking.create({
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      service: service || 'General Software Consultation',
+      message: message.trim(),
+      userId
+    });
+    console.log(`⚡ [ORILLUSIVE MONGO ATLAS] Saved booking call to MongoDB Atlas from ${email}`);
 
     // Optional Resend email dispatch
     const apiKey = process.env.RESEND_API_KEY;
