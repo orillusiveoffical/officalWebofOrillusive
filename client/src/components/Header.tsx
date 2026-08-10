@@ -66,14 +66,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
           <span className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.22em] font-sans text-[#111111]">
             ORILLUSIVE<span className="text-[#4F6B85]">.</span>
           </span>
-        </Link>
-
-        {/* Desktop Links with Dropdowns */}
-        <div className="hidden items-center gap-4 lg:gap-8 md:flex font-sans">
+        </Link>        {/* Desktop Links with Dropdowns */}
+        <div className="hidden items-center gap-2 lg:gap-6 md:flex font-sans">
           <Link
             to="/"
-            className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-colors ${
-              location.pathname === '/' ? 'text-[#4F6B85]' : 'text-[#555555] hover:text-[#111111]'
+            className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-all duration-200 px-3 py-1.5 rounded-full ${
+              location.pathname === '/' ? 'text-[#4F6B85] bg-[#4F6B85]/10' : 'text-[#555555] hover:text-[#111111] hover:bg-black/5'
             }`}
           >
             Home
@@ -81,8 +79,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
 
           <Link
             to="/projects"
-            className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-colors ${
-              location.pathname === '/projects' ? 'text-[#4F6B85]' : 'text-[#555555] hover:text-[#111111]'
+            className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-all duration-200 px-3 py-1.5 rounded-full ${
+              location.pathname === '/projects' ? 'text-[#4F6B85] bg-[#4F6B85]/10' : 'text-[#555555] hover:text-[#111111] hover:bg-black/5'
             }`}
           >
             Products
@@ -96,8 +94,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
           >
             <button
               onClick={() => setActiveDropdown(activeDropdown === 'about' ? null : 'about')}
-              className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-colors flex items-center gap-1 py-1 ${
-                ['/about', '/process'].includes(location.pathname) ? 'text-[#4F6B85]' : 'text-[#555555] hover:text-[#111111]'
+              className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-all duration-200 flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
+                ['/about', '/process'].includes(location.pathname)
+                  ? 'text-[#4F6B85] bg-[#4F6B85]/10'
+                  : 'text-[#555555] hover:text-[#111111] hover:bg-black/5'
               }`}
             >
               <span>About</span>
@@ -107,15 +107,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
             <AnimatePresence>
               {activeDropdown === 'about' && (
                 <motion.div
-                  initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.96 }}
                   transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute left-1/2 -translate-x-1/2 top-full pt-3.5 w-84 z-50 font-sans"
+                  className="absolute left-1/2 -translate-x-1/2 top-full pt-2.5 w-[340px] sm:w-[360px] z-50 font-sans"
                 >
-                  <div className="rounded-3xl bg-white/95 backdrop-blur-2xl border border-black/10 p-3 sm:p-4 shadow-2xl shadow-black/10 space-y-1.5 ring-1 ring-black/5">
-                    <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#4F6B85]">
-                      Studio Overview
+                  <div className="rounded-[28px] bg-white/95 backdrop-blur-2xl border border-black/10 p-4 sm:p-5 shadow-2xl shadow-black/15 space-y-2 ring-1 ring-black/5">
+                    <div className="px-3 py-1.5 border-b border-black/5 mb-1.5 flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#4F6B85]">Studio Overview</span>
+                      <span className="text-[9px] font-mono text-[#888888] uppercase tracking-wider">2 Sections</span>
                     </div>
                     {aboutSublinks.map((item) => {
                       const IconComp = item.icon;
@@ -124,22 +125,22 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
                         <Link
                           key={item.name}
                           to={item.href}
-                          className={`group flex items-start gap-3.5 p-3 rounded-2xl transition-all duration-300 ${
+                          className={`group flex items-start gap-4 p-3.5 sm:p-4 rounded-2xl transition-all duration-300 ${
                             isSubActive 
                               ? 'bg-[#4F6B85]/10 text-[#4F6B85] border border-[#4F6B85]/20 shadow-xs' 
                               : 'hover:bg-[#F7F7F5] border border-transparent hover:border-black/5 text-[#111111]'
                           }`}
                         >
-                          <div className={`p-2.5 rounded-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${
+                          <div className={`p-3 rounded-2xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${
                             isSubActive ? 'bg-[#4F6B85] text-white shadow-xs' : 'bg-[#4F6B85]/10 text-[#4F6B85] group-hover:bg-[#111111] group-hover:text-white'
                           }`}>
-                            <IconComp className="size-4.5" />
+                            <IconComp className="size-4 sm:size-4.5" />
                           </div>
-                          <div>
+                          <div className="space-y-0.5">
                             <div className="text-xs sm:text-sm font-bold font-sans tracking-tight text-[#111111] group-hover:text-[#4F6B85] transition-colors">
                               {item.name}
                             </div>
-                            <div className="text-[11px] text-[#777777] leading-relaxed mt-0.5 font-sans font-normal">
+                            <div className="text-[11px] text-[#666666] leading-relaxed font-sans font-normal">
                               {item.desc}
                             </div>
                           </div>
@@ -160,8 +161,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
           >
             <button
               onClick={() => setActiveDropdown(activeDropdown === 'contact' ? null : 'contact')}
-              className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-colors flex items-center gap-1 py-1 ${
-                ['/contact', '/services', '/pricing'].includes(location.pathname) ? 'text-[#4F6B85]' : 'text-[#555555] hover:text-[#111111]'
+              className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-all duration-200 flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
+                ['/contact', '/services', '/pricing'].includes(location.pathname)
+                  ? 'text-[#4F6B85] bg-[#4F6B85]/10'
+                  : 'text-[#555555] hover:text-[#111111] hover:bg-black/5'
               }`}
             >
               <span>Contact</span>
@@ -171,15 +174,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
             <AnimatePresence>
               {activeDropdown === 'contact' && (
                 <motion.div
-                  initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.96 }}
                   transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute right-0 top-full pt-3.5 w-92 z-50 font-sans"
+                  className="absolute right-0 top-full pt-2.5 w-[350px] sm:w-[370px] z-50 font-sans"
                 >
-                  <div className="rounded-3xl bg-white/95 backdrop-blur-2xl border border-black/10 p-3 sm:p-4 shadow-2xl shadow-black/10 space-y-1.5 ring-1 ring-black/5">
-                    <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#4F6B85]">
-                      Engagements & Offerings
+                  <div className="rounded-[28px] bg-white/95 backdrop-blur-2xl border border-black/10 p-4 sm:p-5 shadow-2xl shadow-black/15 space-y-2 ring-1 ring-black/5">
+                    <div className="px-3 py-1.5 border-b border-black/5 mb-1.5 flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#4F6B85]">Engagements & Offerings</span>
+                      <span className="text-[9px] font-mono text-[#888888] uppercase tracking-wider">3 Options</span>
                     </div>
                     {contactSublinks.map((item) => {
                       const IconComp = item.icon;
@@ -188,22 +192,22 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
                         <Link
                           key={item.name}
                           to={item.href}
-                          className={`group flex items-start gap-3.5 p-3 rounded-2xl transition-all duration-300 ${
+                          className={`group flex items-start gap-4 p-3.5 sm:p-4 rounded-2xl transition-all duration-300 ${
                             isSubActive 
                               ? 'bg-[#4F6B85]/10 text-[#4F6B85] border border-[#4F6B85]/20 shadow-xs' 
                               : 'hover:bg-[#F7F7F5] border border-transparent hover:border-black/5 text-[#111111]'
                           }`}
                         >
-                          <div className={`p-2.5 rounded-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${
+                          <div className={`p-3 rounded-2xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${
                             isSubActive ? 'bg-[#4F6B85] text-white shadow-xs' : 'bg-[#4F6B85]/10 text-[#4F6B85] group-hover:bg-[#111111] group-hover:text-white'
                           }`}>
-                            <IconComp className="size-4.5" />
+                            <IconComp className="size-4 sm:size-4.5" />
                           </div>
-                          <div>
+                          <div className="space-y-0.5">
                             <div className="text-xs sm:text-sm font-bold font-sans tracking-tight text-[#111111] group-hover:text-[#4F6B85] transition-colors">
                               {item.name}
                             </div>
-                            <div className="text-[11px] text-[#777777] leading-relaxed mt-0.5 font-sans font-normal">
+                            <div className="text-[11px] text-[#666666] leading-relaxed font-sans font-normal">
                               {item.desc}
                             </div>
                           </div>
@@ -303,55 +307,75 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
               </Link>
 
               {/* Mobile About Collapsible */}
-              <div className="border-b border-black/5 py-1">
+              <div className="border-b border-black/5 py-2">
                 <button
                   onClick={() => setMobileSubmenu(mobileSubmenu === 'about' ? null : 'about')}
-                  className="w-full flex items-center justify-between py-1 text-xs font-bold uppercase tracking-widest text-[#555555]"
+                  className="w-full flex items-center justify-between py-2 text-xs font-bold uppercase tracking-widest text-[#555555] hover:text-[#111111]"
                 >
-                  <span>About</span>
-                  <ChevronDown className={`size-4 transition-transform ${mobileSubmenu === 'about' ? 'rotate-180 text-[#4F6B85]' : ''}`} />
+                  <span>About Studio</span>
+                  <ChevronDown className={`size-4 transition-transform duration-300 ${mobileSubmenu === 'about' ? 'rotate-180 text-[#4F6B85]' : ''}`} />
                 </button>
                 {mobileSubmenu === 'about' && (
-                  <div className="pl-4 pt-2 pb-1 space-y-2.5">
-                    {aboutSublinks.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`block text-xs font-medium ${
-                          location.pathname === item.href ? 'text-[#4F6B85] font-bold' : 'text-[#666666]'
-                        }`}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
+                  <div className="pt-2 pb-1 space-y-2">
+                    {aboutSublinks.map((item) => {
+                      const IconComp = item.icon;
+                      const isSubActive = location.pathname === item.href;
+                      return (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={`flex items-start gap-3 p-3 rounded-2xl transition-all ${
+                            isSubActive ? 'bg-[#4F6B85]/10 border border-[#4F6B85]/20 text-[#4F6B85]' : 'bg-[#F7F7F5] text-[#111111]'
+                          }`}
+                        >
+                          <div className={`p-2 rounded-xl shrink-0 ${isSubActive ? 'bg-[#4F6B85] text-white' : 'bg-black/5 text-[#4F6B85]'}`}>
+                            <IconComp className="size-4" />
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold">{item.name}</div>
+                            <div className="text-[10px] text-[#777777] leading-tight mt-0.5">{item.desc}</div>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
 
               {/* Mobile Contact Collapsible */}
-              <div className="border-b border-black/5 py-1">
+              <div className="border-b border-black/5 py-2">
                 <button
                   onClick={() => setMobileSubmenu(mobileSubmenu === 'contact' ? null : 'contact')}
-                  className="w-full flex items-center justify-between py-1 text-xs font-bold uppercase tracking-widest text-[#555555]"
+                  className="w-full flex items-center justify-between py-2 text-xs font-bold uppercase tracking-widest text-[#555555] hover:text-[#111111]"
                 >
-                  <span>Contact</span>
-                  <ChevronDown className={`size-4 transition-transform ${mobileSubmenu === 'contact' ? 'rotate-180 text-[#4F6B85]' : ''}`} />
+                  <span>Contact & Engagements</span>
+                  <ChevronDown className={`size-4 transition-transform duration-300 ${mobileSubmenu === 'contact' ? 'rotate-180 text-[#4F6B85]' : ''}`} />
                 </button>
                 {mobileSubmenu === 'contact' && (
-                  <div className="pl-4 pt-2 pb-1 space-y-2.5">
-                    {contactSublinks.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`block text-xs font-medium ${
-                          location.pathname === item.href ? 'text-[#4F6B85] font-bold' : 'text-[#666666]'
-                        }`}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
+                  <div className="pt-2 pb-1 space-y-2">
+                    {contactSublinks.map((item) => {
+                      const IconComp = item.icon;
+                      const isSubActive = location.pathname === item.href;
+                      return (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={`flex items-start gap-3 p-3 rounded-2xl transition-all ${
+                            isSubActive ? 'bg-[#4F6B85]/10 border border-[#4F6B85]/20 text-[#4F6B85]' : 'bg-[#F7F7F5] text-[#111111]'
+                          }`}
+                        >
+                          <div className={`p-2 rounded-xl shrink-0 ${isSubActive ? 'bg-[#4F6B85] text-white' : 'bg-black/5 text-[#4F6B85]'}`}>
+                            <IconComp className="size-4" />
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold">{item.name}</div>
+                            <div className="text-[10px] text-[#777777] leading-tight mt-0.5">{item.desc}</div>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -386,3 +410,4 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
     </header>
   );
 };
+

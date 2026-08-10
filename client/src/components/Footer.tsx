@@ -1,8 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [newsletterMsg, setNewsletterMsg] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail || !newsletterEmail.includes('@')) return;
+
+    setSubmitting(true);
+    setNewsletterMsg(null);
+    setIsError(false);
+
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newsletterEmail })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSubmitted(true);
+        setNewsletterMsg(data.message || 'Subscribed successfully!');
+        setNewsletterEmail('');
+      } else {
+        setIsError(true);
+        setNewsletterMsg(data.error || 'Failed to subscribe. Please try again.');
+      }
+    } catch (err) {
+      setIsError(true);
+      setNewsletterMsg('Network error. Unable to subscribe.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <footer className="bg-[#111111] text-[#F7F7F5] px-4 sm:px-8 lg:px-16 py-16 sm:py-20 md:py-24 font-sans border-t border-white/10">
       <div className="mx-auto max-w-[1400px]">
@@ -64,14 +101,55 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Col 4 */}
+          {/* Col 4 — Field Notes & Newsletter Subscription */}
           <div className="space-y-4">
             <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#888888]">
-              Engineering Focus
+              Field Notes Newsletter
             </p>
-            <p className="text-xs sm:text-sm text-[#888888] leading-relaxed">
-              React • Node.js • TypeScript • Flutter • Supabase • Enterprise Architecture
+            <p className="text-xs text-[#888888] leading-relaxed">
+              Subscribe to senior engineering insights, architectural patterns, and studio updates.
             </p>
+
+            {submitted ? (
+              <div className="p-3.5 rounded-xl bg-[#4F6B85]/20 border border-[#4F6B85]/40 text-xs text-[#F7F7F5] flex items-center gap-2">
+                <CheckCircle2 className="size-4 text-[#C9A84C] shrink-0" />
+                <span>{newsletterMsg}</span>
+              </div>
+            ) : (
+              <form onSubmit={handleNewsletterSubmit} className="space-y-2">
+                <div className="relative flex items-center">
+                  <input
+                    type="email"
+                    required
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder="alex@company.com"
+                    className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-[#666666] focus:border-[#4F6B85] focus:ring-1 focus:ring-[#4F6B85] focus:outline-none transition-all"
+                  />
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    aria-label="Subscribe to newsletter"
+                    className="absolute right-1.5 p-1.5 rounded-lg bg-white/10 text-white hover:bg-[#C9A84C] hover:text-[#111111] transition-all disabled:opacity-50"
+                  >
+                    {submitting ? (
+                      <Loader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <ArrowRight className="size-3.5" />
+                    )}
+                  </button>
+                </div>
+                {newsletterMsg && isError && (
+                  <p className="text-[10px] text-red-400 font-sans">{newsletterMsg}</p>
+                )}
+              </form>
+            )}
+
+            <div className="pt-2 border-t border-white/5">
+              <p className="text-[10px] text-[#666666]">
+                React • Node.js • TypeScript • Flutter • MongoDB Atlas
+              </p>
+            </div>
           </div>
 
         </div>
@@ -90,3 +168,4 @@ export const Footer: React.FC = () => {
     </footer>
   );
 };
+
