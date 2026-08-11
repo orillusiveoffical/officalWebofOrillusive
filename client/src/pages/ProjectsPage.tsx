@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FEATURED_PRODUCTS_DATA } from '../data/contentData';
 import { ArrowUpRight, Check } from 'lucide-react';
 import { SEOHead } from '../components/SEOHead';
@@ -68,13 +69,25 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenInquiry }) => 
 
               <div className="mt-8 sm:mt-10 pt-5 border-t border-black/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <span className="text-xs font-bold text-[#111111]">Orillusive Engineering Studio</span>
-                <button
-                  onClick={onOpenInquiry}
-                  className="group/btn inline-flex min-h-10 items-center justify-center gap-2.5 px-5 py-2.5 rounded-full bg-[#4F6B85]/10 text-[#4F6B85] hover:bg-[#4F6B85] hover:text-white transition-all duration-300 font-bold uppercase tracking-wider text-[11px] hover:scale-105 active:scale-95 shadow-2xs hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none w-full sm:w-auto"
-                >
-                  <span>Inquire About Access</span>
-                  <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                </button>
+                {product.link ? (
+                  <Link
+                    to={product.link}
+                    aria-label={`Explore ${product.title}`}
+                    className="group/btn inline-flex min-h-10 items-center justify-center gap-2.5 px-5 py-2.5 rounded-full bg-[#111111] text-[#F7F7F5] hover:bg-[#2C1E16] transition-all duration-300 font-bold uppercase tracking-wider text-[11px] hover:scale-105 active:scale-95 shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none w-full sm:w-auto"
+                  >
+                    <span>{product.ctaText || 'Explore Product'}</span>
+                    <ArrowUpRight className="size-4 text-[#C9A84C] transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                  </Link>
+                ) : (
+                  <button
+                    onClick={onOpenInquiry}
+                    aria-label={`Inquire about access to ${product.title}`}
+                    className="group/btn inline-flex min-h-10 items-center justify-center gap-2.5 px-5 py-2.5 rounded-full bg-[#4F6B85]/10 text-[#4F6B85] hover:bg-[#4F6B85] hover:text-white transition-all duration-300 font-bold uppercase tracking-wider text-[11px] hover:scale-105 active:scale-95 shadow-2xs hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none w-full sm:w-auto"
+                  >
+                    <span>Inquire About Access</span>
+                    <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                  </button>
+                )}
               </div>
             </div>
           ))}

@@ -9,10 +9,12 @@ export interface FeaturedProduct {
   id: string;
   title: string;
   subtitle: string;
-  status: 'Currently Under Development' | 'Active Development';
+  status: string;
   description: string;
   features: string[];
   type: string;
+  link?: string;
+  ctaText?: string;
 }
 
 export interface CapabilityItem {

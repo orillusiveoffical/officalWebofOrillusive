@@ -167,6 +167,56 @@ export const PAGE_SEO: Record<string, PageSEO> = {
     canonicalPath: '/contact',
     breadcrumbName: 'Contact',
   },
+
+  autiva: {
+    title: 'Autiva — AI-Powered Expense & Habit Tracking App | Orillusive',
+    description:
+      'Autiva is an intuitive mobile application by Orillusive that combines daily expense logging, habit formation tracking, receipt scanning, and AI-powered financial coaching.',
+    keywords:
+      'Autiva, expense tracker, habit tracker, personal finance app, AI financial coach, receipt scanner, Orillusive product, mobile app',
+    canonicalPath: '/products/autiva',
+    breadcrumbName: 'Autiva',
+  },
+
+  autivaPrivacy: {
+    title: 'Autiva Privacy Policy — Orillusive',
+    description: 'Privacy Policy for the Autiva mobile application detailing data collection, processing, and storage practices.',
+    keywords: 'Autiva privacy policy, data practices, user data security',
+    canonicalPath: '/products/autiva/privacy-policy',
+    breadcrumbName: 'Privacy Policy',
+  },
+
+  autivaTerms: {
+    title: 'Autiva Terms of Service — Orillusive',
+    description: 'Terms of Service governing the use of the Autiva mobile application.',
+    keywords: 'Autiva terms of service, user agreement, terms and conditions',
+    canonicalPath: '/products/autiva/terms-and-conditions',
+    breadcrumbName: 'Terms & Conditions',
+  },
+
+  autivaDeleteAccount: {
+    title: 'Delete Autiva Account & Data — Orillusive',
+    description: 'Submit an account deletion request for Autiva or learn about in-app data deletion options.',
+    keywords: 'Autiva delete account, account deletion request, data deletion portal',
+    canonicalPath: '/products/autiva/delete-account',
+    breadcrumbName: 'Delete Account',
+  },
+
+  privacy: {
+    title: 'Privacy Policy — Orillusive',
+    description: 'Privacy Policy for Orillusive website (orillusive.com) and software engineering services.',
+    keywords: 'Orillusive privacy policy, software studio privacy, data protection, privacy terms',
+    canonicalPath: '/privacy',
+    breadcrumbName: 'Privacy Policy',
+  },
+
+  terms: {
+    title: 'Terms & Conditions — Orillusive',
+    description: 'Terms and Conditions for Orillusive website (orillusive.com) and software engineering services.',
+    keywords: 'Orillusive terms and conditions, terms of service, user agreement, studio terms',
+    canonicalPath: '/terms',
+    breadcrumbName: 'Terms & Conditions',
+  },
 };
 
 // ─────────────────────────────────────────────

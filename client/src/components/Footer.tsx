@@ -75,10 +75,21 @@ export const Footer: React.FC = () => {
               <Link to="/" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Home</Link>
               <Link to="/services" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Services</Link>
               <Link to="/projects" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Products</Link>
+              <Link to="/products/autiva" className="text-xs sm:text-sm text-[#C9A84C] hover:text-[#F7F7F5] transition-colors font-semibold">Autiva App</Link>
               <Link to="/about" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">About Studio</Link>
               <Link to="/process" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Engineering Process</Link>
               <Link to="/pricing" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Pricing & Engagements</Link>
               <Link to="/contact" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Start Project / Contact</Link>
+            </div>
+            <div className="pt-3 border-t border-white/10 space-y-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#777777]">
+                Autiva Legal
+              </p>
+              <div className="flex flex-col space-y-2 text-xs">
+                <Link to="/products/autiva/privacy-policy" className="text-[#A0A0A0] hover:text-[#F7F7F5] transition-colors">Privacy Policy</Link>
+                <Link to="/products/autiva/terms-and-conditions" className="text-[#A0A0A0] hover:text-[#F7F7F5] transition-colors">Terms & Conditions</Link>
+                <Link to="/products/autiva/delete-account" className="text-[#A0A0A0] hover:text-[#F7F7F5] transition-colors">Account Deletion</Link>
+              </div>
             </div>
           </div>
 
@@ -156,7 +167,11 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="mt-10 flex flex-col gap-5 text-[11px] text-[#777777] sm:flex-row sm:items-center sm:justify-between font-mono">
-          <p>© 2026 Orillusive. All rights reserved.</p>
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <p>© 2026 Orillusive. All rights reserved.</p>
+            <Link to="/privacy" className="hover:text-[#F7F7F5] transition-colors underline">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-[#F7F7F5] transition-colors underline">Terms & Conditions</Link>
+          </div>
           <div className="flex gap-8">
             <a href="https://github.com" target="_blank" rel="https://github.com/orillusiveoffical" aria-label="Visit Orillusive on GitHub" className="hover:text-[#F7F7F5] transition-colors">GitHub</a>
             <a href="https://linkedin.com" target="_blank" rel="https://www.linkedin.com/company/orillusive/" aria-label="Visit Orillusive on LinkedIn" className="hover:text-[#F7F7F5] transition-colors">LinkedIn</a>

@@ -17,6 +17,12 @@ import { AboutPage } from './pages/AboutPage';
 import { ProcessPage } from './pages/ProcessPage';
 import { PricingPage } from './pages/PricingPage';
 import { ContactPage } from './pages/ContactPage';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import { TermsPage } from './pages/TermsPage';
+import { AutivaProductPage } from './pages/AutivaProductPage';
+import { AutivaPrivacyPolicyPage } from './pages/autiva/AutivaPrivacyPolicyPage';
+import { AutivaTermsPage } from './pages/autiva/AutivaTermsPage';
+import { AutivaDeleteAccountPage } from './pages/autiva/AutivaDeleteAccountPage';
 
 export function App() {
   const [loading, setLoading] = useState(true);
@@ -52,6 +58,16 @@ export function App() {
                   <Route path="/process" element={<ProcessPage />} />
                   <Route path="/pricing" element={<PricingPage onOpenInquiry={() => setInquiryOpen(true)} />} />
                   <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="/terms" element={<TermsPage />} />
+                  <Route path="/terms-and-conditions" element={<TermsPage />} />
+
+                  {/* Autiva Product & Legal Routes */}
+                  <Route path="/products/autiva" element={<AutivaProductPage />} />
+                  <Route path="/products/autiva/privacy-policy" element={<AutivaPrivacyPolicyPage />} />
+                  <Route path="/products/autiva/terms-and-conditions" element={<AutivaTermsPage />} />
+                  <Route path="/products/autiva/delete-account" element={<AutivaDeleteAccountPage />} />
                 </Routes>
               </main>
 

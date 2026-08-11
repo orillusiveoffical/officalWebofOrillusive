@@ -51,6 +51,8 @@ export const SERVICES_DATA: ServiceItem[] = [
   }
 ];
 
+export const AUTIVA_PLAY_STORE_URL = '#';
+
 export const FEATURED_PRODUCTS_DATA: FeaturedProduct[] = [
   {
     id: 'hotel-management-system',
@@ -71,20 +73,22 @@ export const FEATURED_PRODUCTS_DATA: FeaturedProduct[] = [
     type: 'Enterprise Platform'
   },
   {
-    id: 'expense-habit-tracker',
-    title: 'Expense & Habit Tracking App',
-    subtitle: 'Unified personal finance and habit formation mobile app',
-    status: 'Currently Under Development',
-    description: 'An elegant, fluid mobile experience combining intuitive expenditure recording, automated budget planning, and behavioral habit momentum metrics.',
+    id: 'autiva',
+    title: 'Autiva',
+    subtitle: 'AI-powered Expense & Habit Tracking App',
+    status: 'Live / Available Now',
+    description: 'An intuitive mobile application combining daily expense tracking, receipt scanning, habit formation analytics, and AI-powered financial coaching.',
     features: [
-      'Expense Tracking',
-      'Budget Planning',
-      'Habit Tracking',
-      'Progress Analytics',
-      'Monthly Reports',
-      'Clean Dashboard'
+      'Expense & Income Logging',
+      'Habit & Streak Analytics',
+      'AI Financial Coach (Gemini)',
+      'Receipt Camera Scanner',
+      'Spending Insights & Graphs',
+      'Custom Savings Goals'
     ],
-    type: 'Mobile Application'
+    type: 'Mobile Application',
+    link: '/products/autiva',
+    ctaText: 'Explore Autiva'
   }
 ];
 
