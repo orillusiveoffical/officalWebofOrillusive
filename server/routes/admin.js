@@ -32,6 +32,57 @@ const recordAuditLog = async (req, action, target, details) => {
   }
 };
 
+// Seed Helper for Initial Dashboard Data
+export const ensureDefaultDashboardData = async () => {
+  try {
+    const blogCount = await BlogPost.countDocuments();
+    if (blogCount === 0) {
+      await BlogPost.create({
+        title: 'Architecting Scalable SaaS Engines with React & MongoDB',
+        slug: 'architecting-scalable-saas-engines',
+        content: '# Building Next-Gen Web Applications\n\nOrillusive Studio engineers modern, ultra-performant SaaS platforms...',
+        summary: 'A deep dive into building modular, high-performance web applications using modern full-stack architectures.',
+        category: 'Engineering',
+        tags: ['React', 'TypeScript', 'MongoDB', 'Architecture'],
+        status: 'PUBLISHED',
+        author: 'Orillusive Studio',
+        publishedAt: new Date()
+      });
+    }
+
+    const issueCount = await TechnicalIssue.countDocuments();
+    if (issueCount === 0) {
+      await TechnicalIssue.create({
+        title: 'PDF Generation Engine Telemetry Check',
+        errorMsg: 'html2canvas scale factor rendering optimization completed',
+        stackTrace: 'at pdfExport.ts:L45 (PDF Render Canvas OK)',
+        severity: 'LOW',
+        status: 'RESOLVED',
+        endpoint: '/api/generation',
+        occurrences: 1,
+        affectedUsers: 1,
+        history: [{ author: 'System Telemetry', action: 'RESOLVED', note: 'System healthy' }]
+      });
+    }
+
+    const inquiryCount = await ContactInquiry.countDocuments();
+    if (inquiryCount === 0) {
+      await ContactInquiry.create({
+        name: 'Alex Rivera',
+        email: 'alex.rivera@enterprise.com',
+        company: 'Rivera Tech Labs',
+        phone: '+1 555-0192',
+        service: 'SaaS Platform Development',
+        message: 'We are looking to build a custom enterprise SaaS web application with Orillusive Studio.',
+        status: 'NEW',
+        assignedTo: 'Orillusive Engineering'
+      });
+    }
+  } catch (err) {
+    console.warn('⚠️ Dashboard default data initialization deferred:', err.message);
+  }
+};
+
 // ==========================================
 // 1. OVERVIEW & TELEMETRY CONTROL CENTER
 // ==========================================

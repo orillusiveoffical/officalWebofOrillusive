@@ -15,7 +15,7 @@ import packagesRouter, { ensureDefaultPackages } from './routes/packages.js';
 import creditsRouter from './routes/credits.js';
 import paymentsRouter from './routes/payments.js';
 import generationRouter from './routes/generation.js';
-import adminRouter from './routes/admin.js';
+import adminRouter, { ensureDefaultDashboardData } from './routes/admin.js';
 import { connectToDatabase } from './db/mongodb.js';
 
 dotenv.config();
@@ -82,6 +82,7 @@ app.use(requestLogger);
 connectToDatabase()
   .then(() => {
     ensureDefaultPackages();
+    ensureDefaultDashboardData();
   })
   .catch((err) => {
     console.warn('⚠️ MongoDB connection deferred:', err.message);
