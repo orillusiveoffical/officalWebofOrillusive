@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Mail, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowRight, Mail, CheckCircle2, Loader2, AlertCircle, Sparkles } from 'lucide-react';
 import { SERVICES_DATA } from '../data/contentData';
 import { SEOHead } from '../components/SEOHead';
 import { StructuredData } from '../components/StructuredData';
 import { PAGE_SEO, buildBreadcrumbSchema } from '../data/seoData';
 import { useAuth } from '../context/AuthContext';
+import { CustomSelect, SelectOption } from '../components/CustomSelect';
 
 export const ContactPage: React.FC = () => {
   const { user, token, fetchMyBookings } = useAuth();
@@ -15,6 +16,13 @@ export const ContactPage: React.FC = () => {
     service: SERVICES_DATA[0].title,
     message: ''
   });
+
+  const serviceOptions: SelectOption[] = SERVICES_DATA.map((s) => ({
+    value: s.title,
+    label: s.title,
+    description: s.description,
+    icon: Sparkles
+  }));
 
   useEffect(() => {
     if (user) {
@@ -143,18 +151,12 @@ export const ContactPage: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-[#555555] font-semibold uppercase text-[10px] tracking-wider mb-1">Service Interest</label>
-                <select
-                  value={formData.service}
-                  onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-[#F7F7F5] border border-black/10 focus:border-[#4F6B85] focus:ring-2 focus:ring-[#4F6B85]/20 focus:outline-none text-xs text-[#111111] transition-all"
-                >
-                  {SERVICES_DATA.map((s) => (
-                    <option key={s.id} value={s.title}>{s.title}</option>
-                  ))}
-                </select>
-              </div>
+              <CustomSelect
+                label="Service Interest"
+                options={serviceOptions}
+                value={formData.service}
+                onChange={(val) => setFormData({ ...formData, service: val })}
+              />
 
               <div>
                 <label className="block text-[#555555] font-semibold uppercase text-[10px] tracking-wider mb-1">Message *</label>

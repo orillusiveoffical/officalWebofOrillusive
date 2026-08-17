@@ -119,11 +119,11 @@ export const PAGE_SEO: Record<string, PageSEO> = {
   },
 
   projects: {
-    title: 'Featured Products — Hotel Management & Expense Tracking | Orillusive',
+    title: 'Featured Products — Enterprise Platforms & Software | Orillusive',
     description:
-      'Explore Orillusive\'s in-house products currently under active development — a comprehensive Hotel Management System and an intelligent Expense & Habit Tracking mobile application.',
+      'Explore Orillusive\'s in-house products currently under active studio development — including our comprehensive Hotel Management System and enterprise digital platforms.',
     keywords:
-      'hotel management system, expense tracking app, habit tracking app, software products, in-house development, enterprise applications, mobile applications, SaaS products',
+      'hotel management system, enterprise software products, in-house development, enterprise applications, SaaS products, software platform',
     canonicalPath: '/projects',
     breadcrumbName: 'Products',
   },
@@ -166,40 +166,6 @@ export const PAGE_SEO: Record<string, PageSEO> = {
       'contact orillusive, book discovery call, software project inquiry, custom software consultation, enterprise software consultation, hire software engineers',
     canonicalPath: '/contact',
     breadcrumbName: 'Contact',
-  },
-
-  autiva: {
-    title: 'Autiva — AI-Powered Expense & Habit Tracking App | Orillusive',
-    description:
-      'Autiva is an intuitive mobile application by Orillusive that combines daily expense logging, habit formation tracking, receipt scanning, and AI-powered financial coaching.',
-    keywords:
-      'Autiva, expense tracker, habit tracker, personal finance app, AI financial coach, receipt scanner, Orillusive product, mobile app',
-    canonicalPath: '/products/autiva',
-    breadcrumbName: 'Autiva',
-  },
-
-  autivaPrivacy: {
-    title: 'Autiva Privacy Policy — Orillusive',
-    description: 'Privacy Policy for the Autiva mobile application detailing data collection, processing, and storage practices.',
-    keywords: 'Autiva privacy policy, data practices, user data security',
-    canonicalPath: '/products/autiva/privacy-policy',
-    breadcrumbName: 'Privacy Policy',
-  },
-
-  autivaTerms: {
-    title: 'Autiva Terms of Service — Orillusive',
-    description: 'Terms of Service governing the use of the Autiva mobile application.',
-    keywords: 'Autiva terms of service, user agreement, terms and conditions',
-    canonicalPath: '/products/autiva/terms-and-conditions',
-    breadcrumbName: 'Terms & Conditions',
-  },
-
-  autivaDeleteAccount: {
-    title: 'Delete Autiva Account & Data — Orillusive',
-    description: 'Submit an account deletion request for Autiva or learn about in-app data deletion options.',
-    keywords: 'Autiva delete account, account deletion request, data deletion portal',
-    canonicalPath: '/products/autiva/delete-account',
-    breadcrumbName: 'Delete Account',
   },
 
   privacy: {

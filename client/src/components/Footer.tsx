@@ -73,23 +73,13 @@ export const Footer: React.FC = () => {
             </p>
             <div className="flex flex-col space-y-3">
               <Link to="/" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Home</Link>
+              <Link to="/cv-maker" className="text-xs sm:text-sm text-[#C9A84C] font-semibold hover:text-[#F7F7F5] transition-colors">CV Maker (SaaS Product)</Link>
               <Link to="/services" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Services</Link>
               <Link to="/projects" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Products</Link>
-              <Link to="/products/autiva" className="text-xs sm:text-sm text-[#C9A84C] hover:text-[#F7F7F5] transition-colors font-semibold">Autiva App</Link>
               <Link to="/about" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">About Studio</Link>
               <Link to="/process" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Engineering Process</Link>
               <Link to="/pricing" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Pricing & Engagements</Link>
               <Link to="/contact" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Start Project / Contact</Link>
-            </div>
-            <div className="pt-3 border-t border-white/10 space-y-2">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#777777]">
-                Autiva Legal
-              </p>
-              <div className="flex flex-col space-y-2 text-xs">
-                <Link to="/products/autiva/privacy-policy" className="text-[#A0A0A0] hover:text-[#F7F7F5] transition-colors">Privacy Policy</Link>
-                <Link to="/products/autiva/terms-and-conditions" className="text-[#A0A0A0] hover:text-[#F7F7F5] transition-colors">Terms & Conditions</Link>
-                <Link to="/products/autiva/delete-account" className="text-[#A0A0A0] hover:text-[#F7F7F5] transition-colors">Account Deletion</Link>
-              </div>
             </div>
           </div>
 

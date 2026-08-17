@@ -51,9 +51,27 @@ export const SERVICES_DATA: ServiceItem[] = [
   }
 ];
 
-export const AUTIVA_PLAY_STORE_URL = '#';
-
 export const FEATURED_PRODUCTS_DATA: FeaturedProduct[] = [
+  {
+    id: 'resume-maker-cv-maker',
+    title: 'Resume Maker / CV Maker',
+    subtitle: 'Monetized Professional SaaS Resume Builder',
+    status: 'Live SaaS Product',
+    description: 'An official digital SaaS platform of Orillusive. Select ATS-friendly templates, customize colors and typography, live-preview A4 pages, and spend credits to generate print-ready PDF resumes.',
+    features: [
+      '6 Component Templates',
+      'Live A4 Real-Time Preview',
+      'Custom Accent & Font Picker',
+      'Credit Monetization System',
+      'Work & Education Managers',
+      'Print-Ready PDF Export',
+      'User Draft & CV Ledger',
+      'Idempotent Payment System'
+    ],
+    type: 'Monetized SaaS Product',
+    link: '/cv-maker',
+    ctaText: 'Launch Resume Maker / CV Maker'
+  },
   {
     id: 'hotel-management-system',
     title: 'Hotel Management System',
@@ -71,24 +89,6 @@ export const FEATURED_PRODUCTS_DATA: FeaturedProduct[] = [
       'Multi-property Support'
     ],
     type: 'Enterprise Platform'
-  },
-  {
-    id: 'autiva',
-    title: 'Autiva',
-    subtitle: 'AI-powered Expense & Habit Tracking App',
-    status: 'Live / Available Now',
-    description: 'An intuitive mobile application combining daily expense tracking, receipt scanning, habit formation analytics, and AI-powered financial coaching.',
-    features: [
-      'Expense & Income Logging',
-      'Habit & Streak Analytics',
-      'AI Financial Coach (Gemini)',
-      'Receipt Camera Scanner',
-      'Spending Insights & Graphs',
-      'Custom Savings Goals'
-    ],
-    type: 'Mobile Application',
-    link: '/products/autiva',
-    ctaText: 'Explore Autiva'
   }
 ];
 

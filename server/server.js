@@ -10,6 +10,11 @@ import contactRouter from './routes/contact.js';
 import newsletterRouter from './routes/newsletter.js';
 import authRouter from './routes/auth.js';
 import bookingsRouter from './routes/bookings.js';
+import cvsRouter from './routes/cvs.js';
+import packagesRouter, { ensureDefaultPackages } from './routes/packages.js';
+import creditsRouter from './routes/credits.js';
+import paymentsRouter from './routes/payments.js';
+import generationRouter from './routes/generation.js';
 import { connectToDatabase } from './db/mongodb.js';
 
 dotenv.config();
@@ -73,9 +78,13 @@ app.use(mongoSanitizeMiddleware);
 app.use(requestLogger);
 
 // Initialize Database connection on server startup
-connectToDatabase().catch((err) => {
-  console.warn('⚠️ MongoDB connection deferred:', err.message);
-});
+connectToDatabase()
+  .then(() => {
+    ensureDefaultPackages();
+  })
+  .catch((err) => {
+    console.warn('⚠️ MongoDB connection deferred:', err.message);
+  });
 
 // Health telemetry check
 app.get('/api/health', (req, res) => {
@@ -92,6 +101,13 @@ app.use('/api/auth', authLimiter, authRouter);
 app.use('/api/contact', contactLimiter, contactRouter);
 app.use('/api/bookings', apiLimiter, bookingsRouter);
 app.use('/api/newsletter', contactLimiter, newsletterRouter);
+
+// CV Maker & Credit Monetization SaaS Routes
+app.use('/api/cvs', apiLimiter, cvsRouter);
+app.use('/api/packages', apiLimiter, packagesRouter);
+app.use('/api/credits', apiLimiter, creditsRouter);
+app.use('/api/payments', apiLimiter, paymentsRouter);
+app.use('/api/generation', apiLimiter, generationRouter);
 
 // Centralized Error Handling Middleware
 app.use(errorHandler);

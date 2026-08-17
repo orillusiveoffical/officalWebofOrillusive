@@ -154,3 +154,64 @@
   z-index: 0;
 }
 
+/* Premium Neat & Clean Select Styles */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234F6B85'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.1em 1.1em;
+  padding-right: 2.75rem !important;
+  cursor: pointer;
+}
+
+select option {
+  background-color: #FFFFFF;
+  color: #111111;
+  padding: 10px 14px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #D0D0CE;
+  border-radius: 999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #4F6B85;
+}
+
+/* Print Rules for CV Maker PDF Generation */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #cv-print-area, #cv-print-area * {
+    visibility: visible;
+  }
+  #cv-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  header, footer, nav, button {
+    display: none !important;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+  }
+}
+
+

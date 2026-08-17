@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, Menu, X, User, Calendar, LogOut, LogIn, ChevronDown, Layers, Sparkles, DollarSign, Mail, Info, Cpu } from 'lucide-react';
+import { ArrowUpRight, Menu, X, User, Calendar, LogOut, LogIn, ChevronDown, Layers, Sparkles, DollarSign, Mail, Info, Smartphone, Building2, Package } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface HeaderProps {
@@ -13,8 +13,8 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpenMyBookings }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<'about' | 'contact' | null>(null);
-  const [mobileSubmenu, setMobileSubmenu] = useState<'about' | 'contact' | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<'products' | 'about' | 'contact' | null>(null);
+  const [mobileSubmenu, setMobileSubmenu] = useState<'products' | 'about' | 'contact' | null>(null);
   
   const location = useLocation();
   const { user, logout, bookings } = useAuth();
@@ -32,6 +32,30 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
     setActiveDropdown(null);
     setMobileMenuOpen(false);
   }, [location.pathname]);
+
+  const productSublinks = [
+    { 
+      name: 'Resume Maker / CV Maker', 
+      href: '/cv-maker', 
+      desc: 'Monetized SaaS resume builder with live A4 preview & print PDF export', 
+      icon: Sparkles,
+      tag: 'SaaS Product'
+    },
+    { 
+      name: 'All Studio Products', 
+      href: '/projects', 
+      desc: 'Browse complete catalog of in-house software products & platforms', 
+      icon: Package,
+      tag: 'Portfolio'
+    },
+    { 
+      name: 'Hotel Management System', 
+      href: '/projects', 
+      desc: 'Integrated enterprise hospitality suite for reservation & property logistics', 
+      icon: Building2,
+      tag: 'In Dev'
+    }
+  ];
 
   const aboutSublinks = [
     { name: 'About Studio', href: '/about', desc: 'Our philosophy, engineering team & mission', icon: Info },
@@ -66,7 +90,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
           <span className="text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.22em] font-sans text-[#111111]">
             ORILLUSIVE<span className="text-[#4F6B85]">.</span>
           </span>
-        </Link>        {/* Desktop Links with Dropdowns */}
+        </Link>
+
+        {/* Desktop Links with Dropdowns */}
         <div className="hidden items-center gap-2 lg:gap-6 md:flex font-sans">
           <Link
             to="/"
@@ -77,14 +103,85 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
             Home
           </Link>
 
-          <Link
-            to="/projects"
-            className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-all duration-200 px-3 py-1.5 rounded-full ${
-              location.pathname === '/projects' ? 'text-[#4F6B85] bg-[#4F6B85]/10' : 'text-[#555555] hover:text-[#111111] hover:bg-black/5'
-            }`}
+          {/* Products Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setActiveDropdown('products')}
+            onMouseLeave={() => setActiveDropdown(null)}
           >
-            Products
-          </Link>
+            <button
+              onClick={() => setActiveDropdown(activeDropdown === 'products' ? null : 'products')}
+              className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-all duration-200 flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
+                location.pathname === '/projects'
+                  ? 'text-[#4F6B85] bg-[#4F6B85]/10'
+                  : 'text-[#555555] hover:text-[#111111] hover:bg-black/5'
+              }`}
+            >
+              <span>Products</span>
+              <ChevronDown className={`size-3.5 transition-transform duration-300 ${activeDropdown === 'products' ? 'rotate-180 text-[#4F6B85]' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {activeDropdown === 'products' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute left-1/2 -translate-x-1/2 top-full pt-2.5 w-[360px] sm:w-[380px] z-50 font-sans"
+                >
+                  <div className="rounded-[28px] bg-white/95 backdrop-blur-2xl border border-black/10 p-4 sm:p-5 shadow-2xl shadow-black/15 space-y-2 ring-1 ring-black/5">
+                    <div className="px-3 py-1.5 border-b border-black/5 mb-1.5 flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#4F6B85]">In-House Products</span>
+                      <span className="text-[9px] font-mono text-[#888888] uppercase tracking-wider">2 Offerings</span>
+                    </div>
+                    {productSublinks.map((item) => {
+                      const IconComp = item.icon;
+                      const isSubActive = location.pathname === item.href;
+                      return (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          className={`group flex items-start gap-4 p-3.5 sm:p-4 rounded-2xl transition-all duration-300 ${
+                            isSubActive 
+                              ? 'bg-[#4F6B85]/10 text-[#4F6B85] border border-[#4F6B85]/20 shadow-xs' 
+                              : 'hover:bg-[#F7F7F5] border border-transparent hover:border-black/5 text-[#111111]'
+                          }`}
+                        >
+                          <div className={`p-3 rounded-2xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${
+                            isSubActive ? 'bg-[#4F6B85] text-white shadow-xs' : 'bg-[#4F6B85]/10 text-[#4F6B85] group-hover:bg-[#111111] group-hover:text-white'
+                          }`}>
+                            <IconComp className="size-4 sm:size-4.5" />
+                          </div>
+                          <div className="space-y-0.5 flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="text-xs sm:text-sm font-bold font-sans tracking-tight text-[#111111] group-hover:text-[#4F6B85] transition-colors truncate">
+                                {item.name}
+                              </div>
+                              {item.tag && (
+                                <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full shrink-0 ${
+                                  item.tag === 'Live App' 
+                                    ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20'
+                                    : item.tag === 'In Dev'
+                                    ? 'bg-amber-500/10 text-amber-700 border border-amber-500/20'
+                                    : 'bg-[#4F6B85]/10 text-[#4F6B85]'
+                                }`}>
+                                  {item.tag}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[11px] text-[#666666] leading-relaxed font-sans font-normal">
+                              {item.desc}
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* About Dropdown */}
           <div
@@ -296,15 +393,49 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
                 Home
               </Link>
 
-              <Link
-                to="/projects"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block text-xs font-bold uppercase tracking-widest py-2 border-b border-black/5 ${
-                  location.pathname === '/projects' ? 'text-[#4F6B85]' : 'text-[#555555]'
-                }`}
-              >
-                Products
-              </Link>
+              {/* Mobile Products Collapsible */}
+              <div className="border-b border-black/5 py-2">
+                <button
+                  onClick={() => setMobileSubmenu(mobileSubmenu === 'products' ? null : 'products')}
+                  className="w-full flex items-center justify-between py-2 text-xs font-bold uppercase tracking-widest text-[#555555] hover:text-[#111111]"
+                >
+                  <span className={location.pathname === '/projects' ? 'text-[#4F6B85]' : ''}>Products</span>
+                  <ChevronDown className={`size-4 transition-transform duration-300 ${mobileSubmenu === 'products' ? 'rotate-180 text-[#4F6B85]' : ''}`} />
+                </button>
+                {mobileSubmenu === 'products' && (
+                  <div className="pt-2 pb-1 space-y-2">
+                    {productSublinks.map((item) => {
+                      const IconComp = item.icon;
+                      const isSubActive = location.pathname === item.href;
+                      return (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={`flex items-start gap-3 p-3 rounded-2xl transition-all ${
+                            isSubActive ? 'bg-[#4F6B85]/10 border border-[#4F6B85]/20 text-[#4F6B85]' : 'bg-[#F7F7F5] text-[#111111]'
+                          }`}
+                        >
+                          <div className={`p-2 rounded-xl shrink-0 ${isSubActive ? 'bg-[#4F6B85] text-white' : 'bg-black/5 text-[#4F6B85]'}`}>
+                            <IconComp className="size-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-1">
+                              <div className="text-xs font-bold truncate">{item.name}</div>
+                              {item.tag && (
+                                <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#4F6B85]/10 text-[#4F6B85]">
+                                  {item.tag}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[10px] text-[#777777] leading-tight mt-0.5">{item.desc}</div>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
 
               {/* Mobile About Collapsible */}
               <div className="border-b border-black/5 py-2">

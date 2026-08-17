@@ -88,8 +88,6 @@
 ### 5. Featured Products (In-House Engineering)
 - **Hotel Management System** (Status: Currently Under Development)
   - Features: Reservation Management, Guest Management, Room Management, Booking Calendar, Revenue Dashboard, Staff Management, OTA Integrations, Multi-property Support.
-- **Expense & Habit Tracking Mobile App** (Status: Currently Under Development)
-  - Features: Expense Tracking, Budget Planning, Habit Tracking, Progress Analytics, Monthly Reports, Clean Dashboard.
 - Displayed using interactive showcase cards with detailed UI mockups & smooth hover effects.
 
 ### 6. What We Build (Ibex Inspired Capabilities Grid)

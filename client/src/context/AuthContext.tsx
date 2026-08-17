@@ -5,6 +5,7 @@ export interface User {
   name: string;
   email: string;
   role: string;
+  credits?: number;
 }
 
 export interface BookingItem {
@@ -26,6 +27,7 @@ interface AuthContextType {
   register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   fetchMyBookings: () => Promise<void>;
+  updateUserCredits: (credits: number) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -145,8 +147,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('orillusive_auth_token');
   };
 
+  const updateUserCredits = (newCredits: number) => {
+    setUser((prev) => (prev ? { ...prev, credits: newCredits } : null));
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, bookings, login, register, logout, fetchMyBookings }}>
+    <AuthContext.Provider value={{ user, token, loading, bookings, login, register, logout, fetchMyBookings, updateUserCredits }}>
       {children}
     </AuthContext.Provider>
   );

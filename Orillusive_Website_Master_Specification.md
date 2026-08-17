@@ -742,21 +742,6 @@ Features:
   - Multi-property Support
 ```
 
-### Product 2 — Expense & Habit Tracking Mobile App
-
-```
-Title:   Expense & Habit Tracking App
-Status:  Currently Under Development
-
-Features:
-  - Expense Tracking
-  - Budget Planning
-  - Habit Tracking
-  - Progress Analytics
-  - Monthly Reports
-  - Clean Dashboard
-```
-
 ### Card Design
 
 - Premium showcase cards — dark surface, soft shadow

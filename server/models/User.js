@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['client', 'admin'],
       default: 'client'
+    },
+    credits: {
+      type: Number,
+      default: 25,
+      min: [0, 'Credit balance cannot be negative']
     }
   },
   {

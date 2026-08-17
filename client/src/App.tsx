@@ -19,10 +19,10 @@ import { PricingPage } from './pages/PricingPage';
 import { ContactPage } from './pages/ContactPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { TermsPage } from './pages/TermsPage';
-import { AutivaProductPage } from './pages/AutivaProductPage';
-import { AutivaPrivacyPolicyPage } from './pages/autiva/AutivaPrivacyPolicyPage';
-import { AutivaTermsPage } from './pages/autiva/AutivaTermsPage';
-import { AutivaDeleteAccountPage } from './pages/autiva/AutivaDeleteAccountPage';
+import { CVMakerPage } from './pages/cv/CVMakerPage';
+import { CVDashboardPage } from './pages/cv/CVDashboardPage';
+import { CVBuilderPage } from './pages/cv/CVBuilderPage';
+import { CVCreditsPage } from './pages/cv/CVCreditsPage';
 
 export function App() {
   const [loading, setLoading] = useState(true);
@@ -52,6 +52,11 @@ export function App() {
               <main>
                 <Routes>
                   <Route path="/" element={<HomePage onOpenInquiry={() => setInquiryOpen(true)} />} />
+                  <Route path="/cv-maker" element={<CVMakerPage />} />
+                  <Route path="/cv-maker/dashboard" element={<CVDashboardPage />} />
+                  <Route path="/cv-maker/builder" element={<CVBuilderPage />} />
+                  <Route path="/cv-maker/builder/:id" element={<CVBuilderPage />} />
+                  <Route path="/cv-maker/credits" element={<CVCreditsPage />} />
                   <Route path="/services" element={<ServicesPage onOpenInquiry={() => setInquiryOpen(true)} />} />
                   <Route path="/projects" element={<ProjectsPage onOpenInquiry={() => setInquiryOpen(true)} />} />
                   <Route path="/about" element={<AboutPage />} />
@@ -62,12 +67,6 @@ export function App() {
                   <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                   <Route path="/terms" element={<TermsPage />} />
                   <Route path="/terms-and-conditions" element={<TermsPage />} />
-
-                  {/* Autiva Product & Legal Routes */}
-                  <Route path="/products/autiva" element={<AutivaProductPage />} />
-                  <Route path="/products/autiva/privacy-policy" element={<AutivaPrivacyPolicyPage />} />
-                  <Route path="/products/autiva/terms-and-conditions" element={<AutivaTermsPage />} />
-                  <Route path="/products/autiva/delete-account" element={<AutivaDeleteAccountPage />} />
                 </Routes>
               </main>
 

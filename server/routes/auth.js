@@ -44,8 +44,25 @@ router.post('/register', async (req, res) => {
     const newUser = await User.create({
       name: name.trim(),
       email: email.toLowerCase().trim(),
-      password: hashedPassword
+      password: hashedPassword,
+      credits: 25
     });
+
+    // Record initial promotional bonus transaction
+    try {
+      const CreditTransactionModule = await import('../models/CreditTransaction.js');
+      const CreditTransaction = CreditTransactionModule.default || CreditTransactionModule.CreditTransaction;
+      await CreditTransaction.create({
+        userId: newUser._id,
+        type: 'Promotional Credits',
+        amount: 25,
+        balanceBefore: 0,
+        balanceAfter: 25,
+        description: 'New Account Welcome Bonus (25 Credits)'
+      });
+    } catch (txErr) {
+      console.warn('Welcome bonus transaction log deferred:', txErr.message);
+    }
 
     const token = jwt.sign(
       { userId: newUser._id, email: newUser.email, role: newUser.role },
@@ -61,7 +78,8 @@ router.post('/register', async (req, res) => {
         id: newUser._id,
         name: newUser.name,
         email: newUser.email,
-        role: newUser.role
+        role: newUser.role,
+        credits: newUser.credits || 25
       }
     });
   } catch (err) {
@@ -105,7 +123,8 @@ router.post('/login', async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        credits: user.credits ?? 25
       }
     });
   } catch (err) {
@@ -138,7 +157,8 @@ router.get('/me', async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        credits: user.credits ?? 25
       }
     });
   } catch (err) {
