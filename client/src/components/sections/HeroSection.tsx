@@ -176,23 +176,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInquiry }) => {
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div className="p-4 sm:p-5 rounded-2xl bg-[#111111] text-[#F7F7F5] space-y-3">
-                      <p className="text-[10px] uppercase font-bold text-white/60">Monthly Budget</p>
-                      <p className="text-xl sm:text-2xl font-bold font-sans text-white">$4,250.00</p>
+                      <p className="text-[10px] uppercase font-bold text-white/60">Active SaaS Sessions</p>
+                      <p className="text-xl sm:text-2xl font-bold font-sans text-white">14,820</p>
                       <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#4F6B85] w-[68%]" />
+                        <div className="h-full bg-[#4F6B85] w-[84%]" />
                       </div>
-                      <p className="text-[10px] text-white/60 font-mono">68% allocated • $1,360 left</p>
+                      <p className="text-[10px] text-white/60 font-mono">84% capacity • 99.98% SLA</p>
                     </div>
 
                     <div className="p-4 sm:p-5 rounded-2xl bg-[#F7F7F5] border border-black/5 space-y-3">
-                      <p className="text-[10px] uppercase font-bold text-[#777777]">Habit Momentum</p>
-                      <p className="text-xl sm:text-2xl font-bold font-sans text-[#111111]">24 Days</p>
+                      <p className="text-[10px] uppercase font-bold text-[#777777]">API Response Time</p>
+                      <p className="text-xl sm:text-2xl font-bold font-sans text-[#111111]">12 ms</p>
                       <div className="flex space-x-1.5 pt-1">
-                        {[1, 1, 1, 1, 1, 1, 0].map((v, i) => (
+                        {[1, 1, 1, 1, 1, 1, 1].map((v, i) => (
                           <span key={i} className={`size-3.5 rounded-sm ${v ? 'bg-[#4F6B85]' : 'bg-black/10'}`} />
                         ))}
                       </div>
-                      <p className="text-[10px] text-[#4F6B85] font-bold">Consistent progress</p>
+                      <p className="text-[10px] text-[#4F6B85] font-bold">Ultra-fast execution</p>
                     </div>
                   </div>
 
