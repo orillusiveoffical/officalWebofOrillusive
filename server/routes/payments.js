@@ -13,6 +13,47 @@ const DEFAULT_PACKAGES_MAP = {
   pro: { name: 'Pro Studio', credits: 220, price: 29.99, currency: 'USD' }
 };
 
+// Payoneer Payment Gateway API Configuration & Auth Helper
+const getPayoneerConfig = () => ({
+  programId: process.env.PAYONEER_PROGRAM_ID || '',
+  apiUsername: process.env.PAYONEER_API_USERNAME || '',
+  apiPassword: process.env.PAYONEER_API_PASSWORD || '',
+  apiKey: process.env.PAYONEER_API_KEY || '',
+  secretKey: process.env.PAYONEER_SECRET_KEY || '',
+  env: process.env.PAYONEER_ENV || 'production'
+});
+
+const getPayoneerAuthSession = (amount, currency, transactionId) => {
+  const cfg = getPayoneerConfig();
+  const credentials = `${cfg.apiUsername}:${cfg.apiPassword}`;
+  const authHeader = `Basic ${Buffer.from(credentials).toString('base64')}`;
+  const isConfigured = Boolean(cfg.apiKey && cfg.programId);
+
+  return {
+    authenticated: isConfigured,
+    authHeader,
+    programId: cfg.programId,
+    apiKey: cfg.apiKey,
+    env: cfg.env,
+    checkoutUrl: `https://checkout.${cfg.env === 'sandbox' ? 'sandbox.' : ''}payoneer.com/pay/${transactionId}`
+  };
+};
+
+// GET Payoneer API Gateway Status
+router.get('/payoneer/config', requireAuth, (req, res) => {
+  const cfg = getPayoneerConfig();
+  const isConfigured = Boolean(cfg.apiKey && cfg.programId);
+
+  return res.status(200).json({
+    success: true,
+    provider: 'payoneer',
+    isConfigured,
+    environment: cfg.env,
+    programId: cfg.programId ? `***${cfg.programId.slice(-4)}` : 'Not Configured',
+    apiKeyMasked: cfg.apiKey ? `***${cfg.apiKey.slice(-6)}` : 'Not Configured'
+  });
+});
+
 // POST Create Order Checkout Session
 router.post('/checkout', requireAuth, async (req, res) => {
   try {
@@ -35,6 +76,12 @@ router.post('/checkout', requireAuth, async (req, res) => {
 
     const transactionId = `TX-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
 
+    // Payoneer Auth Session if Provider is Payoneer
+    let payoneerSession = null;
+    if (paymentProvider === 'payoneer') {
+      payoneerSession = getPayoneerAuthSession(pkg.price, pkg.currency || 'USD', transactionId);
+    }
+
     const newPayment = await Payment.create({
       userId: req.user._id,
       packageId: pkg.packageId,
@@ -43,7 +90,8 @@ router.post('/checkout', requireAuth, async (req, res) => {
       currency: pkg.currency || 'USD',
       paymentProvider,
       transactionId,
-      paymentStatus: 'Pending'
+      paymentStatus: 'Pending',
+      metadata: paymentProvider === 'payoneer' ? { payoneerAuth: payoneerSession } : {}
     });
 
     return res.status(201).json({
@@ -55,7 +103,9 @@ router.post('/checkout', requireAuth, async (req, res) => {
         packageName: pkg.name,
         credits: pkg.credits,
         amount: pkg.price,
-        currency: pkg.currency || 'USD'
+        currency: pkg.currency || 'USD',
+        paymentProvider,
+        payoneerSession
       }
     });
   } catch (err) {

@@ -231,9 +231,9 @@ export const CVBuilderPage: React.FC<CVBuilderPageProps> = ({ onOpenAuth }) => {
   const userCredits = user?.credits ?? 25;
 
   return (
-    <div className="min-h-screen bg-[#F7F7F5] text-[#111111] font-sans pt-20 pb-12">
+    <div className="min-h-screen bg-[#F7F7F5] text-[#111111] font-sans pt-0 pb-12">
       {/* Builder Top Bar */}
-      <div className="sticky top-16 z-30 bg-white/90 backdrop-blur-xl border-b border-black/10 px-4 sm:px-8 py-3 shadow-xs">
+      <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-xl border-b border-black/10 px-4 sm:px-8 py-3.5 shadow-sm">
         <div className="mx-auto max-w-[1500px] flex flex-wrap items-center justify-between gap-4">
           
           <div className="flex items-center gap-3">

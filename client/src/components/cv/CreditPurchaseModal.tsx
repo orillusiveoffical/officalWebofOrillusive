@@ -16,6 +16,7 @@ export const CreditPurchaseModal: React.FC<Props> = ({ isOpen, onClose, onSucces
   const [packages, setPackages] = useState<CreditPackage[]>([]);
   const [selectedPkg, setSelectedPkg] = useState<CreditPackage | null>(null);
   const [step, setStep] = useState<'select' | 'review' | 'payment' | 'success'>('select');
+  const [paymentProvider, setPaymentProvider] = useState<'stripe' | 'payoneer'>('payoneer');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successInfo, setSuccessInfo] = useState<{ creditsAdded: number; newBalance: number } | null>(null);
@@ -53,7 +54,7 @@ export const CreditPurchaseModal: React.FC<Props> = ({ isOpen, onClose, onSucces
     setErrorMsg(null);
 
     try {
-      // 1. Create Checkout Session
+      // 1. Create Checkout Session with selected paymentProvider (Payoneer / Stripe)
       const checkoutRes = await fetch('/api/payments/checkout', {
         method: 'POST',
         headers: {
@@ -62,7 +63,7 @@ export const CreditPurchaseModal: React.FC<Props> = ({ isOpen, onClose, onSucces
         },
         body: JSON.stringify({
           packageId: selectedPkg.packageId,
-          paymentProvider: 'stripe'
+          paymentProvider
         })
       });
       const checkoutData = await checkoutRes.json();
@@ -195,8 +196,44 @@ export const CreditPurchaseModal: React.FC<Props> = ({ isOpen, onClose, onSucces
 
               {/* Order Summary & Checkout Action */}
               {selectedPkg && (
-                <div className="p-4 rounded-2xl bg-[#F7F7F5] border border-black/10 space-y-3">
-                  <div className="flex justify-between items-center text-xs">
+                <div className="p-4 rounded-2xl bg-[#F7F7F5] border border-black/10 space-y-4">
+                  {/* Payment Method Selector */}
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-[#555555] mb-2">
+                      Select Payment Method:
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setPaymentProvider('payoneer')}
+                        className={`p-2.5 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                          paymentProvider === 'payoneer'
+                            ? 'bg-[#111111] text-white border-[#111111] shadow-xs'
+                            : 'bg-white text-[#555555] border-black/10 hover:border-black/20'
+                        }`}
+                      >
+                        <span className="px-1.5 py-0.5 rounded bg-[#C9A84C] text-[#111111] text-[10px] font-black tracking-tighter">
+                          Payoneer
+                        </span>
+                        <span>Payoneer API</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setPaymentProvider('stripe')}
+                        className={`p-2.5 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                          paymentProvider === 'stripe'
+                            ? 'bg-[#111111] text-white border-[#111111] shadow-xs'
+                            : 'bg-white text-[#555555] border-black/10 hover:border-black/20'
+                        }`}
+                      >
+                        <CreditCard className="size-3.5 text-[#4F6B85]" />
+                        <span>Credit / Debit</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center text-xs pt-2 border-t border-black/5">
                     <span className="font-semibold text-[#555555]">Selected Package:</span>
                     <span className="font-bold text-[#111111]">{selectedPkg.name} ({selectedPkg.credits} Credits)</span>
                   </div>
@@ -214,12 +251,18 @@ export const CreditPurchaseModal: React.FC<Props> = ({ isOpen, onClose, onSucces
                     {loading ? (
                       <>
                         <Loader2 className="size-4 animate-spin text-[#C9A84C]" />
-                        <span>Verifying & Adding Credits...</span>
+                        <span>Authenticating {paymentProvider === 'payoneer' ? 'Payoneer' : 'Stripe'} Payment...</span>
                       </>
                     ) : (
                       <>
-                        <CreditCard className="size-4 text-[#C9A84C]" />
-                        <span>Complete Purchase — ${selectedPkg.price}</span>
+                        {paymentProvider === 'payoneer' ? (
+                          <span className="px-1.5 py-0.5 rounded bg-[#C9A84C] text-[#111111] text-[10px] font-black">
+                            Payoneer
+                          </span>
+                        ) : (
+                          <CreditCard className="size-4 text-[#C9A84C]" />
+                        )}
+                        <span>Pay ${selectedPkg.price} with {paymentProvider === 'payoneer' ? 'Payoneer' : 'Card'}</span>
                         <ArrowRight className="size-4" />
                       </>
                     )}

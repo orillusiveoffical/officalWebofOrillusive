@@ -27,7 +27,7 @@ const paymentSchema = new mongoose.Schema(
     paymentProvider: {
       type: String,
       default: 'stripe',
-      enum: ['stripe', 'paypal', 'orillusive_pay', 'system']
+      enum: ['stripe', 'paypal', 'payoneer', 'orillusive_pay', 'system']
     },
     transactionId: {
       type: String,

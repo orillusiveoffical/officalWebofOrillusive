@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AuthProvider } from './context/AuthContext';
@@ -24,75 +24,87 @@ import { CVDashboardPage } from './pages/cv/CVDashboardPage';
 import { CVBuilderPage } from './pages/cv/CVBuilderPage';
 import { CVCreditsPage } from './pages/cv/CVCreditsPage';
 
-export function App() {
+function AppContent() {
   const [loading, setLoading] = useState(true);
   const [inquiryOpen, setInquiryOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [myBookingsOpen, setMyBookingsOpen] = useState(false);
 
+  const location = useLocation();
+  const isEditorPage = location.pathname.startsWith('/cv-maker/builder');
+
+  return (
+    <div id="top" className="min-h-screen bg-[#F7F7F5] text-[#111111] selection:bg-[#4F6B85] selection:text-white">
+      {/* Splash Loader */}
+      <AnimatePresence>
+        {loading && <SplashLoader onComplete={() => setLoading(false)} />}
+      </AnimatePresence>
+
+      {!loading && (
+        <>
+          {!isEditorPage && (
+            <Header 
+              onOpenInquiry={() => setInquiryOpen(true)}
+              onOpenAuth={() => setAuthOpen(true)}
+              onOpenMyBookings={() => setMyBookingsOpen(true)}
+            />
+          )}
+
+          <main>
+            <Routes>
+              <Route path="/" element={<HomePage onOpenInquiry={() => setInquiryOpen(true)} />} />
+              <Route path="/cv-maker" element={<CVMakerPage onOpenAuth={() => setAuthOpen(true)} />} />
+              <Route path="/cv-maker/dashboard" element={<CVDashboardPage onOpenAuth={() => setAuthOpen(true)} />} />
+              <Route path="/cv-maker/builder" element={<CVBuilderPage onOpenAuth={() => setAuthOpen(true)} />} />
+              <Route path="/cv-maker/builder/:id" element={<CVBuilderPage onOpenAuth={() => setAuthOpen(true)} />} />
+              <Route path="/cv-maker/credits" element={<CVCreditsPage />} />
+              <Route path="/services" element={<ServicesPage onOpenInquiry={() => setInquiryOpen(true)} />} />
+              <Route path="/projects" element={<ProjectsPage onOpenInquiry={() => setInquiryOpen(true)} />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/process" element={<ProcessPage />} />
+              <Route path="/pricing" element={<PricingPage onOpenInquiry={() => setInquiryOpen(true)} />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/privacy" element={<PrivacyPolicyPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/terms-and-conditions" element={<TermsPage />} />
+            </Routes>
+          </main>
+
+          {!isEditorPage && <Footer />}
+
+          <DiscoveryModal
+            isOpen={inquiryOpen}
+            onClose={() => setInquiryOpen(false)}
+          />
+
+          <AuthModal
+            isOpen={authOpen}
+            onClose={() => setAuthOpen(false)}
+          />
+
+          <MyBookingsModal
+            isOpen={myBookingsOpen}
+            onClose={() => setMyBookingsOpen(false)}
+            onOpenNewInquiry={() => setInquiryOpen(true)}
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
+export function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
         <SpeedInsights />
-        <div id="top" className="min-h-screen bg-[#F7F7F5] text-[#111111] selection:bg-[#4F6B85] selection:text-white">
-          {/* Splash Loader */}
-          <AnimatePresence>
-            {loading && <SplashLoader onComplete={() => setLoading(false)} />}
-          </AnimatePresence>
-
-          {!loading && (
-            <>
-              <Header 
-                onOpenInquiry={() => setInquiryOpen(true)}
-                onOpenAuth={() => setAuthOpen(true)}
-                onOpenMyBookings={() => setMyBookingsOpen(true)}
-              />
-
-              <main>
-                <Routes>
-                  <Route path="/" element={<HomePage onOpenInquiry={() => setInquiryOpen(true)} />} />
-                  <Route path="/cv-maker" element={<CVMakerPage onOpenAuth={() => setAuthOpen(true)} />} />
-                  <Route path="/cv-maker/dashboard" element={<CVDashboardPage onOpenAuth={() => setAuthOpen(true)} />} />
-                  <Route path="/cv-maker/builder" element={<CVBuilderPage onOpenAuth={() => setAuthOpen(true)} />} />
-                  <Route path="/cv-maker/builder/:id" element={<CVBuilderPage onOpenAuth={() => setAuthOpen(true)} />} />
-                  <Route path="/cv-maker/credits" element={<CVCreditsPage />} />
-                  <Route path="/services" element={<ServicesPage onOpenInquiry={() => setInquiryOpen(true)} />} />
-                  <Route path="/projects" element={<ProjectsPage onOpenInquiry={() => setInquiryOpen(true)} />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/process" element={<ProcessPage />} />
-                  <Route path="/pricing" element={<PricingPage onOpenInquiry={() => setInquiryOpen(true)} />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route path="/privacy" element={<PrivacyPolicyPage />} />
-                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                  <Route path="/terms" element={<TermsPage />} />
-                  <Route path="/terms-and-conditions" element={<TermsPage />} />
-                </Routes>
-              </main>
-
-              <Footer />
-
-              <DiscoveryModal
-                isOpen={inquiryOpen}
-                onClose={() => setInquiryOpen(false)}
-              />
-
-              <AuthModal
-                isOpen={authOpen}
-                onClose={() => setAuthOpen(false)}
-              />
-
-              <MyBookingsModal
-                isOpen={myBookingsOpen}
-                onClose={() => setMyBookingsOpen(false)}
-                onOpenNewInquiry={() => setInquiryOpen(true)}
-              />
-            </>
-          )}
-        </div>
+        <AppContent />
       </BrowserRouter>
     </AuthProvider>
   );
 }
 
 export default App;
+
