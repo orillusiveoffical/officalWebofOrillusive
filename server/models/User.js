@@ -21,8 +21,19 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['client', 'admin'],
-      default: 'client'
+      enum: ['client', 'admin', 'SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS'],
+      default: 'client',
+      index: true
+    },
+    status: {
+      type: String,
+      enum: ['active', 'suspended'],
+      default: 'active',
+      index: true
+    },
+    lastLogin: {
+      type: Date,
+      default: Date.now
     },
     credits: {
       type: Number,

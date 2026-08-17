@@ -109,6 +109,13 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid email or password.' });
     }
 
+    if (user.status === 'suspended') {
+      return res.status(403).json({ success: false, error: 'Your account has been suspended by administration.' });
+    }
+
+    user.lastLogin = new Date();
+    await user.save();
+
     const token = jwt.sign(
       { userId: user._id, email: user.email, role: user.role },
       JWT_SECRET,

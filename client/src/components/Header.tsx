@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, Menu, X, User, Calendar, LogOut, LogIn, ChevronDown, Layers, Sparkles, DollarSign, Mail, Info, Smartphone, Building2, Package } from 'lucide-react';
+import { ArrowUpRight, Menu, X, User, Calendar, LogOut, LogIn, ChevronDown, Layers, Sparkles, DollarSign, Mail, Info, Smartphone, Building2, Package, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { hasInternalRole } from '../utils/roles';
 
 interface HeaderProps {
   onOpenInquiry: () => void;
@@ -322,6 +323,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
         <div className="hidden items-center gap-3 lg:gap-4 md:flex font-sans">
           {user ? (
             <div className="flex items-center gap-2">
+              {hasInternalRole(user.role) && (
+                <Link
+                  to="/admin"
+                  className="btn-sheen inline-flex min-h-10 lg:min-h-11 items-center justify-center gap-2 rounded-full bg-[#4F6B85] px-4 lg:px-5 text-[11px] lg:text-xs font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-[#3B5268] hover:scale-[1.03] active:scale-[0.97] shadow-md"
+                  title="Access Internal Operations Control Center"
+                >
+                  <LayoutDashboard className="size-3.5 text-[#C9A84C]" />
+                  <span>Dashboard</span>
+                </Link>
+              )}
+
               <button
                 onClick={onOpenMyBookings}
                 className="btn-sheen group inline-flex min-h-10 lg:min-h-11 items-center justify-center gap-2 rounded-full bg-[#111111] px-4 lg:px-6 text-[11px] lg:text-xs font-bold uppercase tracking-wider text-[#F7F7F5] transition-all duration-300 hover:bg-[#2C1E16] hover:scale-[1.03] active:scale-[0.97] shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
@@ -512,16 +524,29 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
               </div>
 
               {user ? (
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenMyBookings();
-                  }}
-                  className="btn-sheen group w-full min-h-12 inline-flex items-center justify-center gap-2.5 rounded-full bg-[#111111] px-6 text-xs font-bold text-[#F7F7F5] uppercase tracking-wider transition-all duration-300 hover:bg-[#2C1E16] active:scale-[0.98] shadow-md mt-2"
-                >
-                  <Calendar className="size-4 text-[#C9A84C]" />
-                  <span>My Saved Calls ({bookings.length})</span>
-                </button>
+                <div className="space-y-2 pt-2">
+                  {hasInternalRole(user.role) && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="btn-sheen group w-full min-h-12 inline-flex items-center justify-center gap-2.5 rounded-full bg-[#4F6B85] px-6 text-xs font-bold text-white uppercase tracking-wider transition-all duration-300 hover:bg-[#3B5268] active:scale-[0.98] shadow-md"
+                    >
+                      <LayoutDashboard className="size-4 text-[#C9A84C]" />
+                      <span>Internal Dashboard ({user.role})</span>
+                    </Link>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenMyBookings();
+                    }}
+                    className="btn-sheen group w-full min-h-12 inline-flex items-center justify-center gap-2.5 rounded-full bg-[#111111] px-6 text-xs font-bold text-[#F7F7F5] uppercase tracking-wider transition-all duration-300 hover:bg-[#2C1E16] active:scale-[0.98] shadow-md"
+                  >
+                    <Calendar className="size-4 text-[#C9A84C]" />
+                    <span>My Saved Calls ({bookings.length})</span>
+                  </button>
+                </div>
               ) : (
                 <button
                   onClick={() => {

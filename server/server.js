@@ -15,6 +15,7 @@ import packagesRouter, { ensureDefaultPackages } from './routes/packages.js';
 import creditsRouter from './routes/credits.js';
 import paymentsRouter from './routes/payments.js';
 import generationRouter from './routes/generation.js';
+import adminRouter from './routes/admin.js';
 import { connectToDatabase } from './db/mongodb.js';
 
 dotenv.config();
@@ -108,6 +109,9 @@ app.use('/api/packages', apiLimiter, packagesRouter);
 app.use('/api/credits', apiLimiter, creditsRouter);
 app.use('/api/payments', apiLimiter, paymentsRouter);
 app.use('/api/generation', apiLimiter, generationRouter);
+
+// Internal Dashboard & Admin Control Center Routes
+app.use('/api/admin', apiLimiter, adminRouter);
 
 // Centralized Error Handling Middleware
 app.use(errorHandler);
