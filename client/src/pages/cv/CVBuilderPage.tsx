@@ -40,7 +40,7 @@ import { CustomizationPanel } from '../../components/cv/builder/CustomizationPan
 import { GenerationConfirmModal } from '../../components/cv/GenerationConfirmModal';
 import { LowCreditModal } from '../../components/cv/LowCreditModal';
 import { CreditPurchaseModal } from '../../components/cv/CreditPurchaseModal';
-import { printOrExportCV } from '../../utils/pdfExport';
+import { downloadCVAsPDF, printOrExportCV } from '../../utils/pdfExport';
 import { useAuth } from '../../context/AuthContext';
 
 const GENERATION_COST = 5;
@@ -71,11 +71,23 @@ export const CVBuilderPage: React.FC<CVBuilderPageProps> = ({ onOpenAuth }) => {
   const [saveStatus, setSaveStatus] = useState<string>('All changes saved');
   const [zoomScale, setZoomScale] = useState<number>(1);
 
-  // Modals
+  // Modals & Export Loading
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [confirmGenOpen, setConfirmGenOpen] = useState(false);
   const [lowCreditOpen, setLowCreditOpen] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
+
+  const handleDownloadPDF = async () => {
+    setDownloadingPDF(true);
+    try {
+      await downloadCVAsPDF({ filename: cvData.title || 'My-Resume' });
+    } catch (err) {
+      console.error('PDF Export Error:', err);
+    } finally {
+      setDownloadingPDF(false);
+    }
+  };
 
   // Load CV from server or local state
   useEffect(() => {
@@ -220,7 +232,7 @@ export const CVBuilderPage: React.FC<CVBuilderPageProps> = ({ onOpenAuth }) => {
       setCvData((prev) => ({ ...prev, status: 'generated' }));
       setConfirmGenOpen(false);
 
-      printOrExportCV(cvData.title);
+      await downloadCVAsPDF({ filename: cvData.title || 'My-Resume' });
     } catch (err: any) {
       alert(err.message || 'Generation failed');
     } finally {
@@ -281,21 +293,41 @@ export const CVBuilderPage: React.FC<CVBuilderPageProps> = ({ onOpenAuth }) => {
             {cvData.status === 'generated' && (
               <button
                 type="button"
-                onClick={() => printOrExportCV(cvData.title)}
-                className="btn-sheen inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-white border border-black/15 px-4 text-xs font-bold uppercase tracking-wider text-[#111111] hover:bg-[#F7F7F5] transition-all shadow-xs"
+                disabled={downloadingPDF}
+                onClick={handleDownloadPDF}
+                className="btn-sheen inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-white border border-black/15 px-4 text-xs font-bold uppercase tracking-wider text-[#111111] hover:bg-[#F7F7F5] transition-all shadow-xs disabled:opacity-60"
               >
-                <Download className="size-3.5 text-[#4F6B85]" />
-                <span>Download PDF</span>
+                {downloadingPDF ? (
+                  <>
+                    <Loader2 className="size-3.5 animate-spin text-[#4F6B85]" />
+                    <span>Rendering PDF...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="size-3.5 text-[#4F6B85]" />
+                    <span>Download PDF</span>
+                  </>
+                )}
               </button>
             )}
 
             <button
               type="button"
+              disabled={generating || downloadingPDF}
               onClick={handleStartGeneration}
-              className="btn-sheen inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#111111] px-5 text-xs font-bold uppercase tracking-wider text-[#F7F7F5] hover:bg-[#2C1E16] hover:scale-105 active:scale-95 transition-all shadow-md"
+              className="btn-sheen inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#111111] px-5 text-xs font-bold uppercase tracking-wider text-[#F7F7F5] hover:bg-[#2C1E16] hover:scale-105 active:scale-95 transition-all shadow-md disabled:opacity-60"
             >
-              <Sparkles className="size-3.5 text-[#C9A84C]" />
-              <span>Generate CV ({GENERATION_COST} Credits)</span>
+              {generating ? (
+                <>
+                  <Loader2 className="size-3.5 animate-spin text-[#C9A84C]" />
+                  <span>Generating CV...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="size-3.5 text-[#C9A84C]" />
+                  <span>Generate CV ({GENERATION_COST} Credits)</span>
+                </>
+              )}
             </button>
           </div>
         </div>
