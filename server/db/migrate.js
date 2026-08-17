@@ -81,20 +81,24 @@ async function runCodeFirstMigration() {
     // Step 3: Default Admin Account Provisioning
     console.log('\n🔑 Step 3: Verifying Studio Admin Account...');
     const adminEmail = 'admin@orillusive.com';
-    const existingAdmin = await User.findOne({ email: adminEmail });
+    let existingAdmin = await User.findOne({ email: adminEmail });
 
     if (!existingAdmin) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash('OrillusiveAdmin2026!', salt);
-      await User.create({
+      existingAdmin = await User.create({
         name: 'Orillusive Studio Administrator',
         email: adminEmail,
         password: hashedPassword,
-        role: 'admin'
+        role: 'SUPER_ADMIN',
+        status: 'active'
       });
       console.log(`  ✔ Default Studio Admin created (${adminEmail}).`);
     } else {
-      console.log(`  ✔ Studio Admin account exists (${adminEmail}).`);
+      existingAdmin.role = 'SUPER_ADMIN';
+      existingAdmin.status = 'active';
+      await existingAdmin.save();
+      console.log(`  ✔ Studio Admin account verified & set to SUPER_ADMIN (${adminEmail}).`);
     }
 
     // Step 4: Final Telemetry Stats
