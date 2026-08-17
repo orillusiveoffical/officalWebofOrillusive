@@ -18,7 +18,10 @@ import {
   CreditCard,
   CheckCircle2,
   AlertCircle,
-  Loader2
+  Loader2,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw
 } from 'lucide-react';
 import { CVData } from '../../types/cv';
 import { DEFAULT_INITIAL_CV } from '../../data/cvPresets';
@@ -42,15 +45,31 @@ import { useAuth } from '../../context/AuthContext';
 
 const GENERATION_COST = 5;
 
-export const CVBuilderPage: React.FC = () => {
+interface CVBuilderPageProps {
+  onOpenAuth?: () => void;
+}
+
+export const CVBuilderPage: React.FC<CVBuilderPageProps> = ({ onOpenAuth }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user, token, updateUserCredits } = useAuth();
 
-  const [cvData, setCvData] = useState<CVData>(DEFAULT_INITIAL_CV);
+  const [cvData, setCvData] = useState<CVData>(() => {
+    const savedGuestDraft = localStorage.getItem('orillusive_guest_cv_draft');
+    if (!id && savedGuestDraft) {
+      try {
+        return JSON.parse(savedGuestDraft);
+      } catch (e) {
+        // Fallback to default
+      }
+    }
+    return DEFAULT_INITIAL_CV;
+  });
+
   const [activeTab, setActiveTab] = useState<'info' | 'summary' | 'experience' | 'education' | 'skills' | 'projects' | 'certifications' | 'languages' | 'achievements' | 'custom' | 'style'>('info');
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<string>('All changes saved');
+  const [zoomScale, setZoomScale] = useState<number>(1);
 
   // Modals
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
@@ -81,7 +100,14 @@ export const CVBuilderPage: React.FC = () => {
 
   // Autosave logic
   const handleSave = async (updatedData: CVData = cvData) => {
-    if (!token) return;
+    // Save to guest localStorage regardless of auth state
+    localStorage.setItem('orillusive_guest_cv_draft', JSON.stringify(updatedData));
+
+    if (!token) {
+      setSaveStatus('Draft saved locally');
+      return;
+    }
+
     setSaving(true);
     setSaveStatus('Saving draft...');
 
@@ -123,12 +149,33 @@ export const CVBuilderPage: React.FC = () => {
 
   // Handle Generation Request
   const handleStartGeneration = () => {
-    const userCredits = user?.credits ?? 25;
+    if (!token || !user) {
+      if (onOpenAuth) {
+        onOpenAuth();
+      } else {
+        alert('Please sign in or create an account to generate and export your professional CV.');
+      }
+      return;
+    }
+
+    const userCredits = user?.credits ?? 0;
     if (userCredits < GENERATION_COST) {
       setLowCreditOpen(true);
     } else {
       setConfirmGenOpen(true);
     }
+  };
+
+  const handleOpenCreditsModal = () => {
+    if (!token || !user) {
+      if (onOpenAuth) {
+        onOpenAuth();
+      } else {
+        alert('Please sign in or create an account to purchase credits.');
+      }
+      return;
+    }
+    setPurchaseModalOpen(true);
   };
 
   const handleConfirmGeneration = async () => {
@@ -224,7 +271,7 @@ export const CVBuilderPage: React.FC = () => {
               <span>{userCredits} Credits</span>
               <button
                 type="button"
-                onClick={() => setPurchaseModalOpen(true)}
+                onClick={handleOpenCreditsModal}
                 className="ml-1 text-[10px] uppercase font-bold text-[#C9A84C] hover:underline"
               >
                 + Get Credits
@@ -472,17 +519,51 @@ export const CVBuilderPage: React.FC = () => {
 
           {/* CENTER & RIGHT: Real-time A4 Live Preview (8 Cols) */}
           <div className="lg:col-span-8 space-y-4">
-            <div className="flex items-center justify-between px-2 text-xs font-semibold text-[#666666]">
+            <div className="flex flex-wrap items-center justify-between gap-3 px-2 text-xs font-semibold text-[#666666]">
               <span className="flex items-center gap-1.5">
                 <Eye className="size-4 text-[#4F6B85]" />
                 <span>Live Real-Time A4 Preview</span>
               </span>
-              <span className="font-mono text-[11px] text-[#888888]">A4 Proportion • Print Safe</span>
+
+              {/* Interactive Zoom Controls */}
+              <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-black/10 shadow-2xs">
+                <button
+                  type="button"
+                  onClick={() => setZoomScale((z) => Math.max(0.5, z - 0.1))}
+                  className="p-1 text-[#555555] hover:text-[#111111] transition-colors"
+                  title="Zoom Out"
+                >
+                  <ZoomOut className="size-3.5" />
+                </button>
+                <span className="font-mono text-[11px] font-bold text-[#111111] min-w-[42px] text-center">
+                  {Math.round(zoomScale * 100)}%
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setZoomScale((z) => Math.min(1.5, z + 0.1))}
+                  className="p-1 text-[#555555] hover:text-[#111111] transition-colors"
+                  title="Zoom In"
+                >
+                  <ZoomIn className="size-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setZoomScale(1)}
+                  className="p-1 text-[#555555] hover:text-[#111111] transition-colors ml-1 border-l border-black/10 pl-2"
+                  title="Reset Zoom (100%)"
+                >
+                  <RotateCcw className="size-3" />
+                </button>
+              </div>
             </div>
 
             {/* Interactive A4 Document Container */}
-            <div className="p-4 sm:p-8 rounded-3xl bg-[#EBEBE8] border border-black/10 overflow-x-auto flex justify-center">
-              <div id="cv-print-area" className="w-full max-w-[800px] shadow-xl rounded-xl overflow-hidden bg-white">
+            <div className="p-4 sm:p-8 rounded-3xl bg-[#EBEBE8] border border-black/10 overflow-x-auto flex justify-center min-h-[700px]">
+              <div 
+                id="cv-print-area" 
+                className="w-full max-w-[800px] shadow-2xl rounded-xl overflow-hidden bg-white transition-transform duration-200"
+                style={{ transform: `scale(${zoomScale})`, transformOrigin: 'top center' }}
+              >
                 <TemplateRenderer data={cvData} />
               </div>
             </div>

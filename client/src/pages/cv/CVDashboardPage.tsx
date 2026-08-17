@@ -18,7 +18,11 @@ import { useAuth } from '../../context/AuthContext';
 import { CreditPurchaseModal } from '../../components/cv/CreditPurchaseModal';
 import { printOrExportCV } from '../../utils/pdfExport';
 
-export const CVDashboardPage: React.FC = () => {
+interface CVDashboardPageProps {
+  onOpenAuth?: () => void;
+}
+
+export const CVDashboardPage: React.FC<CVDashboardPageProps> = ({ onOpenAuth }) => {
   const navigate = useNavigate();
   const { user, token, updateUserCredits } = useAuth();
 

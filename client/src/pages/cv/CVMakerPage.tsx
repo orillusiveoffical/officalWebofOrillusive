@@ -15,7 +15,11 @@ import {
 } from 'lucide-react';
 import { CV_TEMPLATES } from '../../data/cvPresets';
 
-export const CVMakerPage: React.FC = () => {
+interface CVMakerPageProps {
+  onOpenAuth?: () => void;
+}
+
+export const CVMakerPage: React.FC<CVMakerPageProps> = () => {
   return (
     <div className="pt-28 sm:pt-36 pb-20 px-4 sm:px-8 lg:px-16 bg-[#F7F7F5] text-[#111111] font-sans min-h-screen">
       <div className="mx-auto max-w-[1360px] space-y-20 sm:space-y-28">

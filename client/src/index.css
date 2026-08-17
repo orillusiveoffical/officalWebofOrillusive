@@ -200,10 +200,12 @@ select option {
     left: 0;
     top: 0;
     width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     box-shadow: none !important;
     border: none !important;
+    transform: none !important;
   }
   header, footer, nav, button {
     display: none !important;

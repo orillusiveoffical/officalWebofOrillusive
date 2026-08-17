@@ -14,7 +14,7 @@ export const CVTemplateMinimal: React.FC<TemplateProps> = ({ data }) => {
   return (
     <div 
       className="w-full bg-white text-[#111111] p-8 sm:p-12 shadow-sm font-sans"
-      style={{ fontFamily: fontFamily === 'Georgia' || fontFamily === 'Merriweather' ? `${fontFamily}, serif` : `${fontFamily}, sans-serif` }}
+      style={{ fontFamily: `${fontFamily}, 'Plus Jakarta Sans', 'Inter', sans-serif` }}
     >
       {/* Header */}
       <header className="border-b pb-6 mb-6" style={{ borderColor: `${accent}30` }}>

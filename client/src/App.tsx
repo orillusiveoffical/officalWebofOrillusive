@@ -52,10 +52,10 @@ export function App() {
               <main>
                 <Routes>
                   <Route path="/" element={<HomePage onOpenInquiry={() => setInquiryOpen(true)} />} />
-                  <Route path="/cv-maker" element={<CVMakerPage />} />
-                  <Route path="/cv-maker/dashboard" element={<CVDashboardPage />} />
-                  <Route path="/cv-maker/builder" element={<CVBuilderPage />} />
-                  <Route path="/cv-maker/builder/:id" element={<CVBuilderPage />} />
+                  <Route path="/cv-maker" element={<CVMakerPage onOpenAuth={() => setAuthOpen(true)} />} />
+                  <Route path="/cv-maker/dashboard" element={<CVDashboardPage onOpenAuth={() => setAuthOpen(true)} />} />
+                  <Route path="/cv-maker/builder" element={<CVBuilderPage onOpenAuth={() => setAuthOpen(true)} />} />
+                  <Route path="/cv-maker/builder/:id" element={<CVBuilderPage onOpenAuth={() => setAuthOpen(true)} />} />
                   <Route path="/cv-maker/credits" element={<CVCreditsPage />} />
                   <Route path="/services" element={<ServicesPage onOpenInquiry={() => setInquiryOpen(true)} />} />
                   <Route path="/projects" element={<ProjectsPage onOpenInquiry={() => setInquiryOpen(true)} />} />

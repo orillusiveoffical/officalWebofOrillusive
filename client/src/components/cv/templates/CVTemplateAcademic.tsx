@@ -6,7 +6,7 @@ export const CVTemplateAcademic: React.FC<{ data: CVData }> = ({ data }) => {
   const accent = data.customization?.accentColor || '#1E4D2B';
 
   return (
-    <div className="w-full bg-white text-[#111111] p-8 sm:p-12 shadow-sm font-serif">
+    <div className="w-full bg-white text-[#111111] p-8 sm:p-12 shadow-sm font-sans">
       {/* Header */}
       <div className="text-center pb-6 border-b border-black/20 mb-6">
         <h1 className="text-2xl font-bold tracking-tight text-[#111111]" style={{ color: accent }}>{personalInfo?.name || 'Dr. Academic Scholar'}</h1>
