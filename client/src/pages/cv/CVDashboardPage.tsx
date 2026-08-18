@@ -48,10 +48,29 @@ export const CVDashboardPage: React.FC<CVDashboardPageProps> = ({ onOpenAuth }) 
       });
       const data = await res.json();
       if (res.ok && data.cvs) {
-        setCvs(data.cvs);
+        let fetchedList = data.cvs;
+        if (fetchedList.length === 0) {
+          const guestDraft = localStorage.getItem('orillusive_guest_cv_draft');
+          if (guestDraft) {
+            try {
+              const parsed = JSON.parse(guestDraft);
+              if (parsed && parsed.title) {
+                fetchedList = [parsed];
+              }
+            } catch (e) {}
+          }
+        }
+        setCvs(fetchedList);
       }
     } catch (err) {
-      console.warn('Using local CV list');
+      console.warn('Using local CV list', err);
+      const guestDraft = localStorage.getItem('orillusive_guest_cv_draft');
+      if (guestDraft) {
+        try {
+          const parsed = JSON.parse(guestDraft);
+          if (parsed && parsed.title) setCvs([parsed]);
+        } catch (e) {}
+      }
     } finally {
       setLoading(false);
     }

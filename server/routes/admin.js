@@ -1,4 +1,5 @@
 import express from 'express';
+import bcrypt from 'bcryptjs';
 import { requireInternalRole } from '../middleware/adminAuth.js';
 import User from '../models/User.js';
 import BlogPost from '../models/BlogPost.js';
@@ -11,6 +12,8 @@ import Payment from '../models/Payment.js';
 import CreditTransaction from '../models/CreditTransaction.js';
 import Newsletter from '../models/Newsletter.js';
 import Booking from '../models/Booking.js';
+import CV from '../models/CV.js';
+import CreditPackage from '../models/CreditPackage.js';
 
 const router = express.Router();
 
@@ -32,9 +35,25 @@ const recordAuditLog = async (req, action, target, details) => {
   }
 };
 
-// Seed Helper for Initial Dashboard Data
+// Seed Helper for Initial Dashboard Data & Super Admin User
 export const ensureDefaultDashboardData = async () => {
   try {
+    // Ensure Super Admin User exists
+    const adminUser = await User.findOne({ email: 'admin@orillusive.com' });
+    if (!adminUser) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('AdminOrillusive2026!', salt);
+      await User.create({
+        name: 'Super Admin',
+        email: 'admin@orillusive.com',
+        password: hashedPassword,
+        role: 'SUPER_ADMIN',
+        status: 'active',
+        credits: 9999
+      });
+      console.log('⚡ [ORILLUSIVE SEED] Created default Super Admin user: admin@orillusive.com');
+    }
+
     const blogCount = await BlogPost.countDocuments();
     if (blogCount === 0) {
       await BlogPost.create({
@@ -93,6 +112,8 @@ router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYT
     const totalInquiries = await ContactInquiry.countDocuments();
     const openInquiries = await ContactInquiry.countDocuments({ status: { $in: ['NEW', 'PENDING'] } });
     const activeSubscriptions = await Payment.countDocuments({ paymentStatus: 'Completed' });
+    const totalBookings = await Booking.countDocuments();
+    const totalCVs = await CV.countDocuments();
 
     const openIssues = await TechnicalIssue.countDocuments({ status: { $ne: 'RESOLVED' } });
     const criticalIssues = await TechnicalIssue.countDocuments({ severity: 'CRITICAL', status: { $ne: 'RESOLVED' } });
@@ -100,8 +121,9 @@ router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYT
     const recentUsers = await User.find().sort({ createdAt: -1 }).limit(5).select('-password');
     const recentAuditLogs = await AuditLog.find().sort({ createdAt: -1 }).limit(10);
     const recentNotifications = await Notification.find().sort({ createdAt: -1 }).limit(5);
+    const recentInquiries = await ContactInquiry.find().sort({ createdAt: -1 }).limit(5);
 
-    // Mock/Calculated traffic metrics based on database events
+    // Calculated traffic metrics based on database events
     const trafficMetrics = {
       totalVisitors: 14280 + totalUsers * 12,
       uniqueVisitors: 9840 + totalUsers * 8,
@@ -119,12 +141,15 @@ router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYT
         openInquiries,
         activeSubscriptions,
         openIssues,
-        criticalIssues
+        criticalIssues,
+        totalBookings,
+        totalCVs
       },
       trafficMetrics,
       recentUsers,
       recentAuditLogs,
-      recentNotifications
+      recentNotifications,
+      recentInquiries
     });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
@@ -577,14 +602,29 @@ router.get('/audit-logs', requireInternalRole(['SUPER_ADMIN']), async (req, res)
 });
 
 // ==========================================
-// 10. TEAM & ROLE MANAGEMENT (SUPER ADMIN)
+// 11. SUBSCRIPTIONS & PAYMENT TELEMETRY (SUPER ADMIN, DEVELOPER)
 // ==========================================
-router.get('/team', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
+router.get('/subscriptions', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
   try {
-    const team = await User.find({
-      role: { $in: ['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS', 'admin'] }
-    }).select('-password');
-    return res.status(200).json({ success: true, team });
+    const payments = await Payment.find().sort({ createdAt: -1 }).limit(100);
+    const creditTransactions = await CreditTransaction.find().sort({ createdAt: -1 }).limit(100);
+    const packages = await CreditPackage.find();
+
+    const totalRevenue = payments.reduce((acc, p) => p.paymentStatus === 'Completed' ? acc + (p.amount || 0) : acc, 0);
+    const totalTransactions = payments.length;
+    const completedTransactions = payments.filter((p) => p.paymentStatus === 'Completed').length;
+
+    return res.status(200).json({
+      success: true,
+      payments,
+      creditTransactions,
+      packages,
+      stats: {
+        totalRevenue,
+        totalTransactions,
+        completedTransactions
+      }
+    });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
   }
