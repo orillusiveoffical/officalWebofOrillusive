@@ -15,13 +15,16 @@ import {
   Clock,
   Send,
   FileText,
-  Database
+  Database,
+  ShieldAlert,
+  RotateCcw
 } from 'lucide-react';
 
 export const AdminDashboardPage: React.FC = () => {
   const { token, user } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchOverview();
@@ -29,6 +32,7 @@ export const AdminDashboardPage: React.FC = () => {
 
   const fetchOverview = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/admin/overview', {
         headers: { Authorization: `Bearer ${token}` }
@@ -36,9 +40,12 @@ export const AdminDashboardPage: React.FC = () => {
       const json = await res.json();
       if (res.ok && json.success) {
         setData(json);
+      } else {
+        setError(json.error || `Server returned ${res.status}: Failed to fetch dashboard telemetry.`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ADMIN OVERVIEW ERROR]', err);
+      setError(err?.message || 'Network error connecting to telemetry endpoint');
     } finally {
       setLoading(false);
     }
@@ -46,9 +53,9 @@ export const AdminDashboardPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="py-20 flex flex-col items-center justify-center text-center">
+      <div className="py-24 flex flex-col items-center justify-center text-center">
         <RefreshCw className="size-8 animate-spin text-[#4F6B85] mb-3" />
-        <p className="text-xs font-mono text-[#888888]">LOADING CONTROL CENTER TELEMETRY...</p>
+        <p className="text-xs font-mono text-[#888888]">FETCHING CONTROL CENTER DATABASE TELEMETRY...</p>
       </div>
     );
   }
@@ -58,6 +65,29 @@ export const AdminDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-8 font-sans">
+      {/* Telemetry Error Banner if fetch failed */}
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <ShieldAlert className="size-5 text-amber-400 shrink-0" />
+            <div>
+              <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                DATABASE TELEMETRY NOTICE
+              </div>
+              <div className="text-xs mt-0.5 text-amber-200/90">
+                {error}
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={fetchOverview}
+            className="px-4 py-2 rounded-xl bg-amber-500 text-[#111111] font-bold text-xs hover:bg-amber-400 transition-all flex items-center gap-1.5"
+          >
+            <RotateCcw className="size-3.5" />
+            <span>Retry Connection</span>
+          </button>
+        </div>
+      )}
       {/* Header Greeting & Controls */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>

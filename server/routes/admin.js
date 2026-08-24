@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import { requireInternalRole } from '../middleware/adminAuth.js';
+import { connectToDatabase } from '../db/mongodb.js';
 import User from '../models/User.js';
 import BlogPost from '../models/BlogPost.js';
 import NewsletterCampaign from '../models/NewsletterCampaign.js';
@@ -38,6 +39,7 @@ const recordAuditLog = async (req, action, target, details) => {
 // Seed Helper for Initial Dashboard Data & Super Admin User
 export const ensureDefaultDashboardData = async () => {
   try {
+    await connectToDatabase();
     // Ensure Super Admin User exists
     const adminUser = await User.findOne({ email: 'admin@orillusive.com' });
     if (!adminUser) {
@@ -52,6 +54,10 @@ export const ensureDefaultDashboardData = async () => {
         credits: 9999
       });
       console.log('⚡ [ORILLUSIVE SEED] Created default Super Admin user: admin@orillusive.com');
+    } else if (adminUser.role !== 'SUPER_ADMIN' || adminUser.status !== 'active') {
+      adminUser.role = 'SUPER_ADMIN';
+      adminUser.status = 'active';
+      await adminUser.save();
     }
 
     const blogCount = await BlogPost.countDocuments();
@@ -107,21 +113,38 @@ export const ensureDefaultDashboardData = async () => {
 // ==========================================
 router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS']), async (req, res) => {
   try {
-    const totalUsers = await User.countDocuments();
-    const newsletterSubscribers = await Newsletter.countDocuments();
-    const totalInquiries = await ContactInquiry.countDocuments();
-    const openInquiries = await ContactInquiry.countDocuments({ status: { $in: ['NEW', 'PENDING'] } });
-    const activeSubscriptions = await Payment.countDocuments({ paymentStatus: 'Completed' });
-    const totalBookings = await Booking.countDocuments();
-    const totalCVs = await CV.countDocuments();
-
-    const openIssues = await TechnicalIssue.countDocuments({ status: { $ne: 'RESOLVED' } });
-    const criticalIssues = await TechnicalIssue.countDocuments({ severity: 'CRITICAL', status: { $ne: 'RESOLVED' } });
-
-    const recentUsers = await User.find().sort({ createdAt: -1 }).limit(5).select('-password');
-    const recentAuditLogs = await AuditLog.find().sort({ createdAt: -1 }).limit(10);
-    const recentNotifications = await Notification.find().sort({ createdAt: -1 }).limit(5);
-    const recentInquiries = await ContactInquiry.find().sort({ createdAt: -1 }).limit(5);
+    await connectToDatabase();
+    
+    // Query metrics in parallel with fallback defaults
+    const [
+      totalUsers,
+      newsletterSubscribers,
+      totalInquiries,
+      openInquiries,
+      activeSubscriptions,
+      totalBookings,
+      totalCVs,
+      openIssues,
+      criticalIssues,
+      recentUsers,
+      recentAuditLogs,
+      recentNotifications,
+      recentInquiries
+    ] = await Promise.all([
+      User.countDocuments().catch(() => 0),
+      Newsletter.countDocuments().catch(() => 0),
+      ContactInquiry.countDocuments().catch(() => 0),
+      ContactInquiry.countDocuments({ status: { $in: ['NEW', 'PENDING'] } }).catch(() => 0),
+      Payment.countDocuments({ paymentStatus: 'Completed' }).catch(() => 0),
+      Booking.countDocuments().catch(() => 0),
+      CV.countDocuments().catch(() => 0),
+      TechnicalIssue.countDocuments({ status: { $ne: 'RESOLVED' } }).catch(() => 0),
+      TechnicalIssue.countDocuments({ severity: 'CRITICAL', status: { $ne: 'RESOLVED' } }).catch(() => 0),
+      User.find().sort({ createdAt: -1 }).limit(5).select('-password').catch(() => []),
+      AuditLog.find().sort({ createdAt: -1 }).limit(10).catch(() => []),
+      Notification.find().sort({ createdAt: -1 }).limit(5).catch(() => []),
+      ContactInquiry.find().sort({ createdAt: -1 }).limit(5).catch(() => [])
+    ]);
 
     // Calculated traffic metrics based on database events
     const trafficMetrics = {
@@ -152,6 +175,7 @@ router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYT
       recentInquiries
     });
   } catch (err) {
+    console.error('[ADMIN OVERVIEW ERROR]', err);
     return res.status(500).json({ success: false, error: err.message });
   }
 });
@@ -161,6 +185,7 @@ router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYT
 // ==========================================
 router.get('/users', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
+    await connectToDatabase();
     const { search, role, status, page = 1, limit = 20 } = req.query;
     const query = {};
 
@@ -198,6 +223,7 @@ router.get('/users', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
 
 router.put('/users/:id/role', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
+    await connectToDatabase();
     const { role } = req.body;
     const allowed = ['client', 'admin', 'SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS'];
     if (!allowed.includes(role)) {
@@ -289,6 +315,7 @@ router.post('/users/:id/credits', requireInternalRole(['SUPER_ADMIN']), async (r
 // ==========================================
 router.get('/blogs', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
   try {
+    await connectToDatabase();
     const posts = await BlogPost.find().sort({ createdAt: -1 });
     return res.status(200).json({ success: true, posts });
   } catch (err) {
@@ -298,6 +325,7 @@ router.get('/blogs', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (r
 
 router.post('/blogs', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
   try {
+    await connectToDatabase();
     const { title, content, summary, category, tags, status, featuredImage, seoTitle, seoDescription } = req.body;
 
     if (!title || !content) {
@@ -331,6 +359,7 @@ router.post('/blogs', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (
 
 router.put('/blogs/:id', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
   try {
+    await connectToDatabase();
     const post = await BlogPost.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!post) return res.status(404).json({ success: false, error: 'Blog post not found' });
 
@@ -344,6 +373,7 @@ router.put('/blogs/:id', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), asyn
 
 router.delete('/blogs/:id', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
   try {
+    await connectToDatabase();
     const post = await BlogPost.findByIdAndDelete(req.params.id);
     if (post) {
       await recordAuditLog(req, 'BLOG_DELETE', post.title, `Deleted blog post`);
@@ -359,6 +389,7 @@ router.delete('/blogs/:id', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), a
 // ==========================================
 router.get('/newsletter/subscribers', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
+    await connectToDatabase();
     const subscribers = await Newsletter.find().sort({ createdAt: -1 });
     return res.status(200).json({ success: true, subscribers });
   } catch (err) {
@@ -368,6 +399,7 @@ router.get('/newsletter/subscribers', requireInternalRole(['SUPER_ADMIN']), asyn
 
 router.get('/newsletter/campaigns', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
+    await connectToDatabase();
     const campaigns = await NewsletterCampaign.find().sort({ createdAt: -1 });
     return res.status(200).json({ success: true, campaigns });
   } catch (err) {
@@ -377,6 +409,7 @@ router.get('/newsletter/campaigns', requireInternalRole(['SUPER_ADMIN']), async 
 
 router.post('/newsletter/campaigns', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
+    await connectToDatabase();
     const { subject, previewText, content, recipientSegment, status } = req.body;
     const campaign = await NewsletterCampaign.create({
       subject,
@@ -399,6 +432,7 @@ router.post('/newsletter/campaigns', requireInternalRole(['SUPER_ADMIN']), async
 // ==========================================
 router.get('/contacts', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
+    await connectToDatabase();
     const inquiries = await ContactInquiry.find().sort({ createdAt: -1 });
     return res.status(200).json({ success: true, inquiries });
   } catch (err) {
@@ -408,6 +442,7 @@ router.get('/contacts', requireInternalRole(['SUPER_ADMIN']), async (req, res) =
 
 router.put('/contacts/:id', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
+    await connectToDatabase();
     const inquiry = await ContactInquiry.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!inquiry) return res.status(404).json({ success: false, error: 'Inquiry not found' });
 
@@ -421,6 +456,7 @@ router.put('/contacts/:id', requireInternalRole(['SUPER_ADMIN']), async (req, re
 
 router.post('/contacts/:id/reply', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
+    await connectToDatabase();
     const { message, type = 'REPLY' } = req.body;
     const inquiry = await ContactInquiry.findById(req.params.id);
     if (!inquiry) return res.status(404).json({ success: false, error: 'Inquiry not found' });
@@ -447,6 +483,7 @@ router.post('/contacts/:id/reply', requireInternalRole(['SUPER_ADMIN']), async (
 // ==========================================
 router.get('/issues', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
   try {
+    await connectToDatabase();
     const issues = await TechnicalIssue.find().sort({ updatedAt: -1 });
     return res.status(200).json({ success: true, issues });
   } catch (err) {
@@ -456,6 +493,7 @@ router.get('/issues', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (
 
 router.post('/issues', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
   try {
+    await connectToDatabase();
     const { title, errorMsg, stackTrace, severity, endpoint } = req.body;
     const issue = await TechnicalIssue.create({
       title,
@@ -487,6 +525,7 @@ router.post('/issues', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async 
 
 router.put('/issues/:id', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
   try {
+    await connectToDatabase();
     const { status, assignedTo, note } = req.body;
     const issue = await TechnicalIssue.findById(req.params.id);
     if (!issue) return res.status(404).json({ success: false, error: 'Issue not found' });
@@ -517,6 +556,7 @@ router.put('/issues/:id', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), asy
 // ==========================================
 router.get('/system-health', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS']), async (req, res) => {
   try {
+    await connectToDatabase();
     const dbStatus = 'OPERATIONAL';
     const apiLatencyMs = 42;
     const memoryUsageMb = Math.round(process.memoryUsage().heapUsed / 1024 / 1024);
@@ -553,6 +593,7 @@ router.get('/system-health', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'A
 // ==========================================
 router.get('/analytics', requireInternalRole(['SUPER_ADMIN', 'ANALYTICS']), async (req, res) => {
   try {
+    await connectToDatabase();
     const analyticsData = {
       traffic: [
         { day: 'Mon', visitors: 1420, pageViews: 4120 },
@@ -594,8 +635,27 @@ router.get('/analytics', requireInternalRole(['SUPER_ADMIN', 'ANALYTICS']), asyn
 // ==========================================
 router.get('/audit-logs', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
+    await connectToDatabase();
     const logs = await AuditLog.find().sort({ createdAt: -1 }).limit(100);
     return res.status(200).json({ success: true, logs });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==========================================
+// 10. TEAM & INTERNAL ROLES (SUPER ADMIN)
+// ==========================================
+router.get('/team', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
+  try {
+    await connectToDatabase();
+    const team = await User.find({
+      role: { $in: ['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS', 'admin'] }
+    })
+      .sort({ createdAt: -1 })
+      .select('-password');
+
+    return res.status(200).json({ success: true, team });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
   }
@@ -606,6 +666,7 @@ router.get('/audit-logs', requireInternalRole(['SUPER_ADMIN']), async (req, res)
 // ==========================================
 router.get('/subscriptions', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
   try {
+    await connectToDatabase();
     const payments = await Payment.find().sort({ createdAt: -1 }).limit(100);
     const creditTransactions = await CreditTransaction.find().sort({ createdAt: -1 }).limit(100);
     const packages = await CreditPackage.find();

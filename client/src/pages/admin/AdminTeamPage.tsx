@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Shield, Users, UserCheck, Plus, Loader2 } from 'lucide-react';
+import { Shield, Users, UserCheck, Plus, Loader2, RotateCcw, ShieldAlert } from 'lucide-react';
 
 export const AdminTeamPage: React.FC = () => {
   const { token } = useAuth();
   const [team, setTeam] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTeam();
@@ -13,6 +14,7 @@ export const AdminTeamPage: React.FC = () => {
 
   const fetchTeam = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/admin/team', {
         headers: { Authorization: `Bearer ${token}` }
@@ -20,9 +22,12 @@ export const AdminTeamPage: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.success) {
         setTeam(data.team || []);
+      } else {
+        setError(data.error || 'Failed to fetch team members');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ADMIN TEAM ERROR]', err);
+      setError(err?.message || 'Network error fetching team data');
     } finally {
       setLoading(false);
     }
@@ -41,6 +46,22 @@ export const AdminTeamPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <div className="flex items-center gap-3">
+            <ShieldAlert className="size-5 text-amber-400 shrink-0" />
+            <span>{error}</span>
+          </div>
+          <button
+            onClick={fetchTeam}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold text-xs hover:bg-amber-400 transition-all flex items-center gap-1.5"
+          >
+            <RotateCcw className="size-3" />
+            <span>Retry</span>
+          </button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {loading ? (
