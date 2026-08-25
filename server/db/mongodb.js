@@ -1,14 +1,18 @@
 import mongoose from 'mongoose';
 
-let cachedConn = null;
-let cachedPromise = null;
+// Serverless-optimized connection caching on global scope
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
 const DEFAULT_MONGODB_URI =
   'mongodb+srv://orillusiveoffical_db_user:Minhajkhan12@orillusivewebdata.n6qw5tw.mongodb.net/orillusive?retryWrites=true&w=majority';
 
 export async function connectToDatabase() {
-  if (cachedConn && mongoose.connection.readyState === 1) {
-    return cachedConn;
+  if (cached.conn && mongoose.connection.readyState === 1) {
+    return cached.conn;
   }
 
   let mongoUri = process.env.MONGODB_URI;
@@ -22,11 +26,15 @@ export async function connectToDatabase() {
     mongoUri = DEFAULT_MONGODB_URI;
   }
 
-  if (!cachedPromise) {
-    cachedPromise = mongoose
-      .connect(mongoUri, {
-        serverSelectionTimeoutMS: 8000
-      })
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 8000,
+      maxPoolSize: 10
+    };
+
+    cached.promise = mongoose
+      .connect(mongoUri, opts)
       .then((m) => {
         console.log('⚡ [ORILLUSIVE MONGO ATLAS] Successfully connected to MongoDB Atlas database!');
         return m;
@@ -34,11 +42,11 @@ export async function connectToDatabase() {
   }
 
   try {
-    cachedConn = await cachedPromise;
-    return cachedConn;
+    cached.conn = await cached.promise;
+    return cached.conn;
   } catch (err) {
     console.error('❌ [ORILLUSIVE MONGO ATLAS ERROR] Failed to connect to MongoDB Atlas:', err.message);
-    cachedPromise = null;
+    cached.promise = null;
     return null;
   }
 }
