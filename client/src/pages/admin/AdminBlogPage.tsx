@@ -15,6 +15,8 @@ import {
   Sparkles
 } from 'lucide-react';
 
+import { safeFetch } from '../../utils/api';
+
 export const AdminBlogPage: React.FC = () => {
   const { token } = useAuth();
   const [posts, setPosts] = useState<any[]>([]);
@@ -42,14 +44,14 @@ export const AdminBlogPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/blogs', {
+      const res = await safeFetch<any>('/api/admin/blogs', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setPosts(data.posts || []);
+
+      if (res.ok && res.data?.success) {
+        setPosts(res.data.posts || []);
       } else {
-        setError(data.error || 'Failed to load blog posts');
+        setError(res.error || 'Failed to load blog posts');
       }
     } catch (err: any) {
       console.error('[ADMIN BLOG ERROR]', err);
@@ -85,29 +87,27 @@ export const AdminBlogPage: React.FC = () => {
     setModalOpen(true);
   };
 
-  const handleSavePost = async () => {
-    if (!title || !content) {
-      alert('Title and content are required');
-      return;
-    }
+  const handleSavePost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) return;
 
     setSaving(true);
     try {
       const payload = {
-        title,
-        content,
-        summary,
+        title: title.trim(),
+        content: content.trim(),
+        summary: summary.trim(),
         category,
         tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
         status,
-        seoTitle,
-        seoDescription
+        seoTitle: seoTitle.trim(),
+        seoDescription: seoDescription.trim()
       };
 
       const url = editingPost ? `/api/admin/blogs/${editingPost._id}` : '/api/admin/blogs';
       const method = editingPost ? 'PUT' : 'POST';
 
-      const res = await fetch(url, {
+      const res = await safeFetch<any>(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
@@ -115,13 +115,12 @@ export const AdminBlogPage: React.FC = () => {
         },
         body: JSON.stringify(payload)
       });
-      const data = await res.json();
 
-      if (res.ok && data.success) {
+      if (res.ok && res.data?.success) {
         setModalOpen(false);
         fetchPosts();
       } else {
-        alert(data.error || 'Failed to save post');
+        alert(res.error || 'Failed to save post');
       }
     } catch (err: any) {
       alert(err.message || 'Error saving post');
@@ -134,13 +133,17 @@ export const AdminBlogPage: React.FC = () => {
     if (!confirm('Are you sure you want to delete this blog post?')) return;
 
     try {
-      const res = await fetch(`/api/admin/blogs/${id}`, {
+      const res = await safeFetch<any>(`/api/admin/blogs/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (res.ok) fetchPosts();
-    } catch (err) {
-      alert('Failed to delete post');
+      if (res.ok) {
+        fetchPosts();
+      } else {
+        alert(res.error || 'Failed to delete post');
+      }
+    } catch (err: any) {
+      alert(err?.message || 'Failed to delete post');
     }
   };
 

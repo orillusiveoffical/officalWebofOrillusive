@@ -142,7 +142,15 @@ app.use('/api/generation', apiLimiter, generationRouter);
 // Internal Dashboard & Admin Control Center Routes
 app.use('/api/admin', apiLimiter, adminRouter);
 
-// Centralized Error Handling Middleware
+// Fallback 404 handler for undefined API endpoints (strictly returns JSON)
+app.use('/api', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: `Endpoint not found: [${req.method}] ${req.originalUrl}`
+  });
+});
+
+// Centralized Error Handling Middleware (strictly returns JSON)
 app.use(errorHandler);
 
 export default app;

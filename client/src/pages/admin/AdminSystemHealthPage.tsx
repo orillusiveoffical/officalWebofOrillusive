@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Check
 } from 'lucide-react';
+import { safeFetch } from '../../utils/api';
 
 export const AdminSystemHealthPage: React.FC = () => {
   const { token } = useAuth();
@@ -28,14 +29,14 @@ export const AdminSystemHealthPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/system-health', {
+      const res = await safeFetch<any>('/api/admin/system-health', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const json = await res.json();
-      if (res.ok && json.success) {
-        setData(json.system);
+
+      if (res.ok && res.data?.success) {
+        setData(res.data.system);
       } else {
-        setError(json.error || 'Failed to fetch system health telemetry');
+        setError(res.error || 'Failed to fetch system health telemetry');
       }
     } catch (err: any) {
       console.error('[HEALTH TELEMETRY ERROR]', err);

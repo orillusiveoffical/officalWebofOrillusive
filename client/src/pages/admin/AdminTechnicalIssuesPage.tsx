@@ -15,6 +15,7 @@ import {
   ChevronUp,
   UserCheck
 } from 'lucide-react';
+import { safeFetch } from '../../utils/api';
 
 export const AdminTechnicalIssuesPage: React.FC = () => {
   const { token, user } = useAuth();
@@ -43,14 +44,14 @@ export const AdminTechnicalIssuesPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/issues', {
+      const res = await safeFetch<any>('/api/admin/issues', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setIssues(data.issues || []);
+
+      if (res.ok && res.data?.success) {
+        setIssues(res.data.issues || []);
       } else {
-        setError(data.error || 'Failed to load technical issues');
+        setError(res.error || 'Failed to load technical issues');
       }
     } catch (err: any) {
       console.error('[ADMIN ISSUES ERROR]', err);
@@ -62,7 +63,7 @@ export const AdminTechnicalIssuesPage: React.FC = () => {
 
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {
-      const res = await fetch(`/api/admin/issues/${id}`, {
+      const res = await safeFetch<any>(`/api/admin/issues/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -73,9 +74,13 @@ export const AdminTechnicalIssuesPage: React.FC = () => {
           note: `Status updated by ${user?.name}`
         })
       });
-      if (res.ok) fetchIssues();
-    } catch (err) {
-      alert('Failed to update issue status');
+      if (res.ok) {
+        fetchIssues();
+      } else {
+        alert(res.error || 'Failed to update issue status');
+      }
+    } catch (err: any) {
+      alert(err?.message || 'Failed to update issue status');
     }
   };
 
@@ -83,7 +88,7 @@ export const AdminTechnicalIssuesPage: React.FC = () => {
     if (!title || !errorMsg) return;
     setCreating(true);
     try {
-      const res = await fetch('/api/admin/issues', {
+      const res = await safeFetch<any>('/api/admin/issues', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,15 +102,17 @@ export const AdminTechnicalIssuesPage: React.FC = () => {
           endpoint
         })
       });
-      if (res.ok) {
+      if (res.ok && res.data?.success) {
         setNewModalOpen(false);
         setTitle('');
         setErrorMsg('');
         setStackTrace('');
         fetchIssues();
+      } else {
+        alert(res.error || 'Failed to log issue');
       }
-    } catch (err) {
-      alert('Failed to log issue');
+    } catch (err: any) {
+      alert(err?.message || 'Failed to log issue');
     } finally {
       setCreating(false);
     }

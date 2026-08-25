@@ -2,33 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { CreditCard, CheckCircle, Clock, ShieldCheck, RefreshCw, Loader2, Sparkles, DollarSign } from 'lucide-react';
 
+import { safeFetch } from '../../utils/api';
+
 export const AdminSubscriptionsPage: React.FC = () => {
   const { token } = useAuth();
   const [payments, setPayments] = useState<any[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [stats, setStats] = useState<any>({ totalRevenue: 0, totalTransactions: 0, completedTransactions: 0 });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPayments();
   }, [token]);
 
-  const [error, setError] = useState<string | null>(null);
-
   const fetchPayments = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/subscriptions', {
+      const res = await safeFetch<any>('/api/admin/subscriptions', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setPayments(data.payments || []);
-        setTransactions(data.creditTransactions || []);
-        if (data.stats) setStats(data.stats);
+
+      if (res.ok && res.data?.success) {
+        setPayments(res.data.payments || []);
+        setTransactions(res.data.creditTransactions || []);
+        if (res.data.stats) setStats(res.data.stats);
       } else {
-        setError(data.error || 'Failed to load subscription metrics');
+        setError(res.error || 'Failed to load subscription metrics');
       }
     } catch (err: any) {
       console.error('[ADMIN SUBSCRIPTIONS ERROR]', err);

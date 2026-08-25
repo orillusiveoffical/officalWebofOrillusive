@@ -12,6 +12,8 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 
+import { safeFetch } from '../../utils/api';
+
 export const AdminAnalyticsPage: React.FC = () => {
   const { token } = useAuth();
   const [data, setData] = useState<any>(null);
@@ -26,14 +28,14 @@ export const AdminAnalyticsPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/analytics', {
+      const res = await safeFetch<any>('/api/admin/analytics', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const json = await res.json();
-      if (res.ok && json.success) {
-        setData(json.analytics);
+
+      if (res.ok && res.data?.success) {
+        setData(res.data.analytics);
       } else {
-        setError(json.error || 'Failed to load traffic analytics');
+        setError(res.error || 'Failed to load traffic analytics');
       }
     } catch (err: any) {
       console.error('[ADMIN ANALYTICS ERROR]', err);

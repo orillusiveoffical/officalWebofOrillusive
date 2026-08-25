@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { FileCheck, ShieldCheck, Loader2 } from 'lucide-react';
+import { safeFetch } from '../../utils/api';
 
 export const AdminAuditLogsPage: React.FC = () => {
   const { token } = useAuth();
@@ -16,14 +17,14 @@ export const AdminAuditLogsPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/audit-logs', {
+      const res = await safeFetch<any>('/api/admin/audit-logs', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setLogs(data.logs || []);
+
+      if (res.ok && res.data?.success) {
+        setLogs(res.data.logs || []);
       } else {
-        setError(data.error || 'Failed to fetch audit logs');
+        setError(res.error || 'Failed to fetch audit logs');
       }
     } catch (err: any) {
       console.error('[AUDIT LOGS ERROR]', err);

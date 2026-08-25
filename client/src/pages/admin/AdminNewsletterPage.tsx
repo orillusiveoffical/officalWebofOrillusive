@@ -1,36 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Send, Download, Plus, Mail, CheckCircle2, Loader2 } from 'lucide-react';
+import { safeFetch } from '../../utils/api';
 
 export const AdminNewsletterPage: React.FC = () => {
   const { token } = useAuth();
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'subscribers' | 'campaigns'>('subscribers');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
   }, [token]);
-
-  const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
     setError(null);
     try {
       const [subRes, campRes] = await Promise.all([
-        fetch('/api/admin/newsletter/subscribers', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/admin/newsletter/campaigns', { headers: { Authorization: `Bearer ${token}` } })
+        safeFetch<any>('/api/admin/newsletter/subscribers', { headers: { Authorization: `Bearer ${token}` } }),
+        safeFetch<any>('/api/admin/newsletter/campaigns', { headers: { Authorization: `Bearer ${token}` } })
       ]);
-      const subData = await subRes.json();
-      const campData = await campRes.json();
-      if (subRes.ok && subData.success) {
-        setSubscribers(subData.subscribers || []);
+
+      if (subRes.ok && subRes.data?.success) {
+        setSubscribers(subRes.data.subscribers || []);
       } else {
-        setError(subData.error || 'Failed to fetch newsletter subscribers');
+        setError(subRes.error || 'Failed to fetch newsletter subscribers');
       }
-      if (campRes.ok && campData.success) {
-        setCampaigns(campData.campaigns || []);
+
+      if (campRes.ok && campRes.data?.success) {
+        setCampaigns(campRes.data.campaigns || []);
       }
     } catch (err: any) {
       console.error('[NEWSLETTER ERROR]', err);

@@ -19,6 +19,7 @@ import {
   ShieldAlert,
   RotateCcw
 } from 'lucide-react';
+import { safeFetch } from '../../utils/api';
 
 export const AdminDashboardPage: React.FC = () => {
   const { token, user } = useAuth();
@@ -34,14 +35,14 @@ export const AdminDashboardPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/overview', {
+      const res = await safeFetch<any>('/api/admin/overview', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const json = await res.json();
-      if (res.ok && json.success) {
-        setData(json);
+
+      if (res.ok && res.data?.success) {
+        setData(res.data);
       } else {
-        setError(json.error || `Server returned ${res.status}: Failed to fetch dashboard telemetry.`);
+        setError(res.error || 'Failed to fetch dashboard telemetry.');
       }
     } catch (err: any) {
       console.error('[ADMIN OVERVIEW ERROR]', err);

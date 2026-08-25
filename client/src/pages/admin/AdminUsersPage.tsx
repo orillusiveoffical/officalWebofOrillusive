@@ -16,6 +16,8 @@ import {
   X
 } from 'lucide-react';
 
+import { safeFetch } from '../../utils/api';
+
 export const AdminUsersPage: React.FC = () => {
   const { token } = useAuth();
   const [users, setUsers] = useState<any[]>([]);
@@ -45,18 +47,18 @@ export const AdminUsersPage: React.FC = () => {
       if (search) query.append('search', search);
       if (roleFilter) query.append('role', roleFilter);
 
-      const res = await fetch(`/api/admin/users?${query.toString()}`, {
+      const res = await safeFetch<any>(`/api/admin/users?${query.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setUsers(data.users || []);
+
+      if (res.ok && res.data?.success) {
+        setUsers(res.data.users || []);
       } else {
-        setError(data.error || 'Failed to fetch user accounts');
+        setError(res.error || 'Failed to load user accounts from database.');
       }
     } catch (err: any) {
       console.error('[ADMIN USERS ERROR]', err);
-      setError(err?.message || 'Network error loading users');
+      setError(err?.message || 'Network connection error loading users');
     } finally {
       setLoading(false);
     }
@@ -66,7 +68,7 @@ export const AdminUsersPage: React.FC = () => {
     if (!selectedUser) return;
     setUpdating(true);
     try {
-      const res = await fetch(`/api/admin/users/${selectedUser._id}/role`, {
+      const res = await safeFetch<any>(`/api/admin/users/${selectedUser._id}/role`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -74,12 +76,12 @@ export const AdminUsersPage: React.FC = () => {
         },
         body: JSON.stringify({ role: newRole })
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+
+      if (res.ok && res.data?.success) {
         setRoleModalOpen(false);
         fetchUsers();
       } else {
-        alert(data.error || 'Failed to update role');
+        alert(res.error || 'Failed to update role');
       }
     } catch (err: any) {
       alert(err.message || 'Error updating role');
@@ -93,7 +95,7 @@ export const AdminUsersPage: React.FC = () => {
     if (!confirm(`Are you sure you want to set account status for ${userObj.email} to ${nextStatus.toUpperCase()}?`)) return;
 
     try {
-      const res = await fetch(`/api/admin/users/${userObj._id}/status`, {
+      const res = await safeFetch<any>(`/api/admin/users/${userObj._id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -103,9 +105,11 @@ export const AdminUsersPage: React.FC = () => {
       });
       if (res.ok) {
         fetchUsers();
+      } else {
+        alert(res.error || 'Failed to change user status');
       }
-    } catch (err) {
-      alert('Failed to change user status');
+    } catch (err: any) {
+      alert(err?.message || 'Failed to change user status');
     }
   };
 
@@ -113,7 +117,7 @@ export const AdminUsersPage: React.FC = () => {
     if (!selectedUser) return;
     setUpdating(true);
     try {
-      const res = await fetch(`/api/admin/users/${selectedUser._id}/credits`, {
+      const res = await safeFetch<any>(`/api/admin/users/${selectedUser._id}/credits`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -124,12 +128,12 @@ export const AdminUsersPage: React.FC = () => {
           reason: creditReason
         })
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+
+      if (res.ok && res.data?.success) {
         setCreditModalOpen(false);
         fetchUsers();
       } else {
-        alert(data.error || 'Failed to adjust credits');
+        alert(res.error || 'Failed to adjust credits');
       }
     } catch (err: any) {
       alert(err.message || 'Credit adjustment error');

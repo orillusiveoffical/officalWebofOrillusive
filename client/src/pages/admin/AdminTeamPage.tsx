@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Shield, Users, UserCheck, Plus, Loader2, RotateCcw, ShieldAlert } from 'lucide-react';
+import { safeFetch } from '../../utils/api';
 
 export const AdminTeamPage: React.FC = () => {
   const { token } = useAuth();
@@ -16,14 +17,14 @@ export const AdminTeamPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/team', {
+      const res = await safeFetch<any>('/api/admin/team', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setTeam(data.team || []);
+
+      if (res.ok && res.data?.success) {
+        setTeam(res.data.team || []);
       } else {
-        setError(data.error || 'Failed to fetch team members');
+        setError(res.error || 'Failed to fetch team members');
       }
     } catch (err: any) {
       console.error('[ADMIN TEAM ERROR]', err);

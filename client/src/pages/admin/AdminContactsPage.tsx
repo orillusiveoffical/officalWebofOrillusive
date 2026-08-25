@@ -13,6 +13,8 @@ import {
   X
 } from 'lucide-react';
 
+import { safeFetch } from '../../utils/api';
+
 export const AdminContactsPage: React.FC = () => {
   const { token, user } = useAuth();
   const [inquiries, setInquiries] = useState<any[]>([]);
@@ -32,14 +34,14 @@ export const AdminContactsPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/admin/contacts', {
+      const res = await safeFetch<any>('/api/admin/contacts', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setInquiries(data.inquiries || []);
+
+      if (res.ok && res.data?.success) {
+        setInquiries(res.data.inquiries || []);
       } else {
-        setError(data.error || 'Failed to load inquiries.');
+        setError(res.error || 'Failed to load inquiries from database.');
       }
     } catch (err: any) {
       console.error('[ADMIN CONTACTS ERROR]', err);
@@ -51,7 +53,7 @@ export const AdminContactsPage: React.FC = () => {
 
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {
-      const res = await fetch(`/api/admin/contacts/${id}`, {
+      const res = await safeFetch<any>(`/api/admin/contacts/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -59,9 +61,13 @@ export const AdminContactsPage: React.FC = () => {
         },
         body: JSON.stringify({ status: newStatus })
       });
-      if (res.ok) fetchInquiries();
-    } catch (err) {
-      alert('Failed to update status');
+      if (res.ok) {
+        fetchInquiries();
+      } else {
+        alert(res.error || 'Failed to update status');
+      }
+    } catch (err: any) {
+      alert(err?.message || 'Failed to update status');
     }
   };
 
@@ -69,7 +75,7 @@ export const AdminContactsPage: React.FC = () => {
     if (!selectedInquiry || !replyMessage) return;
     setReplying(true);
     try {
-      const res = await fetch(`/api/admin/contacts/${selectedInquiry._id}/reply`, {
+      const res = await safeFetch<any>(`/api/admin/contacts/${selectedInquiry._id}/reply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,14 +86,16 @@ export const AdminContactsPage: React.FC = () => {
           type: replyType
         })
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setSelectedInquiry(data.inquiry);
+
+      if (res.ok && res.data?.success) {
+        setSelectedInquiry(res.data.inquiry);
         setReplyMessage('');
         fetchInquiries();
+      } else {
+        alert(res.error || 'Failed to send reply');
       }
-    } catch (err) {
-      alert('Failed to send reply');
+    } catch (err: any) {
+      alert(err?.message || 'Failed to send reply');
     } finally {
       setReplying(false);
     }
