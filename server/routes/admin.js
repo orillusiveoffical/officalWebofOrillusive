@@ -133,8 +133,14 @@ export const ensureDefaultDashboardData = async () => {
 // ==========================================
 router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS']), async (req, res) => {
   try {
-    await connectToDatabase();
-    
+    const conn = await connectToDatabase();
+    if (!conn) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database connection failed. Please verify MONGODB_URI/DATABASE_URL in Vercel environment variables.'
+      });
+    }
+
     // Query metrics in parallel with fallback defaults
     const [
       totalUsers,

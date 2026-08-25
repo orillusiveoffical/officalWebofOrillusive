@@ -106,15 +106,17 @@ app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitizeMiddleware);
 app.use(requestLogger);
 
-// Initialize Database connection & seed defaults on server startup
-connectToDatabase()
-  .then(() => {
-    ensureDefaultPackages();
-    ensureDefaultDashboardData();
-  })
-  .catch((err) => {
-    console.warn('⚠️ MongoDB connection deferred:', err.message);
-  });
+// Initialize Database connection & seed defaults for local server execution
+if (!process.env.VERCEL) {
+  connectToDatabase()
+    .then(() => {
+      ensureDefaultPackages();
+      ensureDefaultDashboardData();
+    })
+    .catch((err) => {
+      console.warn('⚠️ MongoDB connection deferred:', err.message);
+    });
+}
 
 // Health telemetry check
 app.get('/api/health', (req, res) => {

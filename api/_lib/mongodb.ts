@@ -14,7 +14,11 @@ export async function connectToDatabase() {
     return cached.conn;
   }
 
-  let mongoUri = process.env.MONGODB_URI;
+  let mongoUri =
+    process.env.MONGODB_URI ||
+    process.env.DATABASE_URL ||
+    process.env.MONGODB_URL ||
+    process.env.DIRECT_URL;
 
   if (
     !mongoUri ||
