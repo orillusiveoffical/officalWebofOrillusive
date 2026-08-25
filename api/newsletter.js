@@ -1,15 +1,14 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { connectToDatabase } from './_lib/mongodb';
-import Newsletter from './_lib/models/Newsletter';
-import { checkServerlessRateLimit, sanitizeObject } from './_lib/security';
+import { connectToDatabase } from './_lib/mongodb.js';
+import Newsletter from './_lib/models/Newsletter.js';
+import { checkServerlessRateLimit, sanitizeObject } from './_lib/security.js';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
 
   // Rate Limiting Check
-  const clientIp = (req.headers['x-forwarded-for'] as string) || req.socket?.remoteAddress || '127.0.0.1';
+  const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
   if (!checkServerlessRateLimit(clientIp, 5, 15 * 60 * 1000)) {
     return res.status(429).json({ success: false, error: 'Too many subscription requests. Please try again later.' });
   }
@@ -42,7 +41,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       success: true,
       message: 'Field notes subscription confirmed & saved to database.'
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error('[ORILLUSIVE VERCEL NEWSLETTER ERROR]', err);
     return res.status(500).json({
       success: false,

@@ -1,25 +1,25 @@
 // NoSQL Query Injection Sanitizer
-export function sanitizeObject<T>(data: T): T {
+export function sanitizeObject(data) {
   if (typeof data === 'string') {
-    return data as unknown as T;
+    return data;
   }
   if (Array.isArray(data)) {
-    return data.map(sanitizeObject) as unknown as T;
+    return data.map(sanitizeObject);
   }
   if (data !== null && typeof data === 'object') {
-    const cleanObj: Record<string, any> = {};
-    for (const key of Object.keys(data as Record<string, any>)) {
+    const cleanObj = {};
+    for (const key of Object.keys(data)) {
       if (!key.startsWith('$') && !key.includes('.')) {
-        cleanObj[key] = sanitizeObject((data as Record<string, any>)[key]);
+        cleanObj[key] = sanitizeObject(data[key]);
       }
     }
-    return cleanObj as T;
+    return cleanObj;
   }
   return data;
 }
 
 // XSS HTML Escaper
-export function escapeHtml(str: string): string {
+export function escapeHtml(str) {
   if (typeof str !== 'string') return str;
   return str
     .replace(/&/g, '&amp;')
@@ -31,7 +31,7 @@ export function escapeHtml(str: string): string {
 }
 
 // Enterprise Password Complexity Regex (min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special character)
-export function validatePasswordStrength(password: string): { valid: boolean; error?: string } {
+export function validatePasswordStrength(password) {
   if (!password || password.length < 8) {
     return { valid: false, error: 'Password must be at least 8 characters long.' };
   }
@@ -51,9 +51,9 @@ export function validatePasswordStrength(password: string): { valid: boolean; er
 }
 
 // In-Memory Rate Limiting Cache for Serverless IP Tracking
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const rateLimitMap = new Map();
 
-export function checkServerlessRateLimit(ip: string, limit: number = 10, windowMs: number = 15 * 60 * 1000): boolean {
+export function checkServerlessRateLimit(ip, limit = 10, windowMs = 15 * 60 * 1000) {
   const now = Date.now();
   const record = rateLimitMap.get(ip);
 

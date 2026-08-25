@@ -1,11 +1,10 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import * as jwt from 'jsonwebtoken';
-import { connectToDatabase } from '../_lib/mongodb';
-import Booking from '../_lib/models/Booking';
+import jwt from 'jsonwebtoken';
+import { connectToDatabase } from '../_lib/mongodb.js';
+import Booking from '../_lib/models/Booking.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
@@ -17,7 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; email: string };
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     const conn = await connectToDatabase();
     if (!conn) {
@@ -35,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       success: true,
       bookings: userBookings
     });
-  } catch (err: any) {
+  } catch (err) {
     return res.status(401).json({ success: false, error: 'Failed to fetch bookings' });
   }
 }

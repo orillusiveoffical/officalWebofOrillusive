@@ -1,12 +1,11 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
-import { connectToDatabase } from '../_lib/mongodb';
-import User from '../_lib/models/User';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { connectToDatabase } from '../_lib/mongodb.js';
+import User from '../_lib/models/User.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
@@ -20,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const conn = await connectToDatabase();
     if (!conn) {
-      return res.status(500).json({ success: false, error: 'Database connection unconfigured' });
+      return res.status(500).json({ success: false, error: 'Database connection failed' });
     }
 
     const normalizedEmail = email.toLowerCase().trim();
@@ -55,10 +54,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        credits: user.credits ?? 25
       }
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error('[ORILLUSIVE VERCEL LOGIN ERROR]', err);
     return res.status(500).json({ success: false, error: err?.message || 'Server error during login' });
   }

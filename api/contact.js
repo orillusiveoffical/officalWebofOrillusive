@@ -1,12 +1,11 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { Resend } from 'resend';
-import { connectToDatabase } from './_lib/mongodb';
-import Booking from './_lib/models/Booking';
+import { connectToDatabase } from './_lib/mongodb.js';
+import Booking from './_lib/models/Booking.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
@@ -29,7 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       try {
         const token = authHeader.split(' ')[1];
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+        const decoded = jwt.verify(token, JWT_SECRET);
         userId = decoded.userId;
       } catch (tokenErr) {
         // Token expired/invalid, proceed as guest
@@ -48,7 +47,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: message.trim(),
       userId
     });
-    console.log(`[ORILLUSIVE VERCEL MONGO ATLAS] Saved booking from ${email}`);
 
     const apiKey = process.env.RESEND_API_KEY;
     const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || 'info@orillusive.com';
@@ -121,7 +119,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: 'Inquiry saved successfully to database.',
       booking: savedBooking
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error('[ORILLUSIVE INTAKE EXCEPTION]', err);
     return res.status(500).json({
       success: false,
