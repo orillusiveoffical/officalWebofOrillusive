@@ -7,12 +7,14 @@ export default async function handler(req, res) {
       cachedApp = appModule.default || appModule;
     }
     return cachedApp(req, res);
-  } catch (err) {
-    console.error('[VERCEL SERVERLESS FATAL ERROR]', err);
+  } catch (error) {
+    console.error('Serverless Entrypoint Error:', error);
     if (!res.headersSent) {
-      res.status(500).json({
+      res.setHeader('Content-Type', 'application/json');
+      return res.status(500).json({
         success: false,
-        error: err?.message || 'Serverless Function Execution Error'
+        message: error?.message || 'Serverless Entrypoint Error',
+        error: error?.message || 'Serverless Entrypoint Error'
       });
     }
   }
