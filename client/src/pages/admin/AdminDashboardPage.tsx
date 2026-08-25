@@ -39,10 +39,12 @@ export const AdminDashboardPage: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      if (res.ok && res.data?.success) {
+      if (res.data) {
         setData(res.data);
-      } else {
-        setError(res.error || 'Failed to fetch dashboard telemetry.');
+      }
+
+      if (!res.ok || res.data?.success === false) {
+        setError(res.error || res.data?.message || 'Failed to fetch dashboard telemetry.');
       }
     } catch (err: any) {
       console.error('[ADMIN OVERVIEW ERROR]', err);

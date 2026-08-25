@@ -128,24 +128,24 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Rate Limited API Routes
-app.use('/api/auth', authLimiter, authRouter);
-app.use('/api/contact', contactLimiter, contactRouter);
-app.use('/api/bookings', apiLimiter, bookingsRouter);
-app.use('/api/newsletter', contactLimiter, newsletterRouter);
+// Rate Limited API Routes (supports both direct & /api prefixed requests)
+app.use(['/api/auth', '/auth'], authLimiter, authRouter);
+app.use(['/api/contact', '/contact'], contactLimiter, contactRouter);
+app.use(['/api/bookings', '/bookings'], apiLimiter, bookingsRouter);
+app.use(['/api/newsletter', '/newsletter'], contactLimiter, newsletterRouter);
 
 // CV Maker & Credit Monetization SaaS Routes
-app.use('/api/cvs', apiLimiter, cvsRouter);
-app.use('/api/packages', apiLimiter, packagesRouter);
-app.use('/api/credits', apiLimiter, creditsRouter);
-app.use('/api/payments', apiLimiter, paymentsRouter);
-app.use('/api/generation', apiLimiter, generationRouter);
+app.use(['/api/cvs', '/cvs'], apiLimiter, cvsRouter);
+app.use(['/api/packages', '/packages'], apiLimiter, packagesRouter);
+app.use(['/api/credits', '/credits'], apiLimiter, creditsRouter);
+app.use(['/api/payments', '/payments'], apiLimiter, paymentsRouter);
+app.use(['/api/generation', '/generation'], apiLimiter, generationRouter);
 
 // Internal Dashboard & Admin Control Center Routes
-app.use('/api/admin', apiLimiter, adminRouter);
+app.use(['/api/admin', '/admin'], apiLimiter, adminRouter);
 
 // Fallback 404 handler for undefined API endpoints (strictly returns JSON)
-app.use('/api', (req, res) => {
+app.use(['/api', '/api/*'], (req, res) => {
   res.status(404).json({
     success: false,
     error: `Endpoint not found: [${req.method}] ${req.originalUrl}`

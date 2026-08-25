@@ -131,13 +131,37 @@ export const ensureDefaultDashboardData = async () => {
 // ==========================================
 // 1. OVERVIEW & TELEMETRY CONTROL CENTER
 // ==========================================
-router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS']), async (req, res) => {
+router.get(['/overview', '/telemetry'], requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS']), async (req, res) => {
   try {
     const conn = await connectToDatabase();
     if (!conn) {
-      return res.status(500).json({
+      return res.status(200).json({
         success: false,
-        error: 'Database connection failed. Please verify MONGODB_URI/DATABASE_URL in Vercel environment variables.'
+        message: 'Telemetry unavailable: Database connection failed. Please verify MONGODB_URI/DATABASE_URL.',
+        kpis: {
+          totalUsers: 0,
+          newsletterSubscribers: 0,
+          totalInquiries: 0,
+          openInquiries: 0,
+          activeSubscriptions: 0,
+          openIssues: 0,
+          criticalIssues: 0,
+          totalBookings: 0,
+          totalCVs: 0,
+          registeredAccounts: 0,
+          purchases: 0
+        },
+        trafficMetrics: {
+          totalVisitors: 0,
+          uniqueVisitors: 0,
+          pageViews: 0,
+          avgSessionDuration: '0m 0s',
+          bounceRate: '0%'
+        },
+        recentUsers: [],
+        recentAuditLogs: [],
+        recentNotifications: [],
+        recentInquiries: []
       });
     }
 
@@ -192,7 +216,9 @@ router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYT
         openIssues,
         criticalIssues,
         totalBookings,
-        totalCVs
+        totalCVs,
+        registeredAccounts: totalUsers,
+        purchases: activeSubscriptions
       },
       trafficMetrics,
       recentUsers,
@@ -202,7 +228,34 @@ router.get('/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYT
     });
   } catch (err) {
     console.error('[ADMIN OVERVIEW ERROR]', err);
-    return res.status(500).json({ success: false, error: err.message });
+    return res.status(200).json({
+      success: false,
+      message: 'Telemetry unavailable: ' + (err?.message || 'Server error'),
+      kpis: {
+        totalUsers: 0,
+        newsletterSubscribers: 0,
+        totalInquiries: 0,
+        openInquiries: 0,
+        activeSubscriptions: 0,
+        openIssues: 0,
+        criticalIssues: 0,
+        totalBookings: 0,
+        totalCVs: 0,
+        registeredAccounts: 0,
+        purchases: 0
+      },
+      trafficMetrics: {
+        totalVisitors: 0,
+        uniqueVisitors: 0,
+        pageViews: 0,
+        avgSessionDuration: '0m 0s',
+        bounceRate: '0%'
+      },
+      recentUsers: [],
+      recentAuditLogs: [],
+      recentNotifications: [],
+      recentInquiries: []
+    });
   }
 });
 
