@@ -135,33 +135,9 @@ router.get(['/overview', '/telemetry'], requireInternalRole(['SUPER_ADMIN', 'DEV
   try {
     const conn = await connectToDatabase();
     if (!conn) {
-      return res.status(200).json({
+      return res.status(500).json({
         success: false,
-        message: 'Telemetry unavailable: Database connection failed. Please verify MONGODB_URI/DATABASE_URL.',
-        kpis: {
-          totalUsers: 0,
-          newsletterSubscribers: 0,
-          totalInquiries: 0,
-          openInquiries: 0,
-          activeSubscriptions: 0,
-          openIssues: 0,
-          criticalIssues: 0,
-          totalBookings: 0,
-          totalCVs: 0,
-          registeredAccounts: 0,
-          purchases: 0
-        },
-        trafficMetrics: {
-          totalVisitors: 0,
-          uniqueVisitors: 0,
-          pageViews: 0,
-          avgSessionDuration: '0m 0s',
-          bounceRate: '0%'
-        },
-        recentUsers: [],
-        recentAuditLogs: [],
-        recentNotifications: [],
-        recentInquiries: []
+        error: 'Database connection failed. Please verify MONGODB_URI or DATABASE_URL in Vercel environment variables.'
       });
     }
 
@@ -228,33 +204,9 @@ router.get(['/overview', '/telemetry'], requireInternalRole(['SUPER_ADMIN', 'DEV
     });
   } catch (err) {
     console.error('[ADMIN OVERVIEW ERROR]', err);
-    return res.status(200).json({
+    return res.status(500).json({
       success: false,
-      message: 'Telemetry unavailable: ' + (err?.message || 'Server error'),
-      kpis: {
-        totalUsers: 0,
-        newsletterSubscribers: 0,
-        totalInquiries: 0,
-        openInquiries: 0,
-        activeSubscriptions: 0,
-        openIssues: 0,
-        criticalIssues: 0,
-        totalBookings: 0,
-        totalCVs: 0,
-        registeredAccounts: 0,
-        purchases: 0
-      },
-      trafficMetrics: {
-        totalVisitors: 0,
-        uniqueVisitors: 0,
-        pageViews: 0,
-        avgSessionDuration: '0m 0s',
-        bounceRate: '0%'
-      },
-      recentUsers: [],
-      recentAuditLogs: [],
-      recentNotifications: [],
-      recentInquiries: []
+      error: err?.message || 'Failed to fetch dashboard overview telemetry'
     });
   }
 });
