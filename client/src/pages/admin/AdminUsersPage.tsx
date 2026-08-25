@@ -20,6 +20,7 @@ export const AdminUsersPage: React.FC = () => {
   const { token } = useAuth();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
 
@@ -38,6 +39,7 @@ export const AdminUsersPage: React.FC = () => {
 
   const fetchUsers = async () => {
     setLoading(true);
+    setError(null);
     try {
       const query = new URLSearchParams();
       if (search) query.append('search', search);
@@ -49,9 +51,12 @@ export const AdminUsersPage: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.success) {
         setUsers(data.users || []);
+      } else {
+        setError(data.error || 'Failed to fetch user accounts');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ADMIN USERS ERROR]', err);
+      setError(err?.message || 'Network error loading users');
     } finally {
       setLoading(false);
     }
@@ -147,6 +152,18 @@ export const AdminUsersPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <span>{error}</span>
+          <button
+            onClick={fetchUsers}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Filter & Search Bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#141414] border border-white/10">

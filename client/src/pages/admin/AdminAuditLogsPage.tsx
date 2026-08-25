@@ -6,6 +6,7 @@ export const AdminAuditLogsPage: React.FC = () => {
   const { token } = useAuth();
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchLogs();
@@ -13,6 +14,7 @@ export const AdminAuditLogsPage: React.FC = () => {
 
   const fetchLogs = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/admin/audit-logs', {
         headers: { Authorization: `Bearer ${token}` }
@@ -20,9 +22,12 @@ export const AdminAuditLogsPage: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.success) {
         setLogs(data.logs || []);
+      } else {
+        setError(data.error || 'Failed to fetch audit logs');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[AUDIT LOGS ERROR]', err);
+      setError(err?.message || 'Network error fetching audit logs');
     } finally {
       setLoading(false);
     }
@@ -41,6 +46,18 @@ export const AdminAuditLogsPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <span>{error}</span>
+          <button
+            onClick={fetchLogs}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       <div className="rounded-3xl bg-[#141414] border border-white/10 overflow-hidden shadow-xl">
         <div className="overflow-x-auto">

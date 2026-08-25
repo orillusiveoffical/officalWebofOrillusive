@@ -17,6 +17,7 @@ export const AdminContactsPage: React.FC = () => {
   const { token, user } = useAuth();
   const [inquiries, setInquiries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('');
   const [selectedInquiry, setSelectedInquiry] = useState<any | null>(null);
   const [replyMessage, setReplyMessage] = useState('');
@@ -29,6 +30,7 @@ export const AdminContactsPage: React.FC = () => {
 
   const fetchInquiries = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/admin/contacts', {
         headers: { Authorization: `Bearer ${token}` }
@@ -36,9 +38,12 @@ export const AdminContactsPage: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.success) {
         setInquiries(data.inquiries || []);
+      } else {
+        setError(data.error || 'Failed to load inquiries.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ADMIN CONTACTS ERROR]', err);
+      setError(err?.message || 'Network error fetching contacts.');
     } finally {
       setLoading(false);
     }
@@ -104,6 +109,18 @@ export const AdminContactsPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <span>{error}</span>
+          <button
+            onClick={fetchInquiries}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Filter Bar */}
       <div className="flex items-center gap-3 p-4 rounded-2xl bg-[#141414] border border-white/10">

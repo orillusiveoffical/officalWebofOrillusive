@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { Resend } from 'resend';
 import { connectToDatabase } from '../db/mongodb.js';
 import Booking from '../models/Booking.js';
+import ContactInquiry from '../models/ContactInquiry.js';
 import { saveInquiry } from '../db/persistence.js';
 
 const router = express.Router();
@@ -48,7 +49,22 @@ router.post('/', async (req, res) => {
       message: message.trim(),
       userId
     });
-    console.log(`⚡ [ORILLUSIVE MONGO ATLAS] Saved booking call to MongoDB Atlas from ${email}`);
+
+    try {
+      await ContactInquiry.create({
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        service: service || 'General Software Consultation',
+        message: message.trim(),
+        status: 'NEW',
+        source: 'Website Contact Form',
+        bookingId: savedBooking._id
+      });
+    } catch (inquiryErr) {
+      console.warn('ContactInquiry parallel save notice:', inquiryErr.message);
+    }
+
+    console.log(`⚡ [ORILLUSIVE MONGO ATLAS] Saved booking call & contact inquiry to MongoDB Atlas from ${email}`);
 
     // Optional Resend email dispatch
     const apiKey = process.env.RESEND_API_KEY;

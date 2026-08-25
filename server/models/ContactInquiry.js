@@ -64,6 +64,12 @@ const contactInquirySchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    bookingId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Booking',
+      default: null,
+      index: true
+    },
     responseHistory: [responseHistorySchema],
     source: {
       type: String,

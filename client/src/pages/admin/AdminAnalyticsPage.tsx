@@ -16,6 +16,7 @@ export const AdminAnalyticsPage: React.FC = () => {
   const { token } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchAnalytics();
@@ -23,6 +24,7 @@ export const AdminAnalyticsPage: React.FC = () => {
 
   const fetchAnalytics = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/admin/analytics', {
         headers: { Authorization: `Bearer ${token}` }
@@ -30,9 +32,12 @@ export const AdminAnalyticsPage: React.FC = () => {
       const json = await res.json();
       if (res.ok && json.success) {
         setData(json.analytics);
+      } else {
+        setError(json.error || 'Failed to load traffic analytics');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ADMIN ANALYTICS ERROR]', err);
+      setError(err?.message || 'Network error fetching analytics');
     } finally {
       setLoading(false);
     }
@@ -53,19 +58,30 @@ export const AdminAnalyticsPage: React.FC = () => {
   const topPages = data?.topPages || [];
 
   return (
-    <div className="space-y-8 font-sans">
-      {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
+    <div className="space-y-6 font-sans">
+      <div className="flex items-center justify-between border-b border-white/10 pb-5">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <BarChart3 className="size-6 text-[#4F6B85]" />
+            <BarChart3 className="size-6 text-emerald-400" />
             <span>Traffic & Audience Analytics</span>
           </h1>
           <p className="text-xs text-[#888888] mt-1">
-            Audience behavior, page popularity, visitor channels, and engagement metrics.
+            Visitor behavior breakdown, device telemetry, referrer sources, and top pages.
           </p>
         </div>
       </div>
+
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <span>{error}</span>
+          <button
+            onClick={fetchAnalytics}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Traffic Trend Chart (CSS Bar Visuals) */}
       <div className="p-6 rounded-3xl bg-[#141414] border border-white/10 space-y-6">

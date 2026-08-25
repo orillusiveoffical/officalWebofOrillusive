@@ -13,8 +13,11 @@ export const AdminSubscriptionsPage: React.FC = () => {
     fetchPayments();
   }, [token]);
 
+  const [error, setError] = useState<string | null>(null);
+
   const fetchPayments = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/admin/subscriptions', {
         headers: { Authorization: `Bearer ${token}` }
@@ -24,9 +27,12 @@ export const AdminSubscriptionsPage: React.FC = () => {
         setPayments(data.payments || []);
         setTransactions(data.creditTransactions || []);
         if (data.stats) setStats(data.stats);
+      } else {
+        setError(data.error || 'Failed to load subscription metrics');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ADMIN SUBSCRIPTIONS ERROR]', err);
+      setError(err?.message || 'Network error fetching subscription data');
     } finally {
       setLoading(false);
     }
@@ -53,6 +59,18 @@ export const AdminSubscriptionsPage: React.FC = () => {
           <span>Refresh Telemetry</span>
         </button>
       </div>
+
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <span>{error}</span>
+          <button
+            onClick={fetchPayments}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

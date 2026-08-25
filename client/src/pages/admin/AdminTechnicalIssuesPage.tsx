@@ -33,12 +33,15 @@ export const AdminTechnicalIssuesPage: React.FC = () => {
   const [endpoint, setEndpoint] = useState('/api/subscriptions');
   const [creating, setCreating] = useState(false);
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     fetchIssues();
   }, [token]);
 
   const fetchIssues = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/admin/issues', {
         headers: { Authorization: `Bearer ${token}` }
@@ -46,9 +49,12 @@ export const AdminTechnicalIssuesPage: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.success) {
         setIssues(data.issues || []);
+      } else {
+        setError(data.error || 'Failed to load technical issues');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ADMIN ISSUES ERROR]', err);
+      setError(err?.message || 'Network error fetching technical issues');
     } finally {
       setLoading(false);
     }
@@ -133,6 +139,18 @@ export const AdminTechnicalIssuesPage: React.FC = () => {
           <span>Report Issue</span>
         </button>
       </div>
+
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <span>{error}</span>
+          <button
+            onClick={fetchIssues}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[#141414] border border-white/10">

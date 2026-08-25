@@ -19,6 +19,7 @@ export const AdminBlogPage: React.FC = () => {
   const { token } = useAuth();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<any | null>(null);
 
@@ -39,6 +40,7 @@ export const AdminBlogPage: React.FC = () => {
 
   const fetchPosts = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/admin/blogs', {
         headers: { Authorization: `Bearer ${token}` }
@@ -46,9 +48,12 @@ export const AdminBlogPage: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.success) {
         setPosts(data.posts || []);
+      } else {
+        setError(data.error || 'Failed to load blog posts');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[ADMIN BLOG ERROR]', err);
+      setError(err?.message || 'Network error loading blog articles');
     } finally {
       setLoading(false);
     }
@@ -161,6 +166,18 @@ export const AdminBlogPage: React.FC = () => {
           <span>New Article</span>
         </button>
       </div>
+
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <span>{error}</span>
+          <button
+            onClick={fetchPosts}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Blog List Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -103,6 +103,26 @@ export const ensureDefaultDashboardData = async () => {
         assignedTo: 'Orillusive Engineering'
       });
     }
+
+    // Synchronize all website booking calls into ContactInquiry CRM collection
+    const existingBookings = await Booking.find({});
+    for (const b of existingBookings) {
+      const exists = await ContactInquiry.findOne({
+        email: b.email.toLowerCase(),
+        message: b.message
+      });
+      if (!exists) {
+        await ContactInquiry.create({
+          name: b.name,
+          email: b.email.toLowerCase(),
+          service: b.service || 'General Software Consultation',
+          message: b.message,
+          status: b.status === 'confirmed' ? 'COMPLETED' : b.status === 'reviewed' ? 'CONTACTED' : 'NEW',
+          source: 'Website Discovery Booking',
+          createdAt: b.createdAt
+        });
+      }
+    }
   } catch (err) {
     console.warn('⚠️ Dashboard default data initialization deferred:', err.message);
   }
@@ -433,6 +453,27 @@ router.post('/newsletter/campaigns', requireInternalRole(['SUPER_ADMIN']), async
 router.get('/contacts', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
   try {
     await connectToDatabase();
+
+    // Auto-sync any booking records into CRM collection
+    const bookings = await Booking.find({});
+    for (const b of bookings) {
+      const exists = await ContactInquiry.findOne({
+        email: b.email.toLowerCase(),
+        message: b.message
+      });
+      if (!exists) {
+        await ContactInquiry.create({
+          name: b.name,
+          email: b.email.toLowerCase(),
+          service: b.service || 'General Software Consultation',
+          message: b.message,
+          status: b.status === 'confirmed' ? 'COMPLETED' : b.status === 'reviewed' ? 'CONTACTED' : 'NEW',
+          source: 'Website Discovery Booking',
+          createdAt: b.createdAt
+        });
+      }
+    }
+
     const inquiries = await ContactInquiry.find().sort({ createdAt: -1 });
     return res.status(200).json({ success: true, inquiries });
   } catch (err) {

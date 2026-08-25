@@ -12,8 +12,11 @@ export const AdminNewsletterPage: React.FC = () => {
     fetchData();
   }, [token]);
 
+  const [error, setError] = useState<string | null>(null);
+
   const fetchData = async () => {
     setLoading(true);
+    setError(null);
     try {
       const [subRes, campRes] = await Promise.all([
         fetch('/api/admin/newsletter/subscribers', { headers: { Authorization: `Bearer ${token}` } }),
@@ -21,10 +24,17 @@ export const AdminNewsletterPage: React.FC = () => {
       ]);
       const subData = await subRes.json();
       const campData = await campRes.json();
-      if (subRes.ok && subData.success) setSubscribers(subData.subscribers || []);
-      if (campRes.ok && campData.success) setCampaigns(campData.campaigns || []);
-    } catch (err) {
+      if (subRes.ok && subData.success) {
+        setSubscribers(subData.subscribers || []);
+      } else {
+        setError(subData.error || 'Failed to fetch newsletter subscribers');
+      }
+      if (campRes.ok && campData.success) {
+        setCampaigns(campData.campaigns || []);
+      }
+    } catch (err: any) {
       console.error('[NEWSLETTER ERROR]', err);
+      setError(err?.message || 'Network error fetching newsletter data');
     } finally {
       setLoading(false);
     }
@@ -44,14 +54,14 @@ export const AdminNewsletterPage: React.FC = () => {
 
   return (
     <div className="space-y-6 font-sans">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
+      <div className="flex items-center justify-between border-b border-white/10 pb-5">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Send className="size-6 text-blue-400" />
-            <span>Newsletter Subscribers & Email Campaigns</span>
+            <Mail className="size-6 text-blue-400" />
+            <span>Newsletter Audience & Campaigns</span>
           </h1>
           <p className="text-xs text-[#888888] mt-1">
-            Audience mailing list management, subscriber export, and promotional campaigns.
+            Audience subscriber base export, campaign broadcasts, and distribution analytics.
           </p>
         </div>
 
@@ -63,6 +73,18 @@ export const AdminNewsletterPage: React.FC = () => {
           <span>Export CSV</span>
         </button>
       </div>
+
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <span>{error}</span>
+          <button
+            onClick={fetchData}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       <div className="rounded-3xl bg-[#141414] border border-white/10 overflow-hidden">
         <div className="p-4 border-b border-white/10 flex items-center justify-between">

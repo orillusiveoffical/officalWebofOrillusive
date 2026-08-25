@@ -32,16 +32,18 @@ export const requireInternalRole = (allowedRoles = ['SUPER_ADMIN', 'DEVELOPER', 
         return res.status(403).json({ success: false, error: 'Your account has been suspended by administration.' });
       }
 
-      const role = user.role || 'client';
+      const rawRole = user.role || 'client';
+      const upperRole = rawRole.trim().toUpperCase();
+      const normalizedAllowed = allowedRoles.map((r) => r.trim().toUpperCase());
 
       // Super Admin and legacy 'admin' have unrestricted access across all admin modules
-      if (role === 'SUPER_ADMIN' || role === 'admin') {
+      if (upperRole === 'SUPER_ADMIN' || upperRole === 'ADMIN') {
         req.user = user;
         return next();
       }
 
       // Check specific role authorization
-      if (allowedRoles.includes(role)) {
+      if (normalizedAllowed.includes(upperRole)) {
         req.user = user;
         return next();
       }

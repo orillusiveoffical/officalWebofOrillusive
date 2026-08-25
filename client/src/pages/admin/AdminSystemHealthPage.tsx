@@ -18,6 +18,7 @@ export const AdminSystemHealthPage: React.FC = () => {
   const { token } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchHealth();
@@ -25,6 +26,7 @@ export const AdminSystemHealthPage: React.FC = () => {
 
   const fetchHealth = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/admin/system-health', {
         headers: { Authorization: `Bearer ${token}` }
@@ -32,9 +34,12 @@ export const AdminSystemHealthPage: React.FC = () => {
       const json = await res.json();
       if (res.ok && json.success) {
         setData(json.system);
+      } else {
+        setError(json.error || 'Failed to fetch system health telemetry');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('[HEALTH TELEMETRY ERROR]', err);
+      setError(err?.message || 'Network error fetching system health');
     } finally {
       setLoading(false);
     }
@@ -70,11 +75,23 @@ export const AdminSystemHealthPage: React.FC = () => {
           className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-semibold transition-all flex items-center gap-2 border border-white/10"
         >
           <RefreshCw className="size-3.5" />
-          <span>Ping Health Check</span>
+          <span>Refresh Metrics</span>
         </button>
       </div>
 
-      {/* Metrics Row */}
+      {error && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
+          <span>{error}</span>
+          <button
+            onClick={fetchHealth}
+            className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Top Level KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 rounded-2xl bg-[#141414] border border-white/10">
           <div className="flex items-center justify-between text-[#888888]">
