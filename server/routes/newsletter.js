@@ -1,7 +1,6 @@
 import express from 'express';
 import { connectToDatabase } from '../db/mongodb.js';
 import Newsletter from '../models/Newsletter.js';
-import { saveSubscriber } from '../db/persistence.js';
 
 const router = express.Router();
 
@@ -16,22 +15,20 @@ router.post('/', async (req, res) => {
     const normalizedEmail = email.toLowerCase().trim();
 
     const dbConn = await connectToDatabase();
-    if (dbConn) {
-      const existing = await Newsletter.findOne({ email: normalizedEmail });
-      if (existing) {
-        return res.status(200).json({
-          success: true,
-          message: 'You are already subscribed to Orillusive field notes.'
-        });
-      }
-
-      await Newsletter.create({ email: normalizedEmail });
-      console.log(`⚡ [ORILLUSIVE MONGO ATLAS] Saved newsletter subscriber to MongoDB Atlas: ${normalizedEmail}`);
-    } else {
-      // Fallback local persistence
-      saveSubscriber(normalizedEmail);
-      console.log(`ℹ️ [ORILLUSIVE NEWSLETTER] Saved subscriber to local fallback: ${normalizedEmail}`);
+    if (!dbConn) {
+      return res.status(500).json({ success: false, error: 'Database connection failed. Unable to record subscription.' });
     }
+
+    const existing = await Newsletter.findOne({ email: normalizedEmail });
+    if (existing) {
+      return res.status(200).json({
+        success: true,
+        message: 'You are already subscribed to Orillusive field notes.'
+      });
+    }
+
+    await Newsletter.create({ email: normalizedEmail });
+    console.log(`⚡ [ORILLUSIVE MONGO ATLAS] Saved newsletter subscriber to MongoDB Atlas: ${normalizedEmail}`);
 
     return res.status(200).json({
       success: true,

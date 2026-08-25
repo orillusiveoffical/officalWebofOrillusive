@@ -4,7 +4,6 @@ import { Resend } from 'resend';
 import { connectToDatabase } from '../db/mongodb.js';
 import Booking from '../models/Booking.js';
 import ContactInquiry from '../models/ContactInquiry.js';
-import { saveInquiry } from '../db/persistence.js';
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
