@@ -89,7 +89,7 @@ export const FEATURED_PRODUCTS_DATA: FeaturedProduct[] = [
       'Multi-property Support'
     ],
     type: 'Enterprise Platform',
-    link: 'https://dashboard.orillusive.com/login',
+    link: 'https://dashboard.orillusive.com/',
     ctaText: 'ACCESS PORTAL'
   }
 ];
