@@ -76,7 +76,7 @@ export const FEATURED_PRODUCTS_DATA: FeaturedProduct[] = [
     id: 'hotel-management-system',
     title: 'Hotel Management System',
     subtitle: 'All-in-one hospitality operation & revenue platform',
-    status: 'Currently Under Development',
+    status: 'Live SaaS Product',
     description: 'A modern enterprise platform engineered for independent boutique hotels and multi-property groups to streamline reservations, staff workflows, and guest analytics.',
     features: [
       'Reservation Management',
@@ -88,7 +88,9 @@ export const FEATURED_PRODUCTS_DATA: FeaturedProduct[] = [
       'OTA Integrations',
       'Multi-property Support'
     ],
-    type: 'Enterprise Platform'
+    type: 'Enterprise Platform',
+    link: 'https://dashboard.orillusive.com/login',
+    ctaText: 'ACCESS PORTAL'
   }
 ];
 
