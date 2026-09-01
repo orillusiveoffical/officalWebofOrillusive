@@ -158,6 +158,16 @@ export const PAGE_SEO: Record<string, PageSEO> = {
     breadcrumbName: 'Pricing',
   },
 
+  blog: {
+    title: 'Engineering Blog & Field Notes — Orillusive',
+    description:
+      'Senior software engineering insights, system architecture patterns, SaaS platform scaling, and tech field notes from the Orillusive studio.',
+    keywords:
+      'software engineering blog, system architecture, SaaS development articles, cloud scaling, React performance, technical deep dives, Orillusive field notes',
+    canonicalPath: '/blog',
+    breadcrumbName: 'Blog',
+  },
+
   contact: {
     title: 'Contact Orillusive — Start Your Software Project Today',
     description:

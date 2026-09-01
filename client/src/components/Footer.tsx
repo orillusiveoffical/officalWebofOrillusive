@@ -78,6 +78,7 @@ export const Footer: React.FC = () => {
               <Link to="/projects" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Products</Link>
               <Link to="/about" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">About Studio</Link>
               <Link to="/process" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Engineering Process</Link>
+              <Link to="/blog" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Engineering Blog</Link>
               <Link to="/pricing" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Pricing & Engagements</Link>
               <Link to="/contact" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Start Project / Contact</Link>
             </div>

@@ -18,8 +18,8 @@ export const SplashLoader: React.FC<SplashLoaderProps> = ({ onComplete }) => {
     <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-50 bg-[#111111] flex flex-col items-center justify-center text-[#F7F7F5] pointer-events-none"
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-[99999] bg-[#111111] flex flex-col items-center justify-center text-[#F7F7F5]"
     >
       {/* Soft Radial Background Lighting */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(79,107,133,0.15),transparent_55%)] pointer-events-none" />

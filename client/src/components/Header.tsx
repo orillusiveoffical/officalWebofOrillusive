@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, Menu, X, User, Calendar, LogOut, LogIn, ChevronDown, Layers, Sparkles, DollarSign, Mail, Info, Smartphone, Building2, Package, LayoutDashboard } from 'lucide-react';
+import { ArrowUpRight, Menu, X, User, Calendar, LogOut, LogIn, ChevronDown, Layers, Sparkles, DollarSign, Mail, Info, Smartphone, Building2, Package, LayoutDashboard, BookOpen } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { hasInternalRole } from '../utils/roles';
 
@@ -54,13 +54,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
       href: '/projects', 
       desc: 'Integrated enterprise hospitality suite for reservation & property logistics', 
       icon: Building2,
-      tag: 'In Dev'
+      tag: 'Live App'
     }
   ];
 
   const aboutSublinks = [
     { name: 'About Studio', href: '/about', desc: 'Our philosophy, engineering team & mission', icon: Info },
-    { name: 'Engineering Process', href: '/process', desc: '7-step software build methodology', icon: Layers }
+    { name: 'Engineering Process', href: '/process', desc: '7-step software build methodology', icon: Layers },
+    { name: 'Engineering Blog', href: '/blog', desc: 'Architecture, field notes & tech insights', icon: BookOpen }
   ];
 
   const contactSublinks = [
@@ -193,7 +194,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
             <button
               onClick={() => setActiveDropdown(activeDropdown === 'about' ? null : 'about')}
               className={`text-[11px] lg:text-xs font-bold uppercase tracking-wider lg:tracking-widest transition-all duration-200 flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
-                ['/about', '/process'].includes(location.pathname)
+                ['/about', '/process', '/blog'].includes(location.pathname) || location.pathname.startsWith('/blog/')
                   ? 'text-[#4F6B85] bg-[#4F6B85]/10'
                   : 'text-[#555555] hover:text-[#111111] hover:bg-black/5'
               }`}
@@ -214,7 +215,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenInquiry, onOpenAuth, onOpe
                   <div className="rounded-[28px] bg-white/95 backdrop-blur-2xl border border-black/10 p-4 sm:p-5 shadow-2xl shadow-black/15 space-y-2 ring-1 ring-black/5">
                     <div className="px-3 py-1.5 border-b border-black/5 mb-1.5 flex items-center justify-between">
                       <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#4F6B85]">Studio Overview</span>
-                      <span className="text-[9px] font-mono text-[#888888] uppercase tracking-wider">2 Sections</span>
+                      <span className="text-[9px] font-mono text-[#888888] uppercase tracking-wider">3 Offerings</span>
                     </div>
                     {aboutSublinks.map((item) => {
                       const IconComp = item.icon;

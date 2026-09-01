@@ -27,6 +27,7 @@ import creditsRouter from './routes/credits.js';
 import paymentsRouter from './routes/payments.js';
 import generationRouter from './routes/generation.js';
 import adminRouter, { ensureDefaultDashboardData } from './routes/admin.js';
+import blogsRouter from './routes/blogs.js';
 import { connectToDatabase } from './db/mongodb.js';
 
 dotenv.config();
@@ -140,6 +141,9 @@ app.use(['/api/packages', '/packages'], apiLimiter, packagesRouter);
 app.use(['/api/credits', '/credits'], apiLimiter, creditsRouter);
 app.use(['/api/payments', '/payments'], apiLimiter, paymentsRouter);
 app.use(['/api/generation', '/generation'], apiLimiter, generationRouter);
+
+// Public Blog & Editorial Routes
+app.use(['/api/blogs', '/blogs'], apiLimiter, blogsRouter);
 
 // Internal Dashboard & Admin Control Center Routes
 app.use(['/api/admin', '/admin'], apiLimiter, adminRouter);
