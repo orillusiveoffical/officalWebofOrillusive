@@ -1,6 +1,3 @@
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-
 export interface PDFExportOptions {
   elementId?: string;
   filename?: string;
@@ -40,6 +37,12 @@ export const downloadCVAsPDF = async (
 
     // Allow browser frame render after scale reset
     await new Promise((resolve) => setTimeout(resolve, 50));
+
+    // Dynamic import to avoid bundling in critical path
+    const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+      import('html2canvas'),
+      import('jspdf')
+    ]);
 
     // 2. Render high-resolution canvas with html2canvas
     const canvas = await html2canvas(targetElement, {

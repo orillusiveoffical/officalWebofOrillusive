@@ -27,9 +27,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInquiry }) => {
         <div className="max-w-2xl space-y-6 sm:space-y-8">
 
           <motion.h1 
-            initial={{ opacity: 0, y: 25 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.04] text-[#111111]"
           >
             Engineering Software <br />
@@ -37,18 +37,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInquiry }) => {
           </motion.h1>
 
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
             className="text-sm sm:text-base md:text-xl leading-relaxed text-[#555555] max-w-xl font-normal"
           >
             We design and develop scalable software products—from enterprise platforms to modern mobile applications—crafted for businesses that want to grow.
           </motion.p>
 
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="pt-2 flex flex-col sm:flex-row gap-3.5 sm:gap-5"
           >
             <button
