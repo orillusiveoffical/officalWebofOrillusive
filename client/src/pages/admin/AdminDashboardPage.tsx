@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   Users,
@@ -25,14 +26,19 @@ export const AdminDashboardPage: React.FC = () => {
   const { token, user } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchOverview();
+    fetchOverview(true);
   }, [token]);
 
-  const fetchOverview = async () => {
-    setLoading(true);
+  const fetchOverview = async (isInitial = false) => {
+    if (isInitial && !data) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
     setError(null);
     try {
       const res = await safeFetch<any>('/api/admin/overview', {
@@ -51,6 +57,7 @@ export const AdminDashboardPage: React.FC = () => {
       setError(err?.message || 'Network error connecting to telemetry endpoint');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -83,7 +90,7 @@ export const AdminDashboardPage: React.FC = () => {
             </div>
           </div>
           <button
-            onClick={fetchOverview}
+            onClick={() => fetchOverview(false)}
             className="px-4 py-2 rounded-xl bg-amber-500 text-[#111111] font-bold text-xs hover:bg-amber-400 transition-all flex items-center gap-1.5"
           >
             <RotateCcw className="size-3.5" />
@@ -107,11 +114,12 @@ export const AdminDashboardPage: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={fetchOverview}
-            className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-[#CCCCCC] hover:text-white border border-white/10 text-xs font-semibold transition-all flex items-center gap-2"
+            onClick={() => fetchOverview(false)}
+            disabled={refreshing}
+            className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-[#CCCCCC] hover:text-white border border-white/10 text-xs font-semibold transition-all flex items-center gap-2 disabled:opacity-50"
           >
-            <RefreshCw className="size-3.5" />
-            <span>Refresh Data</span>
+            <RefreshCw className={`size-3.5 ${refreshing ? 'animate-spin text-[#C9A84C]' : ''}`} />
+            <span>{refreshing ? 'Refreshing...' : 'Refresh Data'}</span>
           </button>
         </div>
       </div>
@@ -130,12 +138,12 @@ export const AdminDashboardPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <a
-            href="/admin/issues"
+          <Link
+            to="/admin/issues"
             className="px-4 py-2 rounded-xl bg-red-500 text-white font-bold text-xs hover:bg-red-600 transition-all shrink-0"
           >
             Investigate Issues
-          </a>
+          </Link>
         </div>
       )}
 
@@ -234,27 +242,27 @@ export const AdminDashboardPage: React.FC = () => {
 
           {/* Quick Action Navigation Buttons */}
           <div className="pt-2 flex flex-wrap gap-3 border-t border-white/10">
-            <a
-              href="/admin/users"
+            <Link
+              to="/admin/users"
               className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-all flex items-center gap-2"
             >
               <Users className="size-3.5 text-[#4F6B85]" />
               <span>Manage Users</span>
-            </a>
-            <a
-              href="/admin/blog"
+            </Link>
+            <Link
+              to="/admin/blog"
               className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-all flex items-center gap-2"
             >
               <FileText className="size-3.5 text-[#C9A84C]" />
               <span>Blog CMS</span>
-            </a>
-            <a
-              href="/admin/issues"
+            </Link>
+            <Link
+              to="/admin/issues"
               className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-all flex items-center gap-2"
             >
               <AlertTriangle className="size-3.5 text-amber-400" />
               <span>Technical Issues ({kpis.openIssues || 0})</span>
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -262,7 +270,7 @@ export const AdminDashboardPage: React.FC = () => {
         <div className="lg:col-span-4 p-6 rounded-3xl bg-[#141414] border border-white/10 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <h3 className="text-sm font-bold uppercase tracking-wider text-white">Recent Audit Logs</h3>
-            <a href="/admin/audit-logs" className="text-[10px] font-bold text-[#4F6B85] hover:underline uppercase">View All</a>
+            <Link to="/admin/audit-logs" className="text-[10px] font-bold text-[#4F6B85] hover:underline uppercase">View All</Link>
           </div>
 
           <div className="space-y-3 max-h-[350px] overflow-y-auto custom-scrollbar">

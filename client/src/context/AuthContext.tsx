@@ -8,14 +8,26 @@ export interface User {
   credits?: number;
 }
 
+export interface ResponseItem {
+  _id?: string;
+  author: string;
+  authorEmail: string;
+  message: string;
+  type: string;
+  createdAt: string;
+}
+
 export interface BookingItem {
   _id: string;
   name: string;
   email: string;
   service: string;
   message: string;
-  status: 'pending' | 'reviewed' | 'confirmed';
+  status: 'pending' | 'reviewed' | 'contacted' | 'in_discussion' | 'call_scheduled' | 'confirmed' | 'completed' | 'cancelled' | string;
+  adminNotes?: string;
+  responseHistory?: ResponseItem[];
   createdAt: string;
+  updatedAt?: string;
 }
 
 interface AuthContextType {
@@ -27,6 +39,7 @@ interface AuthContextType {
   register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   fetchMyBookings: () => Promise<void>;
+  cancelBooking: (bookingId: string) => Promise<{ success: boolean; error?: string }>;
   updateUserCredits: (credits: number) => void;
 }
 
@@ -88,12 +101,49 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  useEffect(() => {
-    if (user && token) {
-      fetchMyBookings();
-    } else {
-      setBookings([]);
+  const cancelBooking = async (bookingId: string) => {
+    if (!token) return { success: false, error: 'Not authenticated' };
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        await fetchMyBookings();
+        return { success: true };
+      }
+      return { success: false, error: data.error || 'Failed to cancel booking' };
+    } catch (err: any) {
+      return { success: false, error: err.message };
     }
+  };
+
+  useEffect(() => {
+    if (!user || !token) {
+      setBookings([]);
+      return;
+    }
+
+    fetchMyBookings();
+
+    // Real-time synchronization: Poll every 15s and refresh on window focus
+    const interval = setInterval(() => {
+      fetchMyBookings();
+    }, 15000);
+
+    const handleFocus = () => {
+      fetchMyBookings();
+    };
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, [user, token]);
 
   const login = async (email: string, password: string) => {
@@ -152,7 +202,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, bookings, login, register, logout, fetchMyBookings, updateUserCredits }}>
+    <AuthContext.Provider value={{ user, token, loading, bookings, login, register, logout, fetchMyBookings, cancelBooking, updateUserCredits }}>
       {children}
     </AuthContext.Provider>
   );

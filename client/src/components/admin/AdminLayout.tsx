@@ -252,7 +252,16 @@ export const AdminLayout: React.FC = () => {
 
         {/* Dashboard Main Content Body */}
         <main className="flex-1 p-4 sm:p-8 max-w-[1600px] w-full mx-auto">
-          <Outlet />
+          <React.Suspense
+            fallback={
+              <div className="py-24 flex flex-col items-center justify-center text-center">
+                <div className="size-8 rounded-full border-2 border-white/10 border-t-[#C9A84C] animate-spin mb-3" />
+                <p className="text-xs font-mono text-[#888888] tracking-widest uppercase">Loading Section...</p>
+              </div>
+            }
+          >
+            <Outlet />
+          </React.Suspense>
         </main>
       </div>
 

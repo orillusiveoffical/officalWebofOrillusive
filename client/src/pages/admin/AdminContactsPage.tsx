@@ -27,11 +27,11 @@ export const AdminContactsPage: React.FC = () => {
   const [replying, setReplying] = useState(false);
 
   useEffect(() => {
-    fetchInquiries();
+    fetchInquiries(true);
   }, [token]);
 
-  const fetchInquiries = async () => {
-    setLoading(true);
+  const fetchInquiries = async (isInitial = false) => {
+    if (isInitial && inquiries.length === 0) setLoading(true);
     setError(null);
     try {
       const res = await safeFetch<any>('/api/admin/contacts', {
@@ -61,10 +61,14 @@ export const AdminContactsPage: React.FC = () => {
         },
         body: JSON.stringify({ status: newStatus })
       });
-      if (res.ok) {
-        fetchInquiries();
+      if (res.ok && res.data?.success) {
+        const updated = res.data.inquiry;
+        setInquiries((prev) => prev.map((item) => (item._id === id ? updated : item)));
+        if (selectedInquiry?._id === id) {
+          setSelectedInquiry(updated);
+        }
       } else {
-        alert(res.error || 'Failed to update status');
+        alert(res.error || 'Failed to update status in database');
       }
     } catch (err: any) {
       alert(err?.message || 'Failed to update status');
@@ -88,9 +92,10 @@ export const AdminContactsPage: React.FC = () => {
       });
 
       if (res.ok && res.data?.success) {
-        setSelectedInquiry(res.data.inquiry);
+        const updated = res.data.inquiry;
+        setSelectedInquiry(updated);
+        setInquiries((prev) => prev.map((item) => (item._id === updated._id ? updated : item)));
         setReplyMessage('');
-        fetchInquiries();
       } else {
         alert(res.error || 'Failed to send reply');
       }
@@ -122,7 +127,7 @@ export const AdminContactsPage: React.FC = () => {
         <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center justify-between gap-4 text-xs">
           <span>{error}</span>
           <button
-            onClick={fetchInquiries}
+            onClick={() => fetchInquiries(false)}
             className="px-3 py-1.5 rounded-xl bg-amber-500 text-[#111111] font-bold hover:bg-amber-400 transition-all"
           >
             Retry

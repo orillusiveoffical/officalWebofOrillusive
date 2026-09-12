@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { hasInternalRole } from '../../utils/roles';
 import { Loader2, ShieldAlert, ShieldCheck, Lock, ArrowRight } from 'lucide-react';
@@ -136,12 +136,12 @@ export const AdminRoute: React.FC<AdminRouteProps> = ({ allowedRoles }) => {
           <p className="text-xs text-[#888888] max-w-md mt-2 leading-relaxed">
             Your role (<strong className="text-white uppercase">{user.role}</strong>) does not have authorization to view this section of the Orillusive internal dashboard.
           </p>
-          <a
-            href="/admin"
+          <Link
+            to="/admin"
             className="mt-6 px-6 py-2.5 rounded-full bg-white/10 text-white hover:bg-white/20 text-xs font-bold uppercase tracking-wider transition-all"
           >
             Return to Dashboard Overview
-          </a>
+          </Link>
         </div>
       );
     }

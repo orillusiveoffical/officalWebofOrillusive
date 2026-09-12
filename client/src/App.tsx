@@ -50,9 +50,12 @@ const AuthModal = lazy(() => import('./components/AuthModal').then((m) => ({ def
 const MyBookingsModal = lazy(() => import('./components/MyBookingsModal').then((m) => ({ default: m.MyBookingsModal })));
 
 function PageFallback() {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin') || location.pathname.startsWith('/dashboard');
+
   return (
-    <div className="min-h-[70vh] flex items-center justify-center bg-[#F7F7F5]">
-      <div className="size-8 rounded-full border-2 border-[#4F6B85]/20 border-t-[#4F6B85] animate-spin" />
+    <div className={`min-h-[70vh] flex items-center justify-center ${isAdmin ? 'bg-[#0D0D0D]' : 'bg-[#F7F7F5]'}`}>
+      <div className={`size-8 rounded-full border-2 ${isAdmin ? 'border-white/10 border-t-[#C9A84C]' : 'border-[#4F6B85]/20 border-t-[#4F6B85]'} animate-spin`} />
     </div>
   );
 }

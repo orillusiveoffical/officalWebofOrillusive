@@ -57,7 +57,7 @@ router.post('/', async (req, res) => {
     });
 
     try {
-      await ContactInquiry.create({
+      const savedInquiry = await ContactInquiry.create({
         name: name.trim(),
         email: email.trim().toLowerCase(),
         service: service || 'General Software Consultation',
@@ -66,6 +66,10 @@ router.post('/', async (req, res) => {
         source: 'Website Contact Form',
         bookingId: savedBooking._id
       });
+      if (savedInquiry?._id) {
+        savedBooking.inquiryId = savedInquiry._id;
+        await savedBooking.save();
+      }
     } catch (inquiryErr) {
       console.warn('ContactInquiry parallel save notice:', inquiryErr.message);
     }
