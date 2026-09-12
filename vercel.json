@@ -42,6 +42,33 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/privacy-policy",
+      "destination": "/privacy",
+      "permanent": true
+    },
+    {
+      "source": "/terms-and-conditions",
+      "destination": "/terms",
+      "permanent": true
+    },
+    {
+      "source": "/products",
+      "destination": "/projects",
+      "permanent": true
+    },
+    {
+      "source": "/products/autiva",
+      "destination": "/projects",
+      "permanent": true
+    },
+    {
+      "source": "/products/autiva/(.*)",
+      "destination": "/projects",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",

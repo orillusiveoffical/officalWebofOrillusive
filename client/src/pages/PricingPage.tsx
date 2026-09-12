@@ -52,7 +52,11 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onOpenInquiry }) => {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold font-sans text-[#111111] mb-6">
+            Studio Engagement Models
+          </h2>
+          <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl">
           {engagementModels.map((tier) => (
             <div key={tier.id} className="p-6 sm:p-8 lg:p-9 rounded-2xl bg-white border border-black/10 shadow-xs flex flex-col justify-between space-y-8 sm:space-y-10">
               <div>
@@ -69,6 +73,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onOpenInquiry }) => {
               </button>
             </div>
           ))}
+          </div>
         </div>
       </div>
     </div>

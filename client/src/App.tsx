@@ -1,5 +1,5 @@
 import React, { useState, Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AuthProvider } from './context/AuthContext';
@@ -20,6 +20,7 @@ const BlogPage = lazy(() => import('./pages/BlogPage').then((m) => ({ default: m
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage').then((m) => ({ default: m.BlogPostPage })));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then((m) => ({ default: m.PrivacyPolicyPage })));
 const TermsPage = lazy(() => import('./pages/TermsPage').then((m) => ({ default: m.TermsPage })));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 
 // Lazy-loaded CV Maker Suite
 const CVMakerPage = lazy(() => import('./pages/cv/CVMakerPage').then((m) => ({ default: m.CVMakerPage })));
@@ -112,9 +113,14 @@ function AppContent() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms" element={<TermsPage />} />
-            <Route path="/terms-and-conditions" element={<TermsPage />} />
+
+            {/* Canonical 301-equivalent Client Redirects */}
+            <Route path="/privacy-policy" element={<Navigate to="/privacy" replace />} />
+            <Route path="/terms-and-conditions" element={<Navigate to="/terms" replace />} />
+            <Route path="/products" element={<Navigate to="/projects" replace />} />
+            <Route path="/products/autiva" element={<Navigate to="/projects" replace />} />
+            <Route path="/products/autiva/*" element={<Navigate to="/projects" replace />} />
 
             {/* Internal Operations Control Center Protected Routes */}
             <Route element={<AdminRoute />}>
@@ -135,6 +141,9 @@ function AppContent() {
                 <Route path="/admin/team" element={<AdminTeamPage />} />
               </Route>
             </Route>
+
+            {/* 404 Fallback for Unmatched Routes */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </main>

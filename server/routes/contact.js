@@ -8,6 +8,13 @@ import ContactInquiry from '../models/ContactInquiry.js';
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
+router.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Orillusive Studio Contact & Intake API. Submit discovery inquiries via POST.'
+  });
+});
+
 router.post('/', async (req, res) => {
   try {
     const { name, email, message, service } = req.body || {};

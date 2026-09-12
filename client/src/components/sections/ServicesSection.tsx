@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Layers, Globe, Smartphone, Building2, ShieldCheck, LayoutGrid, Workflow, Wrench } from 'lucide-react';
+import { Layers, Globe, Smartphone, Building2, ShieldCheck, LayoutGrid, Workflow, Wrench, ArrowRight } from 'lucide-react';
 import { SERVICES_DATA } from '../../data/contentData';
 
 const iconMap: Record<string, React.ElementType> = {
@@ -56,6 +57,16 @@ export const ServicesSection: React.FC = () => {
               </motion.article>
             );
           })}
+        </div>
+
+        <div className="mt-12 text-center">
+          <Link
+            to="/services"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#4F6B85] hover:text-[#111111] transition-colors group"
+          >
+            <span>Explore all eight engineering disciplines & technical capabilities</span>
+            <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
         </div>
 
       </div>

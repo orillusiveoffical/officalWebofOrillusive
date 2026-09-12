@@ -14,6 +14,9 @@ import {
   Printer
 } from 'lucide-react';
 import { CV_TEMPLATES } from '../../data/cvPresets';
+import { SEOHead } from '../../components/SEOHead';
+import { StructuredData } from '../../components/StructuredData';
+import { PAGE_SEO, buildBreadcrumbSchema } from '../../data/seoData';
 
 interface CVMakerPageProps {
   onOpenAuth?: () => void;
@@ -22,6 +25,15 @@ interface CVMakerPageProps {
 export const CVMakerPage: React.FC<CVMakerPageProps> = () => {
   return (
     <div className="pt-28 sm:pt-36 pb-20 px-4 sm:px-8 lg:px-16 bg-[#F7F7F5] text-[#111111] font-sans min-h-screen">
+      <SEOHead page={PAGE_SEO.cvMaker} />
+      <StructuredData
+        data={buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Products', path: '/projects' },
+          { name: 'CV Maker', path: '/cv-maker' },
+        ])}
+        id="breadcrumb-cv-maker"
+      />
       <div className="mx-auto max-w-[1360px] space-y-20 sm:space-y-28">
         
         {/* HERO SECTION */}
@@ -143,13 +155,21 @@ export const CVMakerPage: React.FC<CVMakerPageProps> = () => {
           <p className="text-xs sm:text-sm text-white/70 max-w-xl mx-auto">
             Experience the free builder today. Upgrade with credits whenever you need to export professional CVs.
           </p>
-          <Link
-            to="/cv-maker/dashboard"
-            className="btn-sheen inline-flex min-h-13 items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#C9A84C] text-[#111111] font-bold text-xs uppercase tracking-wider hover:bg-white transition-all shadow-lg"
-          >
-            <span>Launch CV Builder</span>
-            <ArrowRight className="size-4" />
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link
+              to="/cv-maker/dashboard"
+              className="btn-sheen inline-flex min-h-13 items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#C9A84C] text-[#111111] font-bold text-xs uppercase tracking-wider hover:bg-white transition-all shadow-lg"
+            >
+              <span>Launch CV Builder</span>
+              <ArrowRight className="size-4" />
+            </Link>
+            <Link
+              to="/projects"
+              className="inline-flex min-h-13 items-center justify-center gap-2 px-8 py-4 rounded-full bg-white/10 text-white font-bold text-xs uppercase tracking-wider hover:bg-white/20 transition-all"
+            >
+              <span>All Studio Products</span>
+            </Link>
+          </div>
         </section>
 
       </div>

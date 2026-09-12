@@ -164,9 +164,8 @@ export const Footer: React.FC = () => {
             <Link to="/terms" className="hover:text-[#F7F7F5] transition-colors underline">Terms & Conditions</Link>
           </div>
           <div className="flex gap-8">
-            <a href="https://github.com" target="_blank" rel="https://github.com/orillusiveoffical" aria-label="Visit Orillusive on GitHub" className="hover:text-[#F7F7F5] transition-colors">GitHub</a>
-            <a href="https://linkedin.com" target="_blank" rel="https://www.linkedin.com/company/orillusive/" aria-label="Visit Orillusive on LinkedIn" className="hover:text-[#F7F7F5] transition-colors">LinkedIn</a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on X / Twitter" className="hover:text-[#F7F7F5] transition-colors">X / Twitter</a>
+            <a href="https://github.com/orillusiveoffical" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on GitHub" className="hover:text-[#F7F7F5] transition-colors">GitHub</a>
+            <a href="https://www.linkedin.com/company/orillusive/" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on LinkedIn" className="hover:text-[#F7F7F5] transition-colors">LinkedIn</a>
           </div>
         </div>
 

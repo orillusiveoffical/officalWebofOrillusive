@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 export const AboutSection: React.FC = () => {
   return (
@@ -30,6 +32,15 @@ export const AboutSection: React.FC = () => {
             <p className="text-sm sm:text-lg md:text-xl leading-relaxed text-[#555555]">
               Orillusive was founded on a simple principle: modern businesses need digital products that stand up to real-world demands. We build software platforms crafted with clean architecture, high scalability, and timeless design.
             </p>
+            <div className="pt-2">
+              <Link
+                to="/about"
+                className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#4F6B85] hover:text-[#111111] transition-colors group"
+              >
+                <span>Read our studio philosophy & standards</span>
+                <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </div>
           </motion.div>
 
           {/* Right Philosophy Timeline with Staggered Scroll Motion */}

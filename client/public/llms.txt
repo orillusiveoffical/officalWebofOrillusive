@@ -1,0 +1,33 @@
+# Orillusive
+
+> Build Beyond the Obvious
+
+Orillusive is an elite software engineering and design studio that turns ambitious ideas into scalable digital products, enterprise platforms, and bespoke web and mobile applications.
+
+Website: https://orillusive.com
+Contact: https://orillusive.com/contact
+Email: contact@orillusive.com
+
+## Core Capabilities & Services
+- Custom Web & Full-Stack Development: Robust, scalable web applications built with modern architectures (React, Node.js, Express, TypeScript, MongoDB).
+- Mobile App Engineering: High-performance iOS and Android applications developed with Flutter and React Native.
+- Cloud & Infrastructure Architecture: Secure, resilient cloud deployments, microservices, API integrations, and database design.
+- UI/UX Design & Product Strategy: Human-centric digital experiences, design systems, and rapid prototyping.
+- Enterprise Software Solutions: End-to-end management systems, CRM platforms, and tailored workflow automation.
+
+## In-House Products & Projects
+- CV Maker (https://orillusive.com/cv-maker): Professional resume and CV builder engineered for modern job seekers, featuring customizable templates and real-time live preview.
+- Hotel & Property Management System: Comprehensive SaaS platform powering front-desk operations, room bookings, inventory, and automated billing.
+
+## Key Public Pages
+- Home: https://orillusive.com/
+- Services: https://orillusive.com/services
+- Projects & Work: https://orillusive.com/projects
+- CV Maker: https://orillusive.com/cv-maker
+- Engineering Process: https://orillusive.com/process
+- Engagement & Pricing Models: https://orillusive.com/pricing
+- About the Studio: https://orillusive.com/about
+- Blog & Insights: https://orillusive.com/blog
+- Contact & Inquiries: https://orillusive.com/contact
+- Privacy Policy: https://orillusive.com/privacy
+- Terms of Service: https://orillusive.com/terms

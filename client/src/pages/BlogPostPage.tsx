@@ -90,21 +90,21 @@ export const BlogPostPage: React.FC = () => {
 
       if (line.startsWith('# ')) {
         elements.push(
-          <h1 key={index} className="text-2xl sm:text-4xl font-bold text-[#111111] mt-10 mb-4 font-sans tracking-tight">
+          <h2 key={index} className="text-2xl sm:text-4xl font-bold text-[#111111] mt-10 mb-4 font-sans tracking-tight">
             {line.replace('# ', '')}
-          </h1>
+          </h2>
         );
       } else if (line.startsWith('## ')) {
         elements.push(
-          <h2 key={index} className="text-xl sm:text-2xl font-bold text-[#111111] mt-8 mb-3 font-sans tracking-tight">
+          <h3 key={index} className="text-xl sm:text-2xl font-bold text-[#111111] mt-8 mb-3 font-sans tracking-tight">
             {line.replace('## ', '')}
-          </h2>
+          </h3>
         );
       } else if (line.startsWith('### ')) {
         elements.push(
-          <h3 key={index} className="text-lg sm:text-xl font-bold text-[#111111] mt-6 mb-2 font-sans tracking-tight">
+          <h4 key={index} className="text-lg sm:text-xl font-bold text-[#111111] mt-6 mb-2 font-sans tracking-tight">
             {line.replace('### ', '')}
-          </h3>
+          </h4>
         );
       } else if (line.startsWith('> ')) {
         elements.push(

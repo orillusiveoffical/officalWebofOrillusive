@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -147,6 +148,24 @@ app.use(['/api/blogs', '/blogs'], apiLimiter, blogsRouter);
 
 // Internal Dashboard & Admin Control Center Routes
 app.use(['/api/admin', '/admin'], apiLimiter, adminRouter);
+
+// Static Client Files & Technical SEO Assets (when built)
+const clientDistPath = path.resolve(__dirname, '../client/dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+
+  // Legacy Redirects
+  app.get('/privacy-policy', (req, res) => res.redirect(301, '/privacy'));
+  app.get('/terms-and-conditions', (req, res) => res.redirect(301, '/terms'));
+  app.get('/products', (req, res) => res.redirect(301, '/projects'));
+  app.get(['/products/autiva', '/products/autiva/*'], (req, res) => res.redirect(301, '/projects'));
+
+  // Public SPA routes fallback
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
 
 // Fallback 404 handler for undefined API endpoints (strictly returns JSON)
 app.use(['/api', '/api/*'], (req, res) => {

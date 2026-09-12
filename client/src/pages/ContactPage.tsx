@@ -111,14 +111,14 @@ export const ContactPage: React.FC = () => {
               <div className="size-14 rounded-full bg-[#4F6B85]/10 border border-[#4F6B85]/30 flex items-center justify-center mx-auto text-[#4F6B85]">
                 <CheckCircle2 className="size-7" />
               </div>
-              <h3 className="text-2xl font-bold font-sans text-[#111111]">Message Received</h3>
+              <h2 className="text-2xl font-bold font-sans text-[#111111]">Message Received</h2>
               <p className="text-xs sm:text-sm text-[#555555] max-w-sm mx-auto leading-relaxed">
                 Thank you for contacting Orillusive. A senior software engineer will review your inquiry and get back to you shortly.
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5 text-xs font-sans">
-              <h3 className="text-xl font-bold font-sans text-[#111111] mb-2">Send an Inquiry</h3>
+              <h2 className="text-xl font-bold font-sans text-[#111111] mb-2">Send an Inquiry</h2>
 
               {errorMsg && (
                 <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 flex items-center space-x-2">

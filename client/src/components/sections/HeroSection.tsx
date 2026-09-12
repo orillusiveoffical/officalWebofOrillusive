@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, Building2, Activity, TrendingUp } from 'lucide-react';
 
@@ -60,14 +61,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenInquiry }) => {
               <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1 text-[#C9A84C]" aria-hidden="true" />
             </button>
 
-            <a
-              href="#products"
+            <Link
+              to="/projects"
               aria-label="View featured products under development"
               className="inline-flex min-h-12 sm:min-h-14 items-center justify-center gap-2.5 rounded-full bg-white border border-black/10 px-7 sm:px-9 text-xs font-bold uppercase tracking-wider text-[#111111] transition-all duration-300 hover:border-[#4F6B85]/40 hover:bg-[#F0F0EC] hover:scale-[1.03] active:scale-[0.97] shadow-xs hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#4F6B85] focus-visible:outline-none"
             >
               <span>View Products</span>
               <ArrowUpRight className="size-4 text-[#4F6B85] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
-            </a>
+            </Link>
           </motion.div>
         </div>
 

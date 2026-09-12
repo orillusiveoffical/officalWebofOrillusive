@@ -12,10 +12,9 @@
 export const SEO_CONFIG = {
   siteUrl: 'https://orillusive.com',
   siteName: 'Orillusive',
-  siteTagline: 'Premium Software Engineering Studio',
+  siteTagline: 'Build Beyond the Obvious',
   defaultOgImage: '/logo.jpg',
   locale: 'en_US',
-  twitterHandle: '@orillusive',
   email: 'info@orillusive.com',
 } as const;
 
@@ -38,7 +37,6 @@ export const ORGANIZATION_SCHEMA = {
   sameAs: [
     'https://github.com/orillusive',
     'https://linkedin.com/company/orillusive',
-    'https://twitter.com/orillusive',
   ],
   address: {
     '@type': 'PostalAddress',
@@ -54,7 +52,6 @@ export const ORGANIZATION_SCHEMA = {
     'Software Engineering',
     'Web Application Development',
     'Mobile App Development',
-    'AI Solutions',
     'SaaS Development',
     'UI/UX Design',
     'Cloud Architecture',
@@ -72,7 +69,7 @@ export const WEBSITE_SCHEMA = {
   name: 'Orillusive',
   url: SEO_CONFIG.siteUrl,
   description:
-    'Premium Software Engineering Studio — engineering digital products that matter.',
+    'Premium Software Engineering Studio — Build Beyond the Obvious.',
   publisher: {
     '@type': 'Organization',
     name: 'Orillusive',
@@ -98,30 +95,40 @@ export interface PageSEO {
 
 export const PAGE_SEO: Record<string, PageSEO> = {
   home: {
-    title: 'Orillusive — Premium Software Engineering Studio | Custom Software Development',
+    title: 'Orillusive — Software Engineering Studio | Build Beyond the Obvious',
     description:
-      'Orillusive is a premium Software Engineering Studio. We design and build scalable software products — enterprise platforms, web applications, mobile apps, and AI solutions for ambitious businesses worldwide.',
+      'Orillusive is a software engineering studio that turns ambitious ideas into scalable digital products, from SaaS platforms to custom web and mobile applications.',
     keywords:
-      'software engineering studio, custom software development, web application development, mobile app development, AI solutions, SaaS development, enterprise software, UI/UX design, cloud architecture, premium software studio',
+      'software engineering studio, custom software development, web application development, mobile app development, SaaS development, enterprise software, UI/UX design, cloud architecture, premium software studio',
     canonicalPath: '/',
     ogType: 'website',
     breadcrumbName: 'Home',
   },
 
-  services: {
-    title: 'Engineering Services — AI, Web, Mobile, SaaS & Cloud | Orillusive',
+  cvMaker: {
+    title: 'Resume Maker & CV Builder — ATS-Friendly Templates | Orillusive',
     description:
-      'Explore Orillusive\'s eight core engineering disciplines — AI Solutions, Web Applications, Mobile Apps, SaaS Development, Automation, UI/UX Design, Cloud Systems, and Maintenance. Built for growth and reliability.',
+      'Build professional, ATS-friendly resumes in minutes with Orillusive CV Maker. Choose from crafted templates, customize styling, and export print-ready PDFs.',
     keywords:
-      'AI solutions, web application development, mobile app development, SaaS development, automation services, UI/UX design, cloud systems, software maintenance, custom software services, enterprise engineering',
+      'resume maker, cv builder, ats friendly resume, professional resume templates, pdf cv generator, online resume builder, orillusive cv maker',
+    canonicalPath: '/cv-maker',
+    breadcrumbName: 'CV Maker',
+  },
+
+  services: {
+    title: 'Software Engineering Services — Web, Mobile, SaaS & Cloud | Orillusive',
+    description:
+      'Explore Orillusive\'s core software engineering disciplines — Custom Web Applications, Mobile Apps, SaaS Development, Enterprise Platforms, and Cloud Systems.',
+    keywords:
+      'custom software development, web application development, mobile app development, SaaS development, automation services, UI/UX design, cloud systems, software maintenance, enterprise engineering',
     canonicalPath: '/services',
     breadcrumbName: 'Services',
   },
 
   projects: {
-    title: 'Featured Products — Enterprise Platforms & Software | Orillusive',
+    title: 'Featured Products & Platforms — In-House Engineering | Orillusive',
     description:
-      'Explore Orillusive\'s in-house products currently under active studio development — including our comprehensive Hotel Management System and enterprise digital platforms.',
+      'Explore Orillusive\'s in-house software products currently under active studio development, including our Hotel Management System and digital platforms.',
     keywords:
       'hotel management system, enterprise software products, in-house development, enterprise applications, SaaS products, software platform',
     canonicalPath: '/projects',
@@ -129,9 +136,9 @@ export const PAGE_SEO: Record<string, PageSEO> = {
   },
 
   about: {
-    title: 'About Orillusive — Studio Philosophy & Engineering Standards',
+    title: 'About Orillusive — Software Engineering Studio Philosophy & Standards',
     description:
-      'Learn about Orillusive\'s engineering philosophy — modern architecture, handcrafted UX, and direct senior access. We build long-term digital products that solve real business problems.',
+      'Learn about Orillusive\'s engineering philosophy: modern architecture, handcrafted UX, and direct access to senior software architects.',
     keywords:
       'about orillusive, software engineering philosophy, modern architecture, handcrafted UX, senior software architects, premium software studio, engineering standards',
     canonicalPath: '/about',
@@ -139,9 +146,9 @@ export const PAGE_SEO: Record<string, PageSEO> = {
   },
 
   process: {
-    title: 'Engineering Process — Discovery to Growth | Orillusive',
+    title: 'Engineering Process — Discovery to Delivery & Scale | Orillusive',
     description:
-      'Orillusive\'s 7-step engineering process: Discovery, Strategy, Architecture, Design, Development, Launch, and Growth. A methodical roadmap designed for scalable software delivery.',
+      'Orillusive\'s methodical 7-step engineering roadmap: Discovery, Planning, Design, Development, Testing, Launch, and Growth for scalable digital products.',
     keywords:
       'software development process, engineering methodology, discovery to launch, agile development, software delivery process, development roadmap, software architecture process',
     canonicalPath: '/process',
@@ -149,9 +156,9 @@ export const PAGE_SEO: Record<string, PageSEO> = {
   },
 
   pricing: {
-    title: 'Pricing & Engagement Models — Product Sprint, Build & Studio | Orillusive',
+    title: 'Pricing & Engagement Models — Software Development | Orillusive',
     description:
-      'Flexible studio engagement models: Product Architecture Sprint, End-to-End Product Build, and Dedicated Engineering Studio. Clear, outcome-focused pricing shaped around your business goals.',
+      'Flexible software engineering engagement models: Product Sprint, End-to-End Build, and Dedicated Studio Team. Transparent, outcome-focused pricing.',
     keywords:
       'software development pricing, engagement models, product sprint, end-to-end build, dedicated engineering team, custom software pricing, software studio pricing',
     canonicalPath: '/pricing',
@@ -159,9 +166,9 @@ export const PAGE_SEO: Record<string, PageSEO> = {
   },
 
   blog: {
-    title: 'Engineering Blog & Field Notes — Orillusive',
+    title: 'Engineering Blog & Technical Field Notes | Orillusive',
     description:
-      'Senior software engineering insights, system architecture patterns, SaaS platform scaling, and tech field notes from the Orillusive studio.',
+      'Senior software engineering insights, system architecture patterns, SaaS platform scaling, and technical field notes from the Orillusive studio.',
     keywords:
       'software engineering blog, system architecture, SaaS development articles, cloud scaling, React performance, technical deep dives, Orillusive field notes',
     canonicalPath: '/blog',
@@ -169,9 +176,9 @@ export const PAGE_SEO: Record<string, PageSEO> = {
   },
 
   contact: {
-    title: 'Contact Orillusive — Start Your Software Project Today',
+    title: 'Contact Orillusive — Start Your Software Project',
     description:
-      'Get in touch with Orillusive\'s senior engineering team. Book a discovery session for your next custom software product, enterprise platform, or mobile application. Response within 24 hours.',
+      'Get in touch with Orillusive\'s senior engineering team. Schedule a discovery session for your custom web app, SaaS platform, or mobile application.',
     keywords:
       'contact orillusive, book discovery call, software project inquiry, custom software consultation, enterprise software consultation, hire software engineers',
     canonicalPath: '/contact',

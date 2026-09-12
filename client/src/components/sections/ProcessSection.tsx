@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { PROCESS_STEPS } from '../../data/contentData';
 
 export const ProcessSection: React.FC = () => {
@@ -64,6 +66,16 @@ export const ProcessSection: React.FC = () => {
               </motion.button>
             );
           })}
+        </div>
+
+        <div className="mt-12 text-center">
+          <Link
+            to="/process"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#4F6B85] hover:text-[#111111] transition-colors group"
+          >
+            <span>Learn more about our 7-step engineering roadmap</span>
+            <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
         </div>
 
       </div>

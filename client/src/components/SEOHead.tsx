@@ -66,13 +66,9 @@ export const SEOHead: React.FC<SEOHeadProps> = ({ page, ogImage }) => {
     setMetaTag('og:image:height', '630', 'property');
     setMetaTag('og:image:alt', `${SEO_CONFIG.siteName} — ${SEO_CONFIG.siteTagline}`, 'property');
 
-    // ── Twitter Card ──
-    setMetaTag('twitter:card', 'summary_large_image');
-    setMetaTag('twitter:site', SEO_CONFIG.twitterHandle);
-    setMetaTag('twitter:title', page.title);
-    setMetaTag('twitter:description', page.description);
-    setMetaTag('twitter:image', imageUrl);
-    setMetaTag('twitter:image:alt', `${SEO_CONFIG.siteName} — ${SEO_CONFIG.siteTagline}`);
+    // ── Twitter Card intentionally excluded (Orillusive does not use Twitter/X) ──
+    const twitterTags = document.querySelectorAll('meta[name^="twitter:"]');
+    twitterTags.forEach((tag) => tag.remove());
   }, [page, ogImage]);
 
   return null; // This component only manages <head> side effects

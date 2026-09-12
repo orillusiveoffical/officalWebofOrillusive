@@ -5,6 +5,11 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /api/*
+Disallow: /admin
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /cv-maker/builder
+Disallow: /cv-maker/dashboard
 
 # Sitemap
 Sitemap: https://orillusive.com/sitemap.xml

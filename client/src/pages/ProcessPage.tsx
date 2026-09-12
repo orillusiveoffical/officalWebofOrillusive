@@ -27,7 +27,11 @@ export const ProcessPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold font-sans text-[#111111] mb-6">
+            7-Step Engineering Delivery Roadmap
+          </h2>
+          <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {PROCESS_STEPS.map((s) => (
             <div key={s.step} className="p-8 rounded-2xl bg-white border border-black/10 shadow-xs flex flex-col justify-between min-h-[230px]">
               <span className="text-2xl font-bold font-mono text-[#4F6B85]">{s.step}</span>
@@ -37,6 +41,7 @@ export const ProcessPage: React.FC = () => {
               </div>
             </div>
           ))}
+          </div>
         </div>
       </div>
     </div>
