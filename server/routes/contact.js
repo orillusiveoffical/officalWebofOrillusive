@@ -1,12 +1,12 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import { Resend } from 'resend';
+import { verifyToken } from '../utils/jwt.js';
+import { escapeHtml } from '../utils/security.js';
 import { connectToDatabase } from '../db/mongodb.js';
 import Booking from '../models/Booking.js';
 import ContactInquiry from '../models/ContactInquiry.js';
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
 router.get('/', (req, res) => {
   res.status(200).json({
@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       try {
         const token = authHeader.split(' ')[1];
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = verifyToken(token);
         userId = decoded.userId;
       } catch (tokenErr) {
         // Token invalid or expired, continue as guest
@@ -109,19 +109,19 @@ router.post('/', async (req, res) => {
               </div>
               <div class="field">
                 <div class="label">Full Name</div>
-                <div class="value">${name.trim()}</div>
+                <div class="value">${escapeHtml(name.trim())}</div>
               </div>
               <div class="field">
                 <div class="label">Email Address</div>
-                <div class="value"><a href="mailto:${email.trim()}">${email.trim()}</a></div>
+                <div class="value"><a href="mailto:${escapeHtml(email.trim())}">${escapeHtml(email.trim())}</a></div>
               </div>
               <div class="field">
                 <div class="label">Service Focus</div>
-                <div class="value">${service || 'General Software Consultation'}</div>
+                <div class="value">${escapeHtml(service || 'General Software Consultation')}</div>
               </div>
               <div class="field">
                 <div class="label">Project Brief</div>
-                <div class="message-box">${message.trim()}</div>
+                <div class="message-box">${escapeHtml(message.trim())}</div>
               </div>
               <div class="footer">
                 Saved in MongoDB Atlas & dispatched automatically from Orillusive Studio platform.
@@ -135,7 +135,7 @@ router.post('/', async (req, res) => {
           from: 'Orillusive Intake <onboarding@resend.dev>',
           to: [receiverEmail],
           replyTo: email.trim(),
-          subject: `[Discovery Call Booking] ${name.trim()} — ${service || 'Orillusive Studio'}`,
+          subject: `[Discovery Call Booking] ${name.trim().replace(/[\r\n]/g, '')} — ${String(service || 'Orillusive Studio').replace(/[\r\n]/g, '')}`,
           html: emailHtml,
         });
       } catch (emailErr) {

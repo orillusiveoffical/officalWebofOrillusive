@@ -6,10 +6,15 @@ export function errorHandler(err, req, res, next) {
     return next(err);
   }
 
+  const isProduction = process.env.NODE_ENV === 'production';
+  const clientMessage = (status >= 500 && isProduction)
+    ? 'An unexpected error occurred. Please try again later.'
+    : (err?.message || 'Internal Server Error');
+
   res.setHeader('Content-Type', 'application/json');
   return res.status(status).json({
     success: false,
-    message: err?.message || 'Internal Server Error',
-    error: err?.message || 'Internal Server Error'
+    message: clientMessage,
+    error: clientMessage
   });
 }

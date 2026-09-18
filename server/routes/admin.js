@@ -1,8 +1,10 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { requireInternalRole } from '../middleware/adminAuth.js';
 import { connectToDatabase } from '../db/mongodb.js';
+import { escapeRegex } from '../utils/security.js';
 import User from '../models/User.js';
 import BlogPost from '../models/BlogPost.js';
 import NewsletterCampaign from '../models/NewsletterCampaign.js';
@@ -16,6 +18,8 @@ import Newsletter from '../models/Newsletter.js';
 import Booking from '../models/Booking.js';
 import CV from '../models/CV.js';
 import CreditPackage from '../models/CreditPackage.js';
+import Design from '../models/Design.js';
+import DesignView from '../models/DesignView.js';
 
 const router = express.Router();
 
@@ -44,17 +48,22 @@ export const ensureDefaultDashboardData = async () => {
     // Ensure Super Admin User exists
     const adminUser = await User.findOne({ email: 'admin@orillusive.com' });
     if (!adminUser) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash('AdminOrillusive2026!', salt);
-      await User.create({
-        name: 'Super Admin',
-        email: 'admin@orillusive.com',
-        password: hashedPassword,
-        role: 'SUPER_ADMIN',
-        status: 'active',
-        credits: 9999
-      });
-      console.log('⚡ [ORILLUSIVE SEED] Created default Super Admin user: admin@orillusive.com');
+      const initialPassword = process.env.ADMIN_INITIAL_PASSWORD;
+      if (initialPassword) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(initialPassword, salt);
+        await User.create({
+          name: 'Super Admin',
+          email: 'admin@orillusive.com',
+          password: hashedPassword,
+          role: 'SUPER_ADMIN',
+          status: 'active',
+          credits: 9999
+        });
+        console.log('⚡ [ORILLUSIVE SEED] Provisioned Super Admin user from ADMIN_INITIAL_PASSWORD.');
+      } else {
+        console.warn('⚠️ [ORILLUSIVE SEED] Default Super Admin was not seeded. To initialize, set ADMIN_INITIAL_PASSWORD in environment variables.');
+      }
     } else if (adminUser.role !== 'SUPER_ADMIN' || adminUser.status !== 'active') {
       adminUser.role = 'SUPER_ADMIN';
       adminUser.status = 'active';
@@ -158,7 +167,9 @@ router.get(['/overview', '/telemetry'], requireInternalRole(['SUPER_ADMIN', 'DEV
       recentNotifications,
       recentInquiries,
       auditLogCount,
-      uniqueIps
+      uniqueIps,
+      totalDesigns,
+      totalDesignViews
     ] = await Promise.all([
       User.countDocuments().catch(() => 0),
       Newsletter.countDocuments().catch(() => 0),
@@ -174,7 +185,9 @@ router.get(['/overview', '/telemetry'], requireInternalRole(['SUPER_ADMIN', 'DEV
       Notification.find().sort({ createdAt: -1 }).limit(5).catch(() => []),
       ContactInquiry.find().sort({ createdAt: -1 }).limit(5).catch(() => []),
       AuditLog.countDocuments().catch(() => 0),
-      AuditLog.distinct('ipAddress').catch(() => [])
+      AuditLog.distinct('ipAddress').catch(() => []),
+      Design.countDocuments().catch(() => 0),
+      DesignView.countDocuments().catch(() => 0)
     ]);
 
     // Real traffic metrics calculated from real database records and events
@@ -205,6 +218,10 @@ router.get(['/overview', '/telemetry'], requireInternalRole(['SUPER_ADMIN', 'DEV
         registeredAccounts: totalUsers,
         purchases: activeSubscriptions
       },
+      designMetrics: {
+        totalDesigns,
+        totalDesignViews
+      },
       trafficMetrics,
       recentUsers,
       recentAuditLogs,
@@ -229,10 +246,11 @@ router.get('/users', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
     const { search, role, status, page = 1, limit = 20 } = req.query;
     const query = {};
 
-    if (search) {
+    if (search && typeof search === 'string' && search.trim()) {
+      const cleanSearch = escapeRegex(search.trim());
       query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } }
+        { name: { $regex: cleanSearch, $options: 'i' } },
+        { email: { $regex: cleanSearch, $options: 'i' } }
       ];
     }
     if (role) query.role = role;
@@ -902,30 +920,236 @@ router.get('/team', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
 });
 
 // ==========================================
-// 11. SUBSCRIPTIONS & PAYMENT TELEMETRY (SUPER ADMIN, DEVELOPER)
+// 12. UI PLATFORM DESIGNS MANAGEMENT (SUPER ADMIN, DEVELOPER)
 // ==========================================
-router.get('/subscriptions', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
+
+// GET /api/admin/designs/overview — Aggregated UI platform metrics
+router.get('/designs/overview', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS']), async (req, res) => {
   try {
     await connectToDatabase();
-    const payments = await Payment.find().sort({ createdAt: -1 }).limit(100);
-    const creditTransactions = await CreditTransaction.find().sort({ createdAt: -1 }).limit(100);
-    const packages = await CreditPackage.find();
 
-    const totalRevenue = payments.reduce((acc, p) => p.paymentStatus === 'Completed' ? acc + (p.amount || 0) : acc, 0);
-    const totalTransactions = payments.length;
-    const completedTransactions = payments.filter((p) => p.paymentStatus === 'Completed').length;
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const [
+      totalDesigns,
+      freeDesigns,
+      premiumDesigns,
+      featuredDesigns,
+      viewsToday,
+      viewsThisWeek,
+      viewsThisMonth,
+      popularDesigns,
+      categoryStats,
+      usersCount,
+      subscribersCount,
+      planBreakdown
+    ] = await Promise.all([
+      Design.countDocuments(),
+      Design.countDocuments({ isPremium: false }),
+      Design.countDocuments({ isPremium: true }),
+      Design.countDocuments({ isFeatured: true }),
+      DesignView.countDocuments({ timestamp: { $gte: startOfToday } }),
+      DesignView.countDocuments({ timestamp: { $gte: startOfWeek } }),
+      DesignView.countDocuments({ timestamp: { $gte: startOfMonth } }),
+      Design.find().sort({ 'metrics.views': -1 }).limit(6).select('slug title category isPremium metrics'),
+      Design.aggregate([
+        { $group: { _id: '$category', count: { $sum: 1 }, totalViews: { $sum: '$metrics.views' } } },
+        { $sort: { totalViews: -1 } }
+      ]),
+      User.countDocuments(),
+      User.countDocuments({ 'subscription.status': 'active' }),
+      User.aggregate([
+        { $match: { 'subscription.status': 'active' } },
+        { $group: { _id: '$subscription.plan', count: { $sum: 1 } } }
+      ])
+    ]);
+
+    const totalViews = categoryStats.reduce((acc, c) => acc + (c.totalViews || 0), 0);
+
+    const subscriptionMap = { starter: 0, pro: 0, enterprise: 0 };
+    planBreakdown.forEach((p) => {
+      if (p._id && subscriptionMap[p._id] !== undefined) {
+        subscriptionMap[p._id] = p.count;
+      }
+    });
 
     return res.status(200).json({
       success: true,
-      payments,
-      creditTransactions,
-      packages,
-      stats: {
-        totalRevenue,
-        totalTransactions,
-        completedTransactions
+      metrics: {
+        totalDesigns,
+        freeDesigns,
+        premiumDesigns,
+        featuredDesigns,
+        totalViews,
+        viewsToday,
+        viewsThisWeek,
+        viewsThisMonth,
+        popularDesigns,
+        categoryStats,
+        usersCount,
+        subscribersCount,
+        subscriptionMap
       }
     });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// GET /api/admin/designs — Paginated search/filter of designs
+router.get('/designs', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS']), async (req, res) => {
+  try {
+    await connectToDatabase();
+    const { search, category, tier, page = 1, limit = 50 } = req.query;
+
+    const query = {};
+    if (category && category !== 'all') query.category = category;
+    if (tier === 'free') query.isPremium = false;
+    if (tier === 'premium') query.isPremium = true;
+    if (search && typeof search === 'string' && search.trim()) {
+      const regex = new RegExp(escapeRegex(search.trim()), 'i');
+      query.$or = [{ title: regex }, { slug: regex }, { category: regex }, { tags: regex }];
+    }
+
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 50));
+    const skip = (pageNum - 1) * limitNum;
+
+    const [designs, total] = await Promise.all([
+      Design.find(query).sort({ createdAt: -1 }).skip(skip).limit(limitNum),
+      Design.countDocuments(query)
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      designs,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum)
+      }
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST /api/admin/designs — Create new design
+router.post('/designs', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
+  try {
+    await connectToDatabase();
+    const {
+      slug,
+      title,
+      description,
+      category,
+      subcategory,
+      tags,
+      style,
+      complexity,
+      isPremium,
+      isFeatured,
+      componentKey,
+      reactCode,
+      htmlCode,
+      cssCode,
+      reactPrompt,
+      htmlPrompt,
+      colorTokens
+    } = req.body;
+
+    if (!slug || !title || !category || !componentKey) {
+      return res.status(400).json({ success: false, error: 'Slug, title, category, and component key are required.' });
+    }
+
+    const cleanSlug = slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    const existing = await Design.findOne({ slug: cleanSlug });
+    if (existing) {
+      return res.status(400).json({ success: false, error: `Design with slug '${cleanSlug}' already exists.` });
+    }
+
+    const newDesign = await Design.create({
+      slug: cleanSlug,
+      title: title.trim(),
+      description: description || '',
+      category: category.trim(),
+      subcategory: subcategory || '',
+      tags: Array.isArray(tags) ? tags : (tags || '').split(',').map((t) => t.trim()).filter(Boolean),
+      style: style || 'saas',
+      complexity: complexity || 'intermediate',
+      isPremium: Boolean(isPremium),
+      isFeatured: Boolean(isFeatured),
+      componentKey: componentKey.trim(),
+      reactCode: reactCode || '// React component implementation',
+      htmlCode: htmlCode || '<!-- HTML implementation -->',
+      cssCode: cssCode || '',
+      reactPrompt: reactPrompt || 'Create a React component...',
+      htmlPrompt: htmlPrompt || 'Create an HTML/CSS component...',
+      colorTokens: colorTokens || {
+        primary: '#111111',
+        secondary: '#4F6B85',
+        background: '#FFFFFF',
+        foreground: '#111111',
+        muted: '#6B7280',
+        border: '#E5E7EB',
+        accent: '#4F6B85',
+        card: '#FFFFFF'
+      }
+    });
+
+    await recordAuditLog(req, 'CREATE_DESIGN', `Design:${cleanSlug}`, `Created design "${title}" in category "${category}"`);
+
+    return res.status(201).json({ success: true, design: newDesign });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// PUT /api/admin/designs/:id — Update existing design
+router.put('/designs/:id', requireInternalRole(['SUPER_ADMIN', 'DEVELOPER']), async (req, res) => {
+  try {
+    await connectToDatabase();
+    const { id } = req.params;
+
+    const design = await Design.findById(id);
+    if (!design) {
+      return res.status(404).json({ success: false, error: 'Design not found.' });
+    }
+
+    const updateFields = { ...req.body };
+    if (updateFields.tags && typeof updateFields.tags === 'string') {
+      updateFields.tags = updateFields.tags.split(',').map((t) => t.trim()).filter(Boolean);
+    }
+
+    const updated = await Design.findByIdAndUpdate(id, { $set: updateFields }, { new: true, runValidators: true });
+
+    await recordAuditLog(req, 'UPDATE_DESIGN', `Design:${updated.slug}`, `Updated design "${updated.title}"`);
+
+    return res.status(200).json({ success: true, design: updated });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// DELETE /api/admin/designs/:id — Delete design
+router.delete('/designs/:id', requireInternalRole(['SUPER_ADMIN']), async (req, res) => {
+  try {
+    await connectToDatabase();
+    const { id } = req.params;
+
+    const design = await Design.findById(id);
+    if (!design) {
+      return res.status(404).json({ success: false, error: 'Design not found.' });
+    }
+
+    await Design.findByIdAndDelete(id);
+    await recordAuditLog(req, 'DELETE_DESIGN', `Design:${design.slug}`, `Deleted design "${design.title}"`);
+
+    return res.status(200).json({ success: true, message: `Design "${design.title}" deleted.` });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
   }

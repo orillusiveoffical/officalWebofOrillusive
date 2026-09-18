@@ -32,32 +32,29 @@ router.post('/generate', requireAuth, async (req, res) => {
       return res.status(404).json({ success: false, error: 'CV not found or access denied.' });
     }
 
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(404).json({ success: false, error: 'User account not found.' });
-    }
+    // Atomic server-side credit deduction with condition check
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.user._id, credits: { $gte: CV_GENERATION_COST } },
+      { $inc: { credits: -CV_GENERATION_COST } },
+      { new: true }
+    );
 
-    const currentBalance = user.credits || 0;
-
-    // Check credit balance on server side
-    if (currentBalance < CV_GENERATION_COST) {
-      const needed = CV_GENERATION_COST - currentBalance;
+    if (!updatedUser) {
+      const freshUser = await User.findById(req.user._id).select('credits');
+      const currentCredits = freshUser ? freshUser.credits : 0;
+      const needed = Math.max(0, CV_GENERATION_COST - currentCredits);
       return res.status(402).json({
         success: false,
         error: 'Insufficient Credits',
         message: `You need ${needed} more credit${needed === 1 ? '' : 's'} to generate this CV.`,
         requiredCredits: CV_GENERATION_COST,
-        availableCredits: currentBalance,
+        availableCredits: currentCredits,
         neededCredits: needed
       });
     }
 
-    // Atomic server-side credit deduction
-    const balanceBefore = currentBalance;
-    const balanceAfter = currentBalance - CV_GENERATION_COST;
-
-    user.credits = balanceAfter;
-    await user.save();
+    const balanceAfter = updatedUser.credits;
+    const balanceBefore = balanceAfter + CV_GENERATION_COST;
 
     // Mark CV status as generated
     cv.status = 'generated';
