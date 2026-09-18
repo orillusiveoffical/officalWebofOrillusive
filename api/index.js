@@ -10,11 +10,13 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Serverless Entrypoint Error:', error);
     if (!res.headersSent) {
+      const isProd = process.env.NODE_ENV === 'production';
+      const msg = isProd ? 'Internal Server Error' : (error?.message || 'Serverless Entrypoint Error');
       res.setHeader('Content-Type', 'application/json');
       return res.status(500).json({
         success: false,
-        message: error?.message || 'Serverless Entrypoint Error',
-        error: error?.message || 'Serverless Entrypoint Error'
+        message: msg,
+        error: msg
       });
     }
   }

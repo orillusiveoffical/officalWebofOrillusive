@@ -32,6 +32,7 @@ yarn.lock
 
 .vercel
 .env*
+**/.env*
 
 # Ignore all markdown documentation & specification files
 *.md

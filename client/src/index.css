@@ -9,209 +9,108 @@
   }
 
   body {
-    background-color: #F7F7F5;
+    background-color: #FBFBFA;
     color: #111111;
-    font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     overflow-x: hidden;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Consistent Typography Hierarchy */
+  h1 {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
     letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  h2 {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+  }
+
+  h3 {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+  }
+
+  h4, h5, h6 {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  button, input, select, textarea {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
   }
 }
 
-/* Premium Scrollbar */
+/* Premium Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F7F7F5;
+  background: #FBFBFA;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CCCCCC;
+  background: #D1D5DB;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4F6B85;
+  background: #9CA3AF;
 }
 
-/* Marquee animation */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 30s linear infinite;
+/* Isolated Preview Scrollbar */
+.preview-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.preview-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+}
+.preview-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+.preview-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
 }
 
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* Clean Shiny Sheen Effect for Buttons */
-@keyframes sheen {
-  0% {
-    transform: translateX(-100%) rotate(25deg);
-  }
-  100% {
-    transform: translateX(200%) rotate(25deg);
-  }
-}
-
-.btn-sheen {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-sheen::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 60%;
-  height: 200%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.25),
-    transparent
-  );
-  transform: translateX(-100%) rotate(25deg);
-  transition: transform 0.6s ease;
-  pointer-events: none;
-}
-
-.btn-sheen:hover::after {
-  animation: sheen 0.85s ease-in-out;
-}
-
-/* Glassmorphism & Soft Premium Clean Antigravity Gradients */
+/* Glassmorphism Classes */
 .glass-header {
-  background: rgba(247, 247, 245, 0.80);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(17, 17, 17, 0.08);
 }
 
 .glass-card {
   background: #FFFFFF;
   border: 1px solid rgba(17, 17, 17, 0.08);
-  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.03), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s ease;
 }
 
-.glass-card:hover {
-  border-color: rgba(79, 107, 133, 0.25);
-  box-shadow: 0 16px 40px -6px rgba(0, 0, 0, 0.06), 0 4px 12px -2px rgba(79, 107, 133, 0.08);
-  transform: translateY(-2px);
-}
-
-.antigravity-hero-bg {
-  background: radial-gradient(circle at 50% 10%, rgba(79, 107, 133, 0.09) 0%, rgba(247, 247, 245, 0) 65%),
-              radial-gradient(circle at 85% 85%, rgba(44, 30, 22, 0.04) 0%, rgba(247, 247, 245, 0) 60%);
-}
-
-.antigravity-dark-bg {
-  background-color: #111111;
-  background-image: radial-gradient(circle at 50% 0%, rgba(79, 107, 133, 0.22) 0%, rgba(17, 17, 17, 0) 75%);
-}
-
-.subtle-grid {
-  background-size: 48px 48px;
-  background-image: 
-    linear-gradient(to right, rgba(17, 17, 17, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(17, 17, 17, 0.03) 1px, transparent 1px);
-}
-
-/* Ambient Clean Page Glow */
-.clean-page-glow {
-  position: relative;
-}
-.clean-page-glow::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 1200px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(79, 107, 133, 0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Premium Neat & Clean Select Styles */
+/* Standard Select styling */
 select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234F6B85'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234F6B85'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 1.1em 1.1em;
-  padding-right: 2.75rem !important;
+  background-position: right 0.75rem center;
+  background-size: 1em 1em;
+  padding-right: 2.25rem !important;
   cursor: pointer;
 }
-
-select option {
-  background-color: #FFFFFF;
-  color: #111111;
-  padding: 10px 14px;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #D0D0CE;
-  border-radius: 999px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #4F6B85;
-}
-
-/* Print Rules for CV Maker PDF Generation */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  #cv-print-area, #cv-print-area * {
-    visibility: visible;
-  }
-  #cv-print-area {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    transform: none !important;
-  }
-  header, footer, nav, button {
-    display: none !important;
-  }
-  @page {
-    size: A4;
-    margin: 0;
-  }
-}
-
-

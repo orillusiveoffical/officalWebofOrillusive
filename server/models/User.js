@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['client', 'admin', 'SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS'],
+      enum: ['client', 'pro', 'admin', 'SUPER_ADMIN'],
       default: 'client',
       index: true
     },
@@ -31,14 +31,41 @@ const userSchema = new mongoose.Schema(
       default: 'active',
       index: true
     },
+    subscription: {
+      plan: {
+        type: String,
+        enum: ['free', 'starter', 'pro', 'enterprise'],
+        default: 'free'
+      },
+      status: {
+        type: String,
+        enum: ['free', 'active', 'past_due', 'cancelled', 'expired', 'pending'],
+        default: 'free'
+      },
+      billingCycle: {
+        type: String,
+        enum: ['monthly', 'annual'],
+        default: 'monthly'
+      },
+      validUntil: {
+        type: Date
+      },
+      payoneerCustomerId: {
+        type: String
+      },
+      payoneerSubscriptionId: {
+        type: String
+      }
+    },
+    savedDesigns: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Design'
+      }
+    ],
     lastLogin: {
       type: Date,
       default: Date.now
-    },
-    credits: {
-      type: Number,
-      default: 25,
-      min: [0, 'Credit balance cannot be negative']
     }
   },
   {

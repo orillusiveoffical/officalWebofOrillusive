@@ -1,8 +1,6 @@
-import jwt from 'jsonwebtoken';
+import { verifyToken } from '../utils/jwt.js';
 import { connectToDatabase } from '../db/mongodb.js';
 import User from '../models/User.js';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
 const INTERNAL_ROLES = ['SUPER_ADMIN', 'DEVELOPER', 'ANALYTICS', 'admin'];
 
@@ -19,7 +17,7 @@ export const requireInternalRole = (allowedRoles = ['SUPER_ADMIN', 'DEVELOPER', 
       }
 
       const token = authHeader.split(' ')[1];
-      const decoded = jwt.verify(token, JWT_SECRET);
+      const decoded = verifyToken(token);
 
       await connectToDatabase();
 

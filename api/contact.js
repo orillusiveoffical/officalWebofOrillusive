@@ -1,9 +1,8 @@
-import jwt from 'jsonwebtoken';
 import { Resend } from 'resend';
+import { verifyToken } from './_lib/jwt.js';
+import { escapeHtml } from './_lib/security.js';
 import { connectToDatabase } from './_lib/mongodb.js';
 import Booking from './_lib/models/Booking.js';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -28,7 +27,7 @@ export default async function handler(req, res) {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       try {
         const token = authHeader.split(' ')[1];
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = verifyToken(token);
         userId = decoded.userId;
       } catch (tokenErr) {
         // Token expired/invalid, proceed as guest
@@ -80,19 +79,19 @@ export default async function handler(req, res) {
               </div>
               <div class="field">
                 <div class="label">Full Name</div>
-                <div class="value">${name.trim()}</div>
+                <div class="value">${escapeHtml(name.trim())}</div>
               </div>
               <div class="field">
                 <div class="label">Email Address</div>
-                <div class="value"><a href="mailto:${email.trim()}">${email.trim()}</a></div>
+                <div class="value"><a href="mailto:${escapeHtml(email.trim())}">${escapeHtml(email.trim())}</a></div>
               </div>
               <div class="field">
                 <div class="label">Service Focus</div>
-                <div class="value">${service || 'General Software Consultation'}</div>
+                <div class="value">${escapeHtml(service || 'General Software Consultation')}</div>
               </div>
               <div class="field">
                 <div class="label">Project Brief & Requirements</div>
-                <div class="message-box">${message.trim()}</div>
+                <div class="message-box">${escapeHtml(message.trim())}</div>
               </div>
               <div class="footer">
                 Sent automatically from Orillusive Engineering Studio platform.
@@ -106,7 +105,7 @@ export default async function handler(req, res) {
           from: 'Orillusive Intake <onboarding@resend.dev>',
           to: [receiverEmail],
           replyTo: email.trim(),
-          subject: `[Discovery Call Inquiry] ${name.trim()} — ${service || 'Orillusive Studio'}`,
+          subject: `[Discovery Call Inquiry] ${name.trim().replace(/[\r\n]/g, '')} — ${String(service || 'Orillusive Studio').replace(/[\r\n]/g, '')}`,
           html: emailHtml,
         });
       } catch (resendErr) {
