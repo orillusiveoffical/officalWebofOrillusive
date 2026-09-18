@@ -1,6 +1,8 @@
-import { verifyToken } from '../_lib/jwt.js';
+import jwt from 'jsonwebtoken';
 import { connectToDatabase } from '../_lib/mongodb.js';
 import Booking from '../_lib/models/Booking.js';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -14,7 +16,7 @@ export default async function handler(req, res) {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = verifyToken(token);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     const conn = await connectToDatabase();
     if (!conn) {

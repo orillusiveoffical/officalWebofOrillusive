@@ -1,10 +1,11 @@
 import express from 'express';
-import { verifyToken } from '../utils/jwt.js';
+import jwt from 'jsonwebtoken';
 import { connectToDatabase } from '../db/mongodb.js';
 import Booking from '../models/Booking.js';
 import ContactInquiry from '../models/ContactInquiry.js';
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
 router.get('/my', async (req, res) => {
   try {
@@ -14,7 +15,7 @@ router.get('/my', async (req, res) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = verifyToken(token);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     const dbConn = await connectToDatabase();
     if (!dbConn) {
@@ -47,7 +48,7 @@ router.put('/:id/cancel', async (req, res) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = verifyToken(token);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     await connectToDatabase();
     const userEmail = (decoded.email || '').toLowerCase().trim();

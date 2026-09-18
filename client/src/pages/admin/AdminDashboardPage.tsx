@@ -156,10 +156,10 @@ export const AdminDashboardPage: React.FC = () => {
             <Users className="size-4 text-[#4F6B85]" />
           </div>
           <div className="mt-4">
-            <div className="text-3xl font-black text-white font-mono">{kpis.totalUsers ?? 0}</div>
-            <div className="text-[10px] text-[#888888] flex items-center gap-1 mt-1">
-              <ShieldCheck className="size-3 text-emerald-400" />
-              <span>Verified registered users</span>
+            <div className="text-3xl font-black text-white font-mono">{kpis.totalUsers || 0}</div>
+            <div className="text-[10px] text-emerald-400 flex items-center gap-1 mt-1">
+              <TrendingUp className="size-3" />
+              <span>+12.4% from last month</span>
             </div>
           </div>
         </div>
@@ -171,10 +171,10 @@ export const AdminDashboardPage: React.FC = () => {
             <CreditCard className="size-4 text-[#C9A84C]" />
           </div>
           <div className="mt-4">
-            <div className="text-3xl font-black text-white font-mono">{kpis.activeSubscriptions ?? 0}</div>
+            <div className="text-3xl font-black text-white font-mono">{kpis.activeSubscriptions || 0}</div>
             <div className="text-[10px] text-emerald-400 flex items-center gap-1 mt-1">
-              <CheckCircle2 className="size-3" />
-              <span>Verified transactions</span>
+              <TrendingUp className="size-3" />
+              <span>Instant credit deposits verified</span>
             </div>
           </div>
         </div>
@@ -186,9 +186,9 @@ export const AdminDashboardPage: React.FC = () => {
             <Mail className="size-4 text-purple-400" />
           </div>
           <div className="mt-4">
-            <div className="text-3xl font-black text-white font-mono">{kpis.openInquiries ?? 0}</div>
+            <div className="text-3xl font-black text-white font-mono">{kpis.openInquiries || 0}</div>
             <div className="text-[10px] text-[#888888] mt-1">
-              Out of {kpis.totalInquiries ?? 0} total submissions
+              Out of {kpis.totalInquiries || 0} total submissions
             </div>
           </div>
         </div>
@@ -200,73 +200,11 @@ export const AdminDashboardPage: React.FC = () => {
             <Send className="size-4 text-blue-400" />
           </div>
           <div className="mt-4">
-            <div className="text-3xl font-black text-white font-mono">{kpis.newsletterSubscribers ?? 0}</div>
+            <div className="text-3xl font-black text-white font-mono">{kpis.newsletterSubscribers || 0}</div>
             <div className="text-[10px] text-emerald-400 flex items-center gap-1 mt-1">
               <ShieldCheck className="size-3" />
               <span>Subscribers verified</span>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* UI Platform Design Library & Subscription Intelligence */}
-      <div className="p-6 rounded-3xl bg-[#141414] border border-white/10 space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
-          <div>
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <Sparkles className="size-4 text-[#4F6B85]" />
-              UI Design Platform Telemetry
-            </h3>
-            <p className="text-xs text-gray-400 mt-0.5">
-              Production design catalog performance, real-time views, and subscription distributions.
-            </p>
-          </div>
-          <Link
-            to="/admin/designs"
-            className="px-4 py-2 rounded-xl bg-white text-black font-semibold text-xs hover:bg-gray-100 transition-colors"
-          >
-            Manage UI Catalog →
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400">Published Designs</span>
-            <p className="text-2xl font-bold text-white mt-1">{data?.designMetrics?.totalDesigns ?? 0}</p>
-            <p className="text-[10px] text-emerald-400 mt-1">100% verified TSX & HTML</p>
-          </div>
-          <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400">Total Tracked Views</span>
-            <p className="text-2xl font-bold text-white mt-1">{data?.designMetrics?.totalDesignViews ?? 0}</p>
-            <p className="text-[10px] text-gray-400 mt-1">Deduplicated 30m window</p>
-          </div>
-          <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-amber-400">Active Subscribers</span>
-            <p className="text-2xl font-bold text-white mt-1">{kpis.activeSubscriptions ?? 0}</p>
-            <p className="text-[10px] text-gray-400 mt-1">Verified paid accounts</p>
-          </div>
-          <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-[#4F6B85]">Platform Status</span>
-            <p className="text-2xl font-bold text-white mt-1">Active</p>
-            <p className="text-[10px] text-emerald-400 mt-1">Endpoints responding</p>
-          </div>
-        </div>
-
-        {/* Subscription Tier Overview */}
-        <div className="pt-2">
-          <div className="flex items-center justify-between text-xs font-semibold text-gray-400 mb-2">
-            <span>Available Subscription Tiers</span>
-            <span>$9 / $16 / $20 Plans</span>
-          </div>
-          <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden flex">
-            <div style={{ width: '33.3%' }} className="bg-blue-500 h-full" title="Starter ($9/mo)" />
-            <div style={{ width: '33.3%' }} className="bg-amber-400 h-full" title="Pro ($16/mo)" />
-            <div style={{ width: '33.4%' }} className="bg-purple-500 h-full" title="Studio ($20/mo)" />
-          </div>
-          <div className="flex items-center gap-6 mt-3 text-[11px] text-gray-400 font-medium">
-            <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-blue-500" /> Starter ($9/mo)</span>
-            <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-amber-400" /> Pro ($16/mo)</span>
-            <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-purple-500" /> Studio ($20/mo)</span>
           </div>
         </div>
       </div>

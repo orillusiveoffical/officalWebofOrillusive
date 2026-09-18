@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#FBFBFA',
+        background: '#F7F7F5',
         foreground: '#111111',
         night: '#111111',
         surface: '#FFFFFF',
@@ -28,12 +28,12 @@ export default {
         'border-dark': 'rgba(255, 255, 255, 0.1)',
         primary: {
           DEFAULT: '#111111',
-          foreground: '#FBFBFA',
+          foreground: '#F7F7F5',
         }
       },
       fontFamily: {
-        sans: ['Poppins', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
-        display: ['Poppins', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        sans: ['Inter', '"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        display: ['Inter', '"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
       boxShadow: {
         'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.04)',

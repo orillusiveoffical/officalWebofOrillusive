@@ -1,8 +1,10 @@
 import bcrypt from 'bcryptjs';
-import { signToken } from '../_lib/jwt.js';
+import jwt from 'jsonwebtoken';
 import { connectToDatabase } from '../_lib/mongodb.js';
 import User from '../_lib/models/User.js';
 import { validatePasswordStrength, checkServerlessRateLimit, sanitizeObject } from '../_lib/security.js';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -51,9 +53,10 @@ export default async function handler(req, res) {
       credits: 25
     });
 
-    const token = signToken(
+    const token = jwt.sign(
       { userId: newUser._id, email: newUser.email, role: newUser.role },
-      { expiresIn: '7d' }
+      JWT_SECRET,
+      { expiresIn: '30d' }
     );
 
     return res.status(201).json({

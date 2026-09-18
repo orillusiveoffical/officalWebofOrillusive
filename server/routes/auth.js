@@ -1,10 +1,11 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import { signToken, verifyToken } from '../utils/jwt.js';
+import jwt from 'jsonwebtoken';
 import { connectToDatabase } from '../db/mongodb.js';
 import User from '../models/User.js';
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'orillusive_jwt_secret_key_2026';
 
 // Register Endpoint
 router.post('/register', async (req, res) => {
@@ -63,9 +64,10 @@ router.post('/register', async (req, res) => {
       console.warn('Welcome bonus transaction log deferred:', txErr.message);
     }
 
-    const token = signToken(
+    const token = jwt.sign(
       { userId: newUser._id, email: newUser.email, role: newUser.role },
-      { expiresIn: '7d' }
+      JWT_SECRET,
+      { expiresIn: '30d' }
     );
 
     return res.status(201).json({
@@ -114,9 +116,10 @@ router.post('/login', async (req, res) => {
     user.lastLogin = new Date();
     await user.save();
 
-    const token = signToken(
+    const token = jwt.sign(
       { userId: user._id, email: user.email, role: user.role },
-      { expiresIn: '7d' }
+      JWT_SECRET,
+      { expiresIn: '30d' }
     );
 
     return res.status(200).json({
@@ -146,7 +149,7 @@ router.get('/me', async (req, res) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = verifyToken(token);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     await connectToDatabase();
 

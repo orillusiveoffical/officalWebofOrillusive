@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ArrowRight, Loader2, CheckCircle2, Sparkles, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [newsletterMsg, setNewsletterMsg] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,6 +15,7 @@ export const Footer: React.FC = () => {
 
     setSubmitting(true);
     setNewsletterMsg(null);
+    setIsError(false);
 
     try {
       const res = await fetch('/api/newsletter', {
@@ -27,126 +29,148 @@ export const Footer: React.FC = () => {
         setNewsletterMsg(data.message || 'Subscribed successfully!');
         setNewsletterEmail('');
       } else {
-        setNewsletterMsg('Subscribed! Check your inbox for weekly UI drops.');
-        setSubmitted(true);
+        setIsError(true);
+        setNewsletterMsg(data.error || 'Failed to subscribe. Please try again.');
       }
     } catch (err) {
-      setNewsletterMsg('Subscribed! Check your inbox for weekly UI drops.');
-      setSubmitted(true);
+      setIsError(true);
+      setNewsletterMsg('Network error. Unable to subscribe.');
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <footer className="bg-[#111111] text-[#F7F7F5] px-6 sm:px-12 py-16 font-sans border-t border-white/10">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5 pb-12 border-b border-white/10">
-          {/* Col 1 & 2 — Brand */}
-          <div className="lg:col-span-2 space-y-5">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="size-8 rounded-xl bg-white text-black flex items-center justify-center font-bold text-sm tracking-wider shadow-sm">
-                O
+    <footer className="bg-[#111111] text-[#F7F7F5] px-4 sm:px-8 lg:px-16 py-16 sm:py-20 md:py-24 font-sans border-t border-white/10">
+      <div className="mx-auto max-w-[1400px]">
+
+        <div className="grid gap-10 sm:gap-14 md:grid-cols-2 lg:grid-cols-4 pb-12 sm:pb-16 border-b border-white/10">
+
+          {/* Col 1 — Brand */}
+          <div className="space-y-5">
+            <Link to="/" className="flex items-center gap-3 group" aria-label="Go to Orillusive homepage">
+              {/* Circular logo image */}
+              <div className="size-9 rounded-full overflow-hidden border border-white/20 shadow-sm shrink-0 transition-transform group-hover:scale-105">
+                <img
+                  src="/logo.jpg"
+                  alt="Orillusive"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-bold uppercase tracking-[0.22em] font-sans text-white">
-                  ORILLUSIVE<span className="text-[#4F6B85]">.</span>
-                </span>
-                <span className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">
-                  Build Beyond The Obvious
-                </span>
-              </div>
+              <span className="text-sm font-bold uppercase tracking-[0.22em] font-sans text-[#F7F7F5]">
+                ORILLUSIVE<span className="text-[#C9A84C]">.</span>
+              </span>
             </Link>
-            <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-gray-400">
-              The premier UI design discovery & implementation platform. Thousands of production-ready components, complete source code, and authentic AI prompts for serious web designers and developers.
+            <p className="max-w-xs text-xs sm:text-sm leading-relaxed text-[#888888]">
+              Premium Software Engineering Studio crafting long-term digital products that matter.
+            </p>
+          </div>
+
+          {/* Col 2 */}
+          <div className="space-y-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#888888]">
+              Navigation
+            </p>
+            <div className="flex flex-col space-y-3">
+              <Link to="/" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Home</Link>
+              <Link to="/cv-maker" className="text-xs sm:text-sm text-[#C9A84C] font-semibold hover:text-[#F7F7F5] transition-colors">CV Maker (SaaS Product)</Link>
+              <Link to="/services" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Services</Link>
+              <Link to="/projects" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Products</Link>
+              <Link to="/about" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">About Studio</Link>
+              <Link to="/process" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Engineering Process</Link>
+              <Link to="/blog" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Engineering Blog</Link>
+              <Link to="/pricing" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Pricing & Engagements</Link>
+              <Link to="/contact" className="text-xs sm:text-sm text-[#CCCCCC] hover:text-[#F7F7F5] transition-colors">Start Project / Contact</Link>
+            </div>
+          </div>
+
+          {/* Col 3 */}
+          <div className="space-y-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#888888]">
+              Contact
+            </p>
+            <div className="space-y-3">
+              <a
+                href="mailto:info@orillusive.com"
+                className="inline-flex items-center gap-2 text-xs sm:text-sm text-[#CCCCCC] hover:text-[#C9A84C] transition-colors font-medium"
+              >
+                <span>info@orillusive.com</span>
+                <ArrowUpRight className="size-3.5" />
+              </a>
+              <p className="text-xs text-[#888888] leading-relaxed">
+                Global operations & remote engineering
+              </p>
+            </div>
+          </div>
+
+          {/* Col 4 — Field Notes & Newsletter Subscription */}
+          <div className="space-y-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#888888]">
+              Field Notes Newsletter
+            </p>
+            <p className="text-xs text-[#888888] leading-relaxed">
+              Subscribe to senior engineering insights, architectural patterns, and studio updates.
             </p>
 
-            {/* Newsletter */}
-            <div className="pt-2 space-y-2 max-w-sm">
-              <p className="text-xs font-bold text-white uppercase tracking-wider">
-                Weekly UI Drop Dispatch
-              </p>
-              {submitted ? (
-                <div className="p-3 bg-white/10 rounded-xl text-xs text-emerald-400 flex items-center gap-2">
-                  <CheckCircle2 size={14} /> {newsletterMsg}
-                </div>
-              ) : (
-                <form onSubmit={handleNewsletterSubmit} className="flex items-center gap-2">
+            {submitted ? (
+              <div className="p-3.5 rounded-xl bg-[#4F6B85]/20 border border-[#4F6B85]/40 text-xs text-[#F7F7F5] flex items-center gap-2">
+                <CheckCircle2 className="size-4 text-[#C9A84C] shrink-0" />
+                <span>{newsletterMsg}</span>
+              </div>
+            ) : (
+              <form onSubmit={handleNewsletterSubmit} className="space-y-2">
+                <div className="relative flex items-center">
                   <input
                     type="email"
+                    required
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    placeholder="name@company.com"
-                    className="bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder:text-gray-500 outline-none w-full focus:border-white"
+                    placeholder="alex@company.com"
+                    className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-[#666666] focus:border-[#4F6B85] focus:ring-1 focus:ring-[#4F6B85] focus:outline-none transition-all"
                   />
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="px-4 py-2 bg-white text-black font-semibold text-xs rounded-xl hover:bg-gray-200 transition-colors shrink-0"
+                    aria-label="Subscribe to newsletter"
+                    className="absolute right-1.5 p-1.5 rounded-lg bg-white/10 text-white hover:bg-[#C9A84C] hover:text-[#111111] transition-all disabled:opacity-50"
                   >
-                    {submitting ? '...' : 'Join'}
+                    {submitting ? (
+                      <Loader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <ArrowRight className="size-3.5" />
+                    )}
                   </button>
-                </form>
-              )}
+                </div>
+                {newsletterMsg && isError && (
+                  <p className="text-[10px] text-red-400 font-sans">{newsletterMsg}</p>
+                )}
+              </form>
+            )}
+
+            <div className="pt-2 border-t border-white/5">
+              <p className="text-[10px] text-[#666666]">
+                React • Node.js • TypeScript • Flutter • MongoDB Atlas
+              </p>
             </div>
           </div>
 
-          {/* Col 3 — UI Library */}
-          <div className="space-y-4">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
-              Design Library
-            </p>
-            <div className="flex flex-col space-y-2.5 text-xs text-gray-300">
-              <Link to="/designs?category=Navbar" className="hover:text-white transition-colors">Navigation Bars</Link>
-              <Link to="/designs?category=Hero" className="hover:text-white transition-colors">Hero Sections</Link>
-              <Link to="/designs?category=Pricing" className="hover:text-white transition-colors">Pricing Cards</Link>
-              <Link to="/designs?category=Cards" className="hover:text-white transition-colors">Bento & Feature Grids</Link>
-              <Link to="/designs?category=Dashboard" className="hover:text-white transition-colors">Dashboards & Sidebars</Link>
-              <Link to="/designs?category=Authentication" className="hover:text-white transition-colors">Auth & Forms</Link>
-            </div>
-          </div>
-
-          {/* Col 4 — Platform & Features */}
-          <div className="space-y-4">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
-              Platform
-            </p>
-            <div className="flex flex-col space-y-2.5 text-xs text-gray-300">
-              <Link to="/designs" className="hover:text-white transition-colors">Browse Catalog</Link>
-              <Link to="/pricing" className="hover:text-white transition-colors text-amber-400 font-semibold flex items-center gap-1">
-                <Sparkles size={12} /> Pro Subscriptions ($9/mo)
-              </Link>
-              <Link to="/categories" className="hover:text-white transition-colors">UI Category Sitemap</Link>
-              <Link to="/about" className="hover:text-white transition-colors">About Studio</Link>
-              <Link to="/contact" className="hover:text-white transition-colors">Contact Support</Link>
-            </div>
-          </div>
-
-          {/* Col 5 — Legal & Trust */}
-          <div className="space-y-4">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
-              Trust & Legal
-            </p>
-            <div className="flex flex-col space-y-2.5 text-xs text-gray-300">
-              <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-              <span className="text-[11px] text-gray-500 pt-2 block">
-                Official Orillusive Design Platform.
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-          <p>© 2026 Orillusive. Build Beyond the Obvious. All rights reserved.</p>
-          <div className="flex items-center gap-4 text-[11px]">
-            <span>Secured with Payoneer</span>
-            <span>•</span>
-            <span>TypeScript / Tailwind CSS</span>
+        <div className="mt-10 flex flex-col gap-5 text-[11px] text-[#777777] sm:flex-row sm:items-center sm:justify-between font-mono">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <p>© 2026 Orillusive. All rights reserved.</p>
+            <Link to="/privacy" className="hover:text-[#F7F7F5] transition-colors underline">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-[#F7F7F5] transition-colors underline">Terms & Conditions</Link>
+          </div>
+          <div className="flex gap-8">
+            <a href="https://github.com/orillusiveoffical" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on GitHub" className="hover:text-[#F7F7F5] transition-colors">GitHub</a>
+            <a href="https://www.linkedin.com/company/orillusive/" target="_blank" rel="noopener noreferrer" aria-label="Visit Orillusive on LinkedIn" className="hover:text-[#F7F7F5] transition-colors">LinkedIn</a>
           </div>
         </div>
+
       </div>
     </footer>
   );
 };
+

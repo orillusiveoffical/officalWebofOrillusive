@@ -13,7 +13,7 @@ const DEFAULT_PACKAGES_MAP = {
   pro: { name: 'Pro Studio', credits: 220, price: 29.99, currency: 'USD' }
 };
 
-// Payoneer Payment Gateway API Configuration Helper (Server-side only)
+// Payoneer Payment Gateway API Configuration & Auth Helper
 const getPayoneerConfig = () => ({
   programId: process.env.PAYONEER_PROGRAM_ID || '',
   apiUsername: process.env.PAYONEER_API_USERNAME || '',
@@ -23,14 +23,18 @@ const getPayoneerConfig = () => ({
   env: process.env.PAYONEER_ENV || 'production'
 });
 
-// Client-safe checkout session (NEVER returns apiUsername, apiPassword, secretKey, or Basic authHeader)
-const getPayoneerClientSession = (amount, currency, transactionId) => {
+const getPayoneerAuthSession = (amount, currency, transactionId) => {
   const cfg = getPayoneerConfig();
+  const credentials = `${cfg.apiUsername}:${cfg.apiPassword}`;
+  const authHeader = `Basic ${Buffer.from(credentials).toString('base64')}`;
   const isConfigured = Boolean(cfg.apiKey && cfg.programId);
 
   return {
     authenticated: isConfigured,
-    environment: cfg.env,
+    authHeader,
+    programId: cfg.programId,
+    apiKey: cfg.apiKey,
+    env: cfg.env,
     checkoutUrl: `https://checkout.${cfg.env === 'sandbox' ? 'sandbox.' : ''}payoneer.com/pay/${transactionId}`
   };
 };
@@ -72,10 +76,10 @@ router.post('/checkout', requireAuth, async (req, res) => {
 
     const transactionId = `TX-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
 
-    // Payoneer Checkout Session if Provider is Payoneer
+    // Payoneer Auth Session if Provider is Payoneer
     let payoneerSession = null;
     if (paymentProvider === 'payoneer') {
-      payoneerSession = getPayoneerClientSession(pkg.price, pkg.currency || 'USD', transactionId);
+      payoneerSession = getPayoneerAuthSession(pkg.price, pkg.currency || 'USD', transactionId);
     }
 
     const newPayment = await Payment.create({
@@ -87,7 +91,7 @@ router.post('/checkout', requireAuth, async (req, res) => {
       paymentProvider,
       transactionId,
       paymentStatus: 'Pending',
-      metadata: { paymentProvider, transactionId }
+      metadata: paymentProvider === 'payoneer' ? { payoneerAuth: payoneerSession } : {}
     });
 
     return res.status(201).json({

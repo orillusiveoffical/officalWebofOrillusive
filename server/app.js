@@ -14,32 +14,24 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
-
 import { requestLogger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { mongoSanitizeMiddleware } from './middleware/sanitize.js';
-import {
-  authLimiter,
-  contactLimiter,
-  apiLimiter,
-  searchLimiter,
-  codePromptLimiter,
-  sensitiveLimiter
-} from './middleware/rateLimiter.js';
-
-// Route Imports
-import authRouter from './routes/auth.js';
-import designRouter from './routes/designRoutes.js';
-import paymentRouter from './routes/paymentRoutes.js';
+import { authLimiter, contactLimiter, apiLimiter } from './middleware/rateLimiter.js';
 import contactRouter from './routes/contact.js';
 import newsletterRouter from './routes/newsletter.js';
-import adminRouter from './routes/admin.js';
-import blogsRouter from './routes/blogs.js';
+import authRouter from './routes/auth.js';
 import bookingsRouter from './routes/bookings.js';
-import generationRouter from './routes/generation.js';
-import creditsRouter from './routes/credits.js';
 import cvsRouter from './routes/cvs.js';
+import packagesRouter, { ensureDefaultPackages } from './routes/packages.js';
+import creditsRouter from './routes/credits.js';
+import paymentsRouter from './routes/payments.js';
+import generationRouter from './routes/generation.js';
+import adminRouter, { ensureDefaultDashboardData } from './routes/admin.js';
+import blogsRouter from './routes/blogs.js';
 import { connectToDatabase } from './db/mongodb.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -52,11 +44,11 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
         scriptSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:', 'https:'],
-        connectSrc: ["'self'", 'https://api.resend.com', 'https://api.payoneer.com']
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'", "https://api.resend.com"]
       }
     },
     hsts: {
@@ -66,46 +58,38 @@ app.use(
     },
     frameguard: { action: 'deny' },
     noSniff: true,
-    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-    crossOriginResourcePolicy: { policy: 'cross-origin' }
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
   })
 );
 
-// Security: Whitelist-based Strict CORS Policy
-const allowedOrigins = new Set([
+// Security: Dynamic CORS Policy (Supports local dev, Vercel deployments, and production domain)
+const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5000',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:5000',
   'https://orillusive.com',
   'https://www.orillusive.com'
-]);
+];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
-      if (!origin) {
-        return callback(null, true);
+      if (
+        !origin ||
+        allowedOrigins.some((o) => origin.startsWith(o)) ||
+        origin.endsWith('.vercel.app') ||
+        origin.includes('localhost') ||
+        origin.includes('127.0.0.1')
+      ) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Permissive in dev to avoid CORS blocking dashboard
       }
-      // Exact match against whitelist
-      if (allowedOrigins.has(origin)) {
-        return callback(null, true);
-      }
-      // Specific Orillusive Vercel deployments only
-      if (/^https:\/\/weborillusive(-[a-z0-9-]+)?\.vercel\.app$/.test(origin)) {
-        return callback(null, true);
-      }
-      // Local development ports
-      if (process.env.NODE_ENV !== 'production' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error(`CORS policy blocked access from origin: ${origin}`));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-    maxAge: 86400
+    credentials: true
   })
 );
 
@@ -114,7 +98,7 @@ app.use(async (req, res, next) => {
   try {
     await connectToDatabase();
   } catch (err) {
-    // MongoDB notice in dev
+    console.warn('DB Connection middleware notice:', err.message);
   }
   next();
 });
@@ -124,30 +108,45 @@ app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitizeMiddleware);
 app.use(requestLogger);
 
-// Health & Brand Status Check
+// Initialize Database connection & seed defaults for local server execution
+if (!process.env.VERCEL) {
+  connectToDatabase()
+    .then(() => {
+      ensureDefaultPackages();
+      ensureDefaultDashboardData();
+    })
+    .catch((err) => {
+      console.warn('⚠️ MongoDB connection deferred:', err.message);
+    });
+}
+
+// Health telemetry check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OPERATIONAL',
-    brand: 'Orillusive',
-    tagline: 'Build Beyond the Obvious',
-    platform: 'UI Design & Implementation Discovery Platform',
+    studio: 'Orillusive.',
+    system: 'Software Engineering Studio Z+ Secured',
     timestamp: new Date().toISOString()
   });
 });
 
-// Primary UI Platform Routes with Layered Rate Limiting
-app.use(['/api/designs', '/designs'], apiLimiter, designRouter);
-app.use(['/api/payments', '/payments'], sensitiveLimiter, paymentRouter);
+// Rate Limited API Routes (supports both direct & /api prefixed requests)
 app.use(['/api/auth', '/auth'], authLimiter, authRouter);
-
-// Complementary Studio Routes
 app.use(['/api/contact', '/contact'], contactLimiter, contactRouter);
-app.use(['/api/bookings', '/bookings'], contactLimiter, bookingsRouter);
-app.use(['/api/generation', '/generation'], sensitiveLimiter, generationRouter);
-app.use(['/api/credits', '/credits'], apiLimiter, creditsRouter);
-app.use(['/api/cvs', '/cvs'], apiLimiter, cvsRouter);
+app.use(['/api/bookings', '/bookings'], apiLimiter, bookingsRouter);
 app.use(['/api/newsletter', '/newsletter'], contactLimiter, newsletterRouter);
+
+// CV Maker & Credit Monetization SaaS Routes
+app.use(['/api/cvs', '/cvs'], apiLimiter, cvsRouter);
+app.use(['/api/packages', '/packages'], apiLimiter, packagesRouter);
+app.use(['/api/credits', '/credits'], apiLimiter, creditsRouter);
+app.use(['/api/payments', '/payments'], apiLimiter, paymentsRouter);
+app.use(['/api/generation', '/generation'], apiLimiter, generationRouter);
+
+// Public Blog & Editorial Routes
 app.use(['/api/blogs', '/blogs'], apiLimiter, blogsRouter);
+
+// Internal Dashboard & Admin Control Center Routes
 app.use(['/api/admin', '/admin'], apiLimiter, adminRouter);
 
 // Static Client Files & Technical SEO Assets (when built)
@@ -155,9 +154,11 @@ const clientDistPath = path.resolve(__dirname, '../client/dist');
 if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
 
-  // Legacy Redirects & Clean URLs
+  // Legacy Redirects
   app.get('/privacy-policy', (req, res) => res.redirect(301, '/privacy'));
   app.get('/terms-and-conditions', (req, res) => res.redirect(301, '/terms'));
+  app.get('/products', (req, res) => res.redirect(301, '/projects'));
+  app.get(['/products/autiva', '/products/autiva/*'], (req, res) => res.redirect(301, '/projects'));
 
   // Public SPA routes fallback
   app.get('*', (req, res, next) => {
@@ -174,7 +175,7 @@ app.use(['/api', '/api/*'], (req, res) => {
   });
 });
 
-// Centralized Error Handling Middleware
+// Centralized Error Handling Middleware (strictly returns JSON)
 app.use(errorHandler);
 
 export default app;

@@ -7,12 +7,15 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
 
+const DEFAULT_MONGODB_URI =
+  'mongodb+srv://orillusiveoffical_db_user:Minhajkhan12@orillusivewebdata.n6qw5tw.mongodb.net/orillusive?retryWrites=true&w=majority';
+
 export async function connectToDatabase() {
   if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
   }
 
-  const mongoUri =
+  let mongoUri =
     process.env.MONGODB_URI ||
     process.env.DATABASE_URL ||
     process.env.MONGODB_URL ||
@@ -20,12 +23,11 @@ export async function connectToDatabase() {
 
   if (
     !mongoUri ||
+    mongoUri === 'mongodb+srv://your_atlas_connection_string' ||
     mongoUri.includes('<db_username>') ||
-    mongoUri.includes('<db_password>') ||
-    mongoUri.includes('<username>')
+    mongoUri.includes('<db_password>')
   ) {
-    console.warn('⚠️ [ORILLUSIVE MONGO ATLAS] MONGODB_URI environment variable is not configured.');
-    return null;
+    mongoUri = DEFAULT_MONGODB_URI;
   }
 
   if (!cached.promise) {

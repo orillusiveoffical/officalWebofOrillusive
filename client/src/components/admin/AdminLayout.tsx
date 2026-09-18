@@ -23,8 +23,7 @@ import {
   ExternalLink,
   Sparkles,
   Database,
-  Cpu,
-  Layers
+  Cpu
 } from 'lucide-react';
 
 export const AdminLayout: React.FC = () => {
@@ -67,9 +66,8 @@ export const AdminLayout: React.FC = () => {
       ]
     },
     {
-      title: 'CONTENT & UI PLATFORM',
+      title: 'CONTENT CMS',
       items: [
-        { name: 'UI Designs Library', path: '/admin/designs', icon: Layers, allowed: true },
         { name: 'Blog CMS', path: '/admin/blog', icon: FileText, allowed: isDeveloper(role) }
       ]
     },
